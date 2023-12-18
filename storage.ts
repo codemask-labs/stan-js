@@ -1,5 +1,6 @@
 import { Synchronizer } from './createStore'
 
+export function storage <T>(initialValue: T, localStorageKey?: string): Synchronizer<T>
 export function storage <T>(initialValue?: T, localStorageKey?: string): Synchronizer<T | undefined>
 export function storage <T>(initialValue: T, localStorageKey?: string) {
     return {
