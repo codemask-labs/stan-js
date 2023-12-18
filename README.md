@@ -11,8 +11,6 @@
 [Jotai](https://jotai.org/) is also great, but you would most likely end up creating close to identical code for each store
 
 ``([a, setA] = useAtom(aAtom), [b, setB] = useAtom(bAtom))``
-
-In addition it is hard to optimize rerenders and updating state outside of react is impossible out of the box
 --- ---
 
 This simple createStore function solves all of those problems, using simple built in react api [useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore), [fast-deep-equal](https://www.npmjs.com/package/fast-deep-equal) and some typescript magic 🪄
