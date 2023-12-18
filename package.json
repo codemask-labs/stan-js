@@ -21,8 +21,7 @@
   },
   "scripts": {
     "check-config": "attw --pack . && publint",
-    "build": "tsup",
-    "prebuild": "yarn check-config"
+    "build": "tsup"
   },
   "author": "Cezary Bober",
   "license": "ISC",
