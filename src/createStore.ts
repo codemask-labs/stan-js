@@ -14,7 +14,9 @@ const isSynchronizer = (value: unknown): value is Synchronizer<unknown> => {
 }
 const optionalArray = <T>(arr: Array<T>, fallback: Array<T>) => arr.length > 0 ? arr : fallback
 
-export const createStore = <TStateRaw extends object>(stateRaw: TStateRaw) => {
+type NonFunction = string | number | boolean | null | undefined | Array<NonFunction> | { [key: string]: any }
+
+export const createStore = <TStateRaw extends Record<string, NonFunction>>(stateRaw: TStateRaw) => {
     type TState = { [K in keyof TStateRaw]: TStateRaw[K] extends Synchronizer<infer U> ? U : TStateRaw[K] }
 
     const storeKeys = Object.keys(stateRaw) as Array<keyof TState>
