@@ -21,28 +21,30 @@ This simple createStore function solves all of those problems, using simple buil
 import { storage, createStore } from './store'
 
 const { useStore } = createStore({
-    hello: 'hello',
-    world: storage('world')
+    key1: 'value1',
+    key2: storage('value2')
 })
 
-const Hello = () => {
-    const { state, actions } = useStore('hello')
+const A = () => {
+    const { state, actions } = useStore('key1')
 
     return <input value={state.hello} onChange={event => actions.setHello(event.target.value)} />
 }
 
-const World = () => {
-    const { state, actions } = useStore('world')
+const B = () => {
+    const { state, actions } = useStore('key1', 'key2')
 
-    return <input value={state.world} onChange={event => actions.setWorld(event.target.value)} />
+    console.log(state.key1) // listens on value change
+
+    return <input value={state.key2} onChange={event => actions.setKey2(event.target.value)} />
 }
 
 const App = () => {
     return (
         <>
-            <Hello />
+            <A />
             <br/>
-            <World />
+            <B />
         </>
     )
 }
@@ -56,25 +58,27 @@ It takes object which is initial state of the store and returns:
 Hook that allows to subscribe and update given properties of store, based on keys which you pass into it
 
 ```ts
-const { useStore } = createStore({ test: 'test' })
+const { useStore } = createStore({ test: 'some value' })
 ```
 
 ### getState
 Returns current state of the store
 
 ```ts
-const { getState } = createStore({ test: 'test' })
+const { getState } = createStore({ test: 'some value' })
 
-console.log(getState().test)
+console.log(getState().test) // "some value"
 ```
 
 ### actions
 Object that contains of all actions to update store properties
 
 ```ts
-const { actions } = createStore({ test: 'test' })
+const { getState, actions } = createStore({ test: 'some value' })
 
-actions.setTest('hello world)
+console.log(getState().test) // "some value"
+actions.setTest('hello world')
+console.log(getState().test) // "hello world"
 ```
 
 ## storage
@@ -84,7 +88,7 @@ Allows to synchronize store with localStorage
 ```ts
 const { useStore } = createStore({
     hello: storage<string>(), // string | undefined
-    world: storage('world'),
+    test: storage('value'),
     user: storage<User | null>(null, 'STORAGE_USER')
 })
 ```
