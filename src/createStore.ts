@@ -14,18 +14,29 @@ const isSynchronizer = (value: unknown): value is Synchronizer<unknown> => {
 }
 const optionalArray = <T>(arr: Array<T>, fallback: Array<T>) => arr.length > 0 ? arr : fallback
 
-export const createStore = <TStateRaw extends object>(stateRaw: TStateRaw) => {
+type NonFunction = string | number | boolean | null | undefined | Array<NonFunction> | { [key: string]: any }
+
+export const createStore = <TStateRaw extends Record<string, NonFunction>>(stateRaw: TStateRaw) => {
     type TState = { [K in keyof TStateRaw]: TStateRaw[K] extends Synchronizer<infer U> ? U : TStateRaw[K] }
 
     const storeKeys = Object.keys(stateRaw) as Array<keyof TState>
 
     const actions = storeKeys.reduce((acc, key) => ({
         ...acc,
-        [`set${capitalize(String(key))}`]: (value: TState[typeof key]) => {
+        [`set${capitalize(String(key))}`]: (value: TState[typeof key] | ((prevState: TState[typeof key]) => TState[typeof key])) => {
+            if (typeof value === 'function') {
+                const fn = value as (prevState: TState[typeof key]) => TState[typeof key]
+
+                state[key] = fn(state[key])
+                listeners[key].forEach(listener => listener(fn(state[key])))
+
+                return
+            }
+
             state[key] = value
             listeners[key].forEach(listener => listener(value))
         }
-    }), {} as { [K in keyof TState as `set${Capitalize<K & string>}`]: (value: TState[K]) => void })
+    }), {} as { [K in keyof TState as `set${Capitalize<K & string>}`]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
 
     const listeners = storeKeys.reduce((acc, key) => ({
         ...acc,
@@ -84,15 +95,15 @@ export const createStore = <TStateRaw extends object>(stateRaw: TStateRaw) => {
         }
     }
 
-    const getActions = <TKeys extends Array<keyof TState>>(keys: TKeys) => {        
+    const getActions = <TKeys extends Array<keyof TState>>(keys: TKeys) => {
         return keys.reduce((acc, key) => {
             const actionKey = `set${capitalize(String(key))}`
 
             return {
                 ...acc,
-                [actionKey]: actions[actionKey as keyof typeof actions] 
+                [actionKey]: actions[actionKey as keyof typeof actions]
             }
-        }, {} as { [K in keyof TState as `set${Capitalize<K & string>}`]: (value: TState[K]) => void })
+        }, {} as { [K in keyof TState as `set${Capitalize<K & string>}`]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
     }
 
     const useStore = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
