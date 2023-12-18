@@ -23,8 +23,8 @@
     "check-config": "attw --pack . && publint",
     "build": "tsup"
   },
-  "author": "Cezary Bober",
-  "license": "ISC",
+  "author": "@codemaskinc",
+  "license": "MIT",
   "files": [
     "dist"
   ],
