@@ -107,6 +107,6 @@ export const createStore = <TStateRaw extends object>(stateRaw: TStateRaw) => {
     return {
         useStore,
         getState: () => state,
-        actions: getActions(storeKeys),
+        actions,
     }
 }
