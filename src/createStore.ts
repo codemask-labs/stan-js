@@ -1,4 +1,4 @@
-import equal from 'fast-deep-equal/es6'
+import equal from 'fast-deep-equal'
 import { useMemo, useSyncExternalStore } from 'react'
 
 export type Synchronizer<T> = {
@@ -12,6 +12,7 @@ const capitalize = (str: string) => `${str.charAt(0).toUpperCase()}${str.slice(1
 const isSynchronizer = (value: unknown): value is Synchronizer<unknown> => {
     return typeof value === 'object' && value !== null && 'subscribe' in value && 'value' in value && 'update' in value && 'getSnapshot' in value
 }
+const optionalArray = <T>(arr: Array<T>, fallback: Array<T>) => arr.length > 0 ? arr : fallback
 
 export const createStore = <TStateRaw extends object>(stateRaw: TStateRaw) => {
     type TState = { [K in keyof TStateRaw]: TStateRaw[K] extends Synchronizer<infer U> ? U : TStateRaw[K] }
@@ -33,6 +34,7 @@ export const createStore = <TStateRaw extends object>(stateRaw: TStateRaw) => {
 
     const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
         if (isSynchronizer(value)) {
+            // @ts-expect-error need to better type this
             value.subscribe(actions[`set${capitalize(key)}`], key)
             listeners[key as keyof TState].push(newValue => value.update(newValue, key))
             const snapshotValue = value.getSnapshot(key)
@@ -94,9 +96,9 @@ export const createStore = <TStateRaw extends object>(stateRaw: TStateRaw) => {
     }
 
     const useStore = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
-        const getSnapshot = useMemo(() => getState(keys), [])
-        const actions = useMemo(() => getActions(keys), [])
-        const state = useSyncExternalStore(subscribe(keys), getSnapshot)
+        const getSnapshot = useMemo(() => getState(optionalArray(keys, storeKeys)), [])
+        const actions = useMemo(() => getActions(optionalArray(keys, storeKeys)), [])
+        const state = useSyncExternalStore(subscribe(optionalArray(keys, storeKeys)), getSnapshot)
 
         return {
             state,
