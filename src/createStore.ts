@@ -4,7 +4,7 @@ import { useMemo, useSyncExternalStore } from 'react'
 export type Synchronizer<T> = {
     value: T,
     subscribe: (update: (value: T) => void, key: string) => VoidFunction,
-    getSnapshot: (key: string) => T | null | undefined,
+    getSnapshot: (key: string) => T | null | undefined | Promise<T | null | undefined>,
     update: (value: T, key: string) => void
 }
 
@@ -13,6 +13,9 @@ const isSynchronizer = (value: unknown): value is Synchronizer<unknown> => {
     return typeof value === 'object' && value !== null && 'subscribe' in value && 'value' in value && 'update' in value && 'getSnapshot' in value
 }
 const optionalArray = <T>(arr: Array<T>, fallback: Array<T>) => arr.length > 0 ? arr : fallback
+const isPromise = <T>(value: unknown): value is Promise<T> => {
+    return typeof value === 'object' && value !== null && 'then' in value
+}
 
 type NonFunction = string | number | boolean | null | undefined | Array<NonFunction> | { [key: string]: any }
 
@@ -50,7 +53,26 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
             listeners[key as keyof TState].push(newValue => value.update(newValue, key))
             const snapshotValue = value.getSnapshot(key)
 
-            if (!snapshotValue && value.value !== undefined) {
+            if (isPromise(snapshotValue)) {
+                snapshotValue.then(snapshotValue => {
+                    if (snapshotValue !== undefined && snapshotValue !== null) {
+                        // @ts-expect-error update value
+                        actions[`set${capitalize(key)}`](snapshotValue)
+
+                        return
+                    }
+
+                    value.update(value.value, key)
+                }).catch()
+
+                // Return initial value
+                return {
+                    ...acc,
+                    [key]: value.value
+                }
+            }
+
+            if (!snapshotValue && value.value !== undefined && value.value !== null) {
                 value.update(value.value, key)
             }
 
