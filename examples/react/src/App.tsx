@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react'
-import { useStore } from './store'
+import { useStore, reset } from './store'
 
 const Todos = () => {
     const [todo, setTodo] = useState('')
@@ -10,6 +10,11 @@ const Todos = () => {
             <h1>
                 Todos
             </h1>
+            <button onClick={() => reset('todos')}>
+                Reset todos
+            </button>
+            <br/>
+            <br/>
             {todos.map((todo, index) => (
                 <Fragment key={`${todo}-${index}`}>
                     <div>
@@ -22,19 +27,22 @@ const Todos = () => {
                 </Fragment>
             ))}
             <br/>
-            <input value={todo} onChange={event => setTodo(event.target.value)} />
-            <br/>
-            <br/>
-            <button onClick={() => {
+            <form onSubmit={event => {
+                event.preventDefault()
+
                 if (!todo) {
                     return
                 }
-                
                 setTodos(prev => [...prev, todo])
                 setTodo('')
             }}>
-                Add todo
-            </button>
+                <input value={todo} onChange={event => setTodo(event.target.value)} />
+                <br/>
+                <br/>
+                <button type="submit">
+                    Add todo
+                </button>
+            </form>
         </div>
     )
 }
