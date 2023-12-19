@@ -7,6 +7,10 @@ export function storage <T>(initialValue: T, localStorageKey?: string) {
         value: initialValue,
         subscribe: (update, key) => {
             const handleEvent = (event: StorageEvent) => {
+                if (event.storageArea !== localStorage) {
+                    return
+                }
+
                 const storageKey = localStorageKey ?? key
 
                 if (event.key !== storageKey || event.newValue === null) {
