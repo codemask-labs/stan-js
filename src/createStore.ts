@@ -13,9 +13,7 @@ const isSynchronizer = (value: unknown): value is Synchronizer<unknown> => {
     return typeof value === 'object' && value !== null && 'subscribe' in value && 'value' in value && 'update' in value && 'getSnapshot' in value
 }
 const optionalArray = <T>(arr: Array<T>, fallback: Array<T>) => arr.length > 0 ? arr : fallback
-const isPromise = <T>(value: unknown): value is Promise<T> => {
-    return typeof value === 'object' && value !== null && 'then' in value
-}
+const isPromise = <T>(value: unknown): value is Promise<T> => typeof value === 'object' && value !== null && 'then' in value
 
 type NonFunction = string | number | boolean | null | undefined | Array<NonFunction> | { [key: string]: any }
 
