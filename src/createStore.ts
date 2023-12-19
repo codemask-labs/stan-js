@@ -137,9 +137,17 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
         }
     }
 
+    const reset = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
+        optionalArray(keys, storeKeys).forEach(key => {
+            // @ts-expect-error update value
+            actions[`set${capitalize(key)}`](stateRaw[key])
+        })
+    }
+
     return {
         useStore,
         getState: () => state,
         actions,
+        reset
     }
 }
