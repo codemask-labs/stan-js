@@ -16,6 +16,8 @@ const optionalArray = <T>(arr: Array<T>, fallback: Array<T>) => arr.length > 0 ?
 const isPromise = <T>(value: unknown): value is Promise<T> => typeof value === 'object' && value !== null && 'then' in value
 
 type NonFunction = string | number | boolean | null | undefined | Array<NonFunction> | { [key: string]: any }
+type ActionKey<K> = `set${Capitalize<K & string>}`
+const getActionKey = <K>(key: K) => `set${capitalize(String(key))}` as ActionKey<K>
 
 export const createStore = <TStateRaw extends Record<string, NonFunction>>(stateRaw: TStateRaw) => {
     type TState = { [K in keyof TStateRaw]: TStateRaw[K] extends Synchronizer<infer U> ? U : TStateRaw[K] }
@@ -24,7 +26,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
     const actions = storeKeys.reduce((acc, key) => ({
         ...acc,
-        [`set${capitalize(String(key))}`]: (value: TState[typeof key] | ((prevState: TState[typeof key]) => TState[typeof key])) => {
+        [getActionKey(key)]: (value: TState[typeof key] | ((prevState: TState[typeof key]) => TState[typeof key])) => {
             if (typeof value === 'function') {
                 const fn = value as (prevState: TState[typeof key]) => TState[typeof key]
 
@@ -37,7 +39,8 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
             state[key] = value
             listeners[key].forEach(listener => listener(value))
         }
-    }), {} as { [K in keyof TState as `set${Capitalize<K & string>}`]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
+    }), {} as { [K in keyof TState as ActionKey<K>]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
+    const getAction = (key: any) => actions[getActionKey(key)] as (value: unknown) => void
 
     const listeners = storeKeys.reduce((acc, key) => ({
         ...acc,
@@ -46,8 +49,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
     const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
         if (isSynchronizer(value)) {
-            // @ts-expect-error need to better type this
-            value.subscribe(actions[`set${capitalize(key)}`], key)
+            value.subscribe(getAction(key), key)
             listeners[key as keyof TState].push(newValue => value.update(newValue, key))
 
             try {
@@ -56,22 +58,21 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
                 if (isPromise(snapshotValue)) {
                     snapshotValue.then(snapshotValue => {
                         if (snapshotValue !== undefined && snapshotValue !== null) {
-                            // @ts-expect-error update value
-                            actions[`set${capitalize(key)}`](snapshotValue)
-    
+                            getAction(key)(snapshotValue)
+
                             return
                         }
-    
+
                         value.update(value.value, key)
                     }).catch()
-    
+
                     // Return initial value
                     return {
                         ...acc,
                         [key]: value.value
                     }
                 }
-    
+
                 return {
                     ...acc,
                     [key]: snapshotValue
@@ -124,13 +125,13 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
     const getActions = <TKeys extends Array<keyof TState>>(keys: TKeys) => {
         return keys.reduce((acc, key) => {
-            const actionKey = `set${capitalize(String(key))}`
+            const actionKey = getActionKey(key)
 
             return {
                 ...acc,
-                [actionKey]: actions[actionKey as keyof typeof actions]
+                [actionKey]: getAction(actionKey)
             }
-        }, {} as { [K in keyof TState as `set${Capitalize<K & string>}`]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
+        }, {} as { [K in keyof TState as ActionKey<K>]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
     }
 
     const useStore = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
@@ -149,8 +150,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
             const valueOrSynchronizer = stateRaw[key]
             const initialValue = (isSynchronizer(valueOrSynchronizer) ? valueOrSynchronizer.value : valueOrSynchronizer) as TStateRaw[keyof TStateRaw]
 
-            // @ts-expect-error update value
-            actions[`set${capitalize(key)}`](initialValue)
+            getAction(key)(initialValue)
         })
     }
 
