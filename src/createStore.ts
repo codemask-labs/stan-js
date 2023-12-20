@@ -147,7 +147,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
     const reset = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
         optionalArray(keys, storeKeys).forEach(key => {
             const valueOrSynchronizer = stateRaw[key]
-            const initialValue = isSynchronizer(valueOrSynchronizer) ? valueOrSynchronizer.value : valueOrSynchronizer
+            const initialValue = (isSynchronizer(valueOrSynchronizer) ? valueOrSynchronizer.value : valueOrSynchronizer) as TStateRaw[keyof TStateRaw]
 
             // @ts-expect-error update value
             actions[`set${capitalize(key)}`](initialValue)
