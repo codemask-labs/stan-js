@@ -29,12 +29,10 @@ const ssrSaveStorage = {
     },
     getItem: (key: string) => {
         if (isLocalStorageAvailable()) {
-            localStorage.getItem(key)
-
-            return
+            return localStorage.getItem(key)
         }
         
-        mapStorage.get(key)
+        return mapStorage.get(key)
     }
 }
 
@@ -78,7 +76,8 @@ export function storage <T>(initialValue: T, localStorageKey?: string) {
             const value = ssrSaveStorage.getItem(storageKey)
 
             if (value === null || value === undefined) {
-                return value
+                // Value is not in storage
+                throw new Error()
             }
 
             return JSON.parse(value)
