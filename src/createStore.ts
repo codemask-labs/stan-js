@@ -40,6 +40,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
             listeners[key].forEach(listener => listener(value))
         }
     }), {} as { [K in keyof TState as ActionKey<K>]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
+    const getAction = (key: any) => actions[getActionKey(key)] as (value: unknown) => void
 
     const listeners = storeKeys.reduce((acc, key) => ({
         ...acc,
@@ -48,8 +49,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
     const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
         if (isSynchronizer(value)) {
-            // @ts-expect-error need to better type this
-            value.subscribe(actions[getActionKey(key)], key)
+            value.subscribe(getAction(key), key)
             listeners[key as keyof TState].push(newValue => value.update(newValue, key))
 
             try {
@@ -58,8 +58,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
                 if (isPromise(snapshotValue)) {
                     snapshotValue.then(snapshotValue => {
                         if (snapshotValue !== undefined && snapshotValue !== null) {
-                            // @ts-expect-error update value
-                            actions[`set${capitalize(key)}`](snapshotValue)
+                            getAction(key)(snapshotValue)
 
                             return
                         }
@@ -130,7 +129,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
             return {
                 ...acc,
-                [actionKey]: actions[actionKey as keyof typeof actions]
+                [actionKey]: getAction(actionKey)
             }
         }, {} as { [K in keyof TState as ActionKey<K>]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
     }
@@ -151,8 +150,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
             const valueOrSynchronizer = stateRaw[key]
             const initialValue = (isSynchronizer(valueOrSynchronizer) ? valueOrSynchronizer.value : valueOrSynchronizer) as TStateRaw[keyof TStateRaw]
 
-            // @ts-expect-error update value
-            actions[getActionKey(key)](initialValue)
+            getAction(key)(initialValue)
         })
     }
 
