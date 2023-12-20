@@ -1,5 +1,43 @@
 import { Synchronizer } from './createStore'
 
+const isLocalStorageAvailable = () => {
+    // for SSR
+    if (typeof window === 'undefined') {
+        return false
+    }
+
+    try {
+        window.localStorage
+        
+        return true
+    } catch {
+        // if localStorage is disabled
+        return false
+    }
+}
+const mapStorage = new Map<string, string>()
+
+const ssrSaveStorage = {
+    setItem: (key: string, value: string) => {
+        if (isLocalStorageAvailable()) {
+            localStorage.setItem(key, value)
+            
+            return
+        }
+        
+        mapStorage.set(key, value)
+    },
+    getItem: (key: string) => {
+        if (isLocalStorageAvailable()) {
+            localStorage.getItem(key)
+
+            return
+        }
+        
+        mapStorage.get(key)
+    }
+}
+
 export function storage <T>(initialValue: T, localStorageKey?: string): Synchronizer<T>
 export function storage <T>(initialValue?: T, localStorageKey?: string): Synchronizer<T | undefined>
 export function storage <T>(initialValue: T, localStorageKey?: string) {
@@ -20,6 +58,10 @@ export function storage <T>(initialValue: T, localStorageKey?: string) {
                 update(JSON.parse(event.newValue))
             }
 
+            if (!isLocalStorageAvailable()) {
+                return
+            }
+
             window.addEventListener('storage', handleEvent)
 
             return () => {
@@ -29,14 +71,14 @@ export function storage <T>(initialValue: T, localStorageKey?: string) {
         update: (value: T, key) => {
             const storageKey = localStorageKey ?? key
 
-            localStorage.setItem(storageKey, JSON.stringify(value))
+            ssrSaveStorage.setItem(storageKey, JSON.stringify(value))
         },
         getSnapshot: key => {
             const storageKey = localStorageKey ?? key
-            const value = localStorage.getItem(storageKey)
+            const value = ssrSaveStorage.getItem(storageKey)
 
-            if (value === null) {
-                return null
+            if (value === null || value === undefined) {
+                return value
             }
 
             return JSON.parse(value)
