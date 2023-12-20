@@ -4,7 +4,7 @@ import { useMemo, useSyncExternalStore } from 'react'
 export type Synchronizer<T> = {
     value: T,
     subscribe: (update: (value: T) => void, key: string) => VoidFunction,
-    getSnapshot: (key: string) => T | null | undefined | Promise<T | null | undefined>,
+    getSnapshot: (key: string) => T | Promise<T>,
     update: (value: T, key: string) => void
 }
 
@@ -51,34 +51,41 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
             // @ts-expect-error need to better type this
             value.subscribe(actions[getActionKey(key)], key)
             listeners[key as keyof TState].push(newValue => value.update(newValue, key))
-            const snapshotValue = value.getSnapshot(key)
 
-            if (isPromise(snapshotValue)) {
-                snapshotValue.then(snapshotValue => {
-                    if (snapshotValue !== undefined && snapshotValue !== null) {
-                        // @ts-expect-error update value
-                        actions[getActionKey(key)](snapshotValue)
+            try {
+                const snapshotValue = value.getSnapshot(key)
 
-                        return
+                if (isPromise(snapshotValue)) {
+                    snapshotValue.then(snapshotValue => {
+                        if (snapshotValue !== undefined && snapshotValue !== null) {
+                            // @ts-expect-error update value
+                            actions[`set${capitalize(key)}`](snapshotValue)
+    
+                            return
+                        }
+    
+                        value.update(value.value, key)
+                    }).catch()
+    
+                    // Return initial value
+                    return {
+                        ...acc,
+                        [key]: value.value
                     }
+                }
+    
+                return {
+                    ...acc,
+                    [key]: snapshotValue
+                }
+            } catch {
+                // If getSnapshot throws, return initial value and set it in storage
+                value.update(value.value, key)
 
-                    value.update(value.value, key)
-                }).catch()
-
-                // Return initial value
                 return {
                     ...acc,
                     [key]: value.value
                 }
-            }
-
-            if (!snapshotValue && value.value !== undefined && value.value !== null) {
-                value.update(value.value, key)
-            }
-
-            return {
-                ...acc,
-                [key]: snapshotValue ?? value.value
             }
         }
 

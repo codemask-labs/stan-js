@@ -106,7 +106,8 @@ Synchronizer is util that allows to synchronize store with something external lo
 type Synchronizer<T> = {
     value: T,
     subscribe: (update: (value: T) => void, key: string) => VoidFunction,
-    getSnapshot: (key: string) => T | null | undefined,
+    // If synchronizer doesn't have data that matches passed key, it should throw
+    getSnapshot: (key: string) => T | Promise<T>,
     update: (value: T, key: string) => void
 }
 ```
