@@ -1,4 +1,4 @@
-import { Synchronizer } from '../../../../dist/index.js'
+import { Synchronizer } from '../../../../dist'
 
 const fakeTimeout = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -31,7 +31,7 @@ export const sessionSync = <T>(initialValue: T) => {
             await fakeTimeout(2000)
 
             if (value === null) {
-                return null
+                throw new Error()
             }
 
             return JSON.parse(value)
