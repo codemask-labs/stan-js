@@ -17,7 +17,7 @@ const isPromise = <T>(value: unknown): value is Promise<T> => typeof value === '
 
 type NonFunction = string | number | boolean | null | undefined | Array<NonFunction> | { [key: string]: any }
 type ActionKey<K> = `set${Capitalize<K & string>}`
-const getActionKey = <K>(key: any) => `set${capitalize(String(key))}` as ActionKey<K>
+const getActionKey = <K>(key: K) => `set${capitalize(String(key))}` as ActionKey<K>
 
 export const createStore = <TStateRaw extends Record<string, NonFunction>>(stateRaw: TStateRaw) => {
     type TState = { [K in keyof TStateRaw]: TStateRaw[K] extends Synchronizer<infer U> ? U : TStateRaw[K] }
