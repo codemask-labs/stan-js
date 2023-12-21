@@ -2,6 +2,7 @@
   "name": "create-store",
   "version": "1.0.0",
   "description": "- ⚛️ updates outside react components - 🪝 easy access to all store values - ✍️ no repeating yourself - ⚡️ no unnecessary rerenders - 🚀 typescript intellisense",
+  "source": "src/index.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -20,8 +21,12 @@
     }
   },
   "scripts": {
-    "check-config": "attw --pack . && publint",
-    "build": "tsup"
+    "prebuild": "rm -rf dist && rm -rf .parcel-cache",
+    "build": "parcel build",
+    "build:watch": "parcel watch",
+    "postbuild": "cp dist/index.d.ts dist/index.d.mts",
+    "check:config": "attw --pack . && publint",
+    "check:typescript": "tsc --noEmit"
   },
   "author": "@codemaskinc",
   "license": "MIT",
@@ -30,10 +35,12 @@
   ],
   "devDependencies": {
     "@arethetypeswrong/cli": "0.13.3",
+    "@parcel/packager-ts": "2.10.3",
+    "@parcel/transformer-typescript-types": "2.10.3",
     "@types/react": "18.2.45",
+    "parcel": "2.10.3",
     "publint": "0.2.6",
     "react": "18.2.0",
-    "tsup": "8.0.1",
     "typescript": "5.3.3"
   },
   "peerDependencies": {
