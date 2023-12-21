@@ -1,0 +1,28 @@
+on:
+  push:
+
+name: Build and test library
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build library
+        run: bun run build
+      
+      - name: Run tests
+        run: bun run test
+
+      - name: Check types
+        run: bun run check:typescript
+
+      - name: Check configuration
+        run: bun run check:config
