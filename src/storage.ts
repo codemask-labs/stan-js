@@ -1,3 +1,6 @@
+/// <reference lib="dom" />
+/// <reference lib="dom.iterable" />
+
 import { Synchronizer } from './createStore'
 
 const isLocalStorageAvailable = () => {
