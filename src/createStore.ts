@@ -129,7 +129,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
             return {
                 ...acc,
-                [actionKey]: getAction(actionKey)
+                [actionKey]: getAction(key)
             }
         }, {} as { [K in keyof TState as ActionKey<K>]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
     }
