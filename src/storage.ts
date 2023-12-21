@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 
-import { Synchronizer } from './createStore'
+import { Synchronizer } from './types'
 
 const isLocalStorageAvailable = () => {
     // for SSR

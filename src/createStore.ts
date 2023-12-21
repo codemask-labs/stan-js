@@ -1,23 +1,7 @@
 import equal from 'fast-deep-equal'
 import { useMemo, useSyncExternalStore } from 'react'
-
-export type Synchronizer<T> = {
-    value: T,
-    subscribe: (update: (value: T) => void, key: string) => VoidFunction,
-    getSnapshot: (key: string) => T | Promise<T>,
-    update: (value: T, key: string) => void
-}
-
-const capitalize = (str: string) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`
-const isSynchronizer = (value: unknown): value is Synchronizer<unknown> => {
-    return typeof value === 'object' && value !== null && 'subscribe' in value && 'value' in value && 'update' in value && 'getSnapshot' in value
-}
-const optionalArray = <T>(arr: Array<T>, fallback: Array<T>) => arr.length > 0 ? arr : fallback
-const isPromise = <T>(value: unknown): value is Promise<T> => typeof value === 'object' && value !== null && 'then' in value
-
-type NonFunction = string | number | boolean | null | undefined | Array<NonFunction> | { [key: string]: any }
-type ActionKey<K> = `set${Capitalize<K & string>}`
-const getActionKey = <K>(key: K) => `set${capitalize(String(key))}` as ActionKey<K>
+import { getActionKey, isSynchronizer, isPromise, optionalArray } from './utils'
+import { NonFunction, Synchronizer, Actions, Dispatch } from './types'
 
 export const createStore = <TStateRaw extends Record<string, NonFunction>>(stateRaw: TStateRaw) => {
     type TState = { [K in keyof TStateRaw]: TStateRaw[K] extends Synchronizer<infer U> ? U : TStateRaw[K] }
@@ -26,7 +10,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
     const actions = storeKeys.reduce((acc, key) => ({
         ...acc,
-        [getActionKey(key)]: (value: TState[typeof key] | ((prevState: TState[typeof key]) => TState[typeof key])) => {
+        [getActionKey(key)]: (value: Dispatch<TState, typeof key>) => {
             if (typeof value === 'function') {
                 const fn = value as (prevState: TState[typeof key]) => TState[typeof key]
 
@@ -39,8 +23,8 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
             state[key] = value
             listeners[key].forEach(listener => listener(value))
         }
-    }), {} as { [K in keyof TState as ActionKey<K>]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
-    const getAction = (key: any) => actions[getActionKey(key)] as (value: unknown) => void
+    }), {} as Actions<TState>)
+    const getAction = <K extends keyof TState>(key: K) => actions[getActionKey(key)] as (value: unknown) => void
 
     const listeners = storeKeys.reduce((acc, key) => ({
         ...acc,
@@ -131,7 +115,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
                 ...acc,
                 [actionKey]: getAction(key)
             }
-        }, {} as { [K in keyof TState as ActionKey<K>]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void })
+        }, {} as Actions<TState>)
     }
 
     const useStore = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
