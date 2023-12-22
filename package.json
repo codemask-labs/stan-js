@@ -21,7 +21,7 @@
     }
   },
   "scripts": {
-    "postinstall": "rm -rf ./.husky && husky install && husky add .husky/pre-commit \"bun precommit\"",
+    "postinstall": "husky install",
     "precommit": "yarn test && dprint fmt && git add .",
     "prebuild": "rm -rf dist && rm -rf .parcel-cache",
     "build": "parcel build",
