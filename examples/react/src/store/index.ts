@@ -1,5 +1,5 @@
-import { createStore, storage } from '../../../../dist';
-import { sessionSync } from './sessionSync';
+import { createStore, storage } from '../../../../dist'
+import { sessionSync } from './sessionSync'
 
 const { useStore, actions, reset } = createStore({
     counter: 0,
@@ -8,7 +8,7 @@ const { useStore, actions, reset } = createStore({
 })
 
 export {
-    useStore,
     actions,
-    reset
+    reset,
+    useStore
 }

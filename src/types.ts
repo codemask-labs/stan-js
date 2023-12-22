@@ -1,8 +1,8 @@
 export type Synchronizer<T> = {
-  value: T,
-  subscribe: (update: (value: T) => void, key: string) => VoidFunction,
-  getSnapshot: (key: string) => T | Promise<T>,
-  update: (value: T, key: string) => void
+    value: T
+    subscribe: (update: (value: T) => void, key: string) => VoidFunction
+    getSnapshot: (key: string) => T | Promise<T>
+    update: (value: T, key: string) => void
 }
 
 export type NonFunction = string | number | boolean | null | undefined | Array<NonFunction> | { [key: string]: any }

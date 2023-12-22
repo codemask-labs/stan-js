@@ -11,7 +11,7 @@ const isLocalStorageAvailable = () => {
 
     try {
         window.localStorage
-        
+
         return true
     } catch {
         // if localStorage is disabled
@@ -24,24 +24,24 @@ const ssrSaveStorage = {
     setItem: (key: string, value: string) => {
         if (isLocalStorageAvailable()) {
             localStorage.setItem(key, value)
-            
+
             return
         }
-        
+
         mapStorage.set(key, value)
     },
     getItem: (key: string) => {
         if (isLocalStorageAvailable()) {
             return localStorage.getItem(key)
         }
-        
+
         return mapStorage.get(key)
     }
 }
 
-export function storage <T>(initialValue: T, localStorageKey?: string): Synchronizer<T>
-export function storage <T>(initialValue?: T, localStorageKey?: string): Synchronizer<T | undefined>
-export function storage <T>(initialValue: T, localStorageKey?: string) {
+export function storage<T>(initialValue: T, localStorageKey?: string): Synchronizer<T>
+export function storage<T>(initialValue?: T, localStorageKey?: string): Synchronizer<T | undefined>
+export function storage<T>(initialValue: T, localStorageKey?: string) {
     return {
         value: initialValue,
         subscribe: (update, key) => {
