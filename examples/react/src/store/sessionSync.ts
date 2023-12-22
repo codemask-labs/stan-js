@@ -35,6 +35,6 @@ export const sessionSync = <T>(initialValue: T) => {
             }
 
             return JSON.parse(value)
-        }
+        },
     } as Synchronizer<T>
 }

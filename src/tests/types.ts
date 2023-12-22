@@ -4,7 +4,7 @@ import { storage } from '../storage'
 
 const { useStore, getState, actions, reset } = createStore({
     counter: 0,
-    user: storage('john')
+    user: storage('john'),
 })
 
 type ExpectedStateKeys = 'counter' | 'user'

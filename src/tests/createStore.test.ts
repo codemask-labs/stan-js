@@ -5,7 +5,7 @@ describe('create', () => {
     it('should create store', () => {
         const store = createStore({
             count: 0,
-            text: 'test'
+            text: 'test',
         })
 
         expect(store).toBeDefined()
@@ -16,12 +16,12 @@ describe('state', () => {
     it('should return store state', () => {
         const { getState } = createStore({
             a: 0,
-            b: 'test'
+            b: 'test',
         })
 
         expect(getState()).toEqual({
             a: 0,
-            b: 'test'
+            b: 'test',
         })
     })
 })
@@ -30,7 +30,7 @@ describe('actions', () => {
     it('should update value in store', () => {
         const { getState, actions } = createStore({
             a: 0,
-            b: 'test'
+            b: 'test',
         })
 
         actions.setA(3)
@@ -38,7 +38,7 @@ describe('actions', () => {
 
         expect(getState()).toEqual({
             a: 3,
-            b: 'hmm'
+            b: 'hmm',
         })
     })
 })
@@ -47,7 +47,7 @@ describe('reset', () => {
     it('should reset whole store', () => {
         const initialState = {
             a: 0,
-            b: 'test'
+            b: 'test',
         }
         const { getState, actions, reset } = createStore(initialState)
 
@@ -56,7 +56,7 @@ describe('reset', () => {
 
         expect(getState()).toEqual({
             a: 3,
-            b: 'hmm'
+            b: 'hmm',
         })
 
         reset()
@@ -67,7 +67,7 @@ describe('reset', () => {
     it('should reset part of store', () => {
         const { getState, actions, reset } = createStore({
             a: 0,
-            b: 'test'
+            b: 'test',
         })
 
         actions.setA(3)
@@ -75,14 +75,14 @@ describe('reset', () => {
 
         expect(getState()).toEqual({
             a: 3,
-            b: 'hmm'
+            b: 'hmm',
         })
 
         reset('a')
 
         expect(getState()).toEqual({
             a: 0,
-            b: 'hmm'
+            b: 'hmm',
         })
     })
 })

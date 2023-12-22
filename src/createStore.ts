@@ -22,13 +22,13 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
             state[key] = value
             listeners[key].forEach(listener => listener(value))
-        }
+        },
     }), {} as Actions<TState>)
     const getAction = <K extends keyof TState>(key: K) => actions[getActionKey(key)] as (value: unknown) => void
 
     const listeners = storeKeys.reduce((acc, key) => ({
         ...acc,
-        [key]: []
+        [key]: [],
     }), {} as { [K in keyof TState]: Array<(newState: TState[K]) => void> })
 
     const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
@@ -53,13 +53,13 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
                     // Return initial value
                     return {
                         ...acc,
-                        [key]: value.value
+                        [key]: value.value,
                     }
                 }
 
                 return {
                     ...acc,
-                    [key]: snapshotValue
+                    [key]: snapshotValue,
                 }
             } catch {
                 // If getSnapshot throws, return initial value and set it in storage
@@ -67,14 +67,14 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
                 return {
                     ...acc,
-                    [key]: value.value
+                    [key]: value.value,
                 }
             }
         }
 
         return {
             ...acc,
-            [key]: value
+            [key]: value,
         }
     }, {}) as { [K in keyof TState]: TState[K] }
 
@@ -94,7 +94,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
         return () => {
             const newState = keys.reduce((acc, key) => ({
                 ...acc,
-                [key]: state[key]
+                [key]: state[key],
             }), {} as { [K in keyof TState]: TState[K] })
 
             if (equal(oldState, newState)) {
@@ -113,7 +113,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
             return {
                 ...acc,
-                [actionKey]: getAction(key)
+                [actionKey]: getAction(key),
             }
         }, {} as Actions<TState>)
     }
@@ -125,7 +125,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
         return {
             state,
-            actions
+            actions,
         }
     }
 
@@ -142,6 +142,6 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
         useStore,
         getState: () => state,
         actions,
-        reset
+        reset,
     }
 }
