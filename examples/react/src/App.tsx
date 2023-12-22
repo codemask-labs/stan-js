@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react'
-import { useStore, reset } from './store'
+import { reset, useStore } from './store'
 
 const Todos = () => {
     const [todo, setTodo] = useState('')
@@ -13,8 +13,8 @@ const Todos = () => {
             <button onClick={() => reset('todos')}>
                 Reset todos
             </button>
-            <br/>
-            <br/>
+            <br />
+            <br />
             {todos.map((todo, index) => (
                 <Fragment key={`${todo}-${index}`}>
                     <div>
@@ -23,22 +23,24 @@ const Todos = () => {
                             X
                         </button>
                     </div>
-                    <br/>
+                    <br />
                 </Fragment>
             ))}
-            <br/>
-            <form onSubmit={event => {
-                event.preventDefault()
+            <br />
+            <form
+                onSubmit={event => {
+                    event.preventDefault()
 
-                if (!todo) {
-                    return
-                }
-                setTodos(prev => [...prev, todo])
-                setTodo('')
-            }}>
+                    if (!todo) {
+                        return
+                    }
+                    setTodos(prev => [...prev, todo])
+                    setTodo('')
+                }}
+            >
                 <input value={todo} onChange={event => setTodo(event.target.value)} />
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <button type="submit">
                     Add todo
                 </button>
@@ -59,7 +61,7 @@ export const App = () => {
                 count is {counter}
             </button>
             <hr />
-            <Todos />        
+            <Todos />
         </>
     )
 }

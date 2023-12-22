@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'bun:test'
-import { createStore } from '..';
+import { describe, expect, it } from 'bun:test'
+import { createStore } from '..'
 
 describe('create', () => {
     it('should create store', () => {
@@ -7,7 +7,7 @@ describe('create', () => {
             count: 0,
             text: 'test'
         })
-    
+
         expect(store).toBeDefined()
     })
 })
@@ -64,7 +64,7 @@ describe('reset', () => {
         expect(getState()).toEqual(initialState)
     })
 
-    it ('should reset part of store', () => {
+    it('should reset part of store', () => {
         const { getState, actions, reset } = createStore({
             a: 0,
             b: 'test'

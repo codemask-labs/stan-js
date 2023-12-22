@@ -3,20 +3,20 @@ import { createStore } from '../createStore'
 import { storage } from '../storage'
 
 const { useStore, getState, actions, reset } = createStore({
-  counter: 0,
-  user: storage('john')
+    counter: 0,
+    user: storage('john')
 })
 
 type ExpectedStateKeys = 'counter' | 'user'
 
 type ExpectedStateValues = {
-  counter: number
-  user: string
+    counter: number
+    user: string
 }
 
 type ExpectedActions = {
-  setCounter: (value: number | ((prevState: number) => number)) => void
-  setUser: (value: string | ((prevState: string) => string)) => void
+    setCounter: (value: number | ((prevState: number) => number)) => void
+    setUser: (value: string | ((prevState: string) => string)) => void
 }
 
 type ResetKeys = Parameters<typeof reset>[number]

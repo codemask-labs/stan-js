@@ -1,7 +1,7 @@
 import equal from 'fast-deep-equal'
 import { useMemo, useSyncExternalStore } from 'react'
-import { getActionKey, isSynchronizer, isPromise, optionalArray } from './utils'
-import { NonFunction, Synchronizer, Actions, Dispatch } from './types'
+import { Actions, Dispatch, NonFunction, Synchronizer } from './types'
+import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
 
 export const createStore = <TStateRaw extends Record<string, NonFunction>>(stateRaw: TStateRaw) => {
     type TState = { [K in keyof TStateRaw]: TStateRaw[K] extends Synchronizer<infer U> ? U : TStateRaw[K] }
@@ -28,7 +28,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
 
     const listeners = storeKeys.reduce((acc, key) => ({
         ...acc,
-        [key]: [],
+        [key]: []
     }), {} as { [K in keyof TState]: Array<(newState: TState[K]) => void> })
 
     const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
