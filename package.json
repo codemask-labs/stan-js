@@ -22,7 +22,7 @@
   },
   "scripts": {
     "postinstall": "husky install",
-    "precommit": "yarn test && dprint fmt && git add .",
+    "precommit": "bun test && dprint fmt && git add .",
     "prebuild": "rm -rf dist && rm -rf .parcel-cache",
     "build": "parcel build",
     "build:watch": "parcel watch",
