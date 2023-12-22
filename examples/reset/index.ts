@@ -2,7 +2,7 @@ import { createStore } from '../../dist'
 
 const { getState, actions: { setStateA, setStateB }, reset } = createStore({
     stateA: 0,
-    stateB: 'A'
+    stateB: 'A',
 })
 
 console.log(getState())

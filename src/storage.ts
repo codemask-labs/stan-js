@@ -36,7 +36,7 @@ const ssrSaveStorage = {
         }
 
         return mapStorage.get(key)
-    }
+    },
 }
 
 export function storage<T>(initialValue: T, localStorageKey?: string): Synchronizer<T>
@@ -84,6 +84,6 @@ export function storage<T>(initialValue: T, localStorageKey?: string) {
             }
 
             return JSON.parse(value)
-        }
+        },
     } as Synchronizer<T>
 }

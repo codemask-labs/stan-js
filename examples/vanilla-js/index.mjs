@@ -1,7 +1,7 @@
 import { createStore } from '../../dist/index.mjs'
 
 const { actions: { setCount }, getState } = createStore({
-    count: 0
+    count: 0,
 })
 
 console.log(getState().count)

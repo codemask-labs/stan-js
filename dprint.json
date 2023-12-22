@@ -3,10 +3,12 @@
     "lineWidth": 150,
     "indentWidth": 4,
     "semiColons": "asi",
-    "quoteStyle": "preferSingle",
-    "trailingCommas": "never",
+    "quoteStyle": "alwaysSingle",
+    "trailingCommas": "onlyMultiLine",
     "preferSingleLine": false,
-    "jsx.quoteStyle": "preferDouble"
+    "jsx.quoteStyle": "preferDouble",
+    "constructorType.spaceAfterNewKeyword": true,
+    "constructSignature.spaceAfterNewKeyword": true
   },
   "json": {
   },
