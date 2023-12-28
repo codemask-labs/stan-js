@@ -29,6 +29,7 @@
     "postbuild": "cp dist/index.d.ts dist/index.d.mts",
     "check:config": "attw --pack . && publint",
     "check:typescript": "tsc --noEmit",
+    "test": "jest",
     "coverage": "jest --coverage && make-coverage-badge --output-path ./badge.svg"
   },
   "author": "@codemaskinc",
