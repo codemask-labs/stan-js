@@ -16,7 +16,7 @@
     "declaration": true,
     "declarationMap": true,
     "lib": ["es2022", "dom", "dom.iterable"],
-    "types": ["bun-types"]
+    "types": ["bun-types", "jest"]
   },
   "include": ["src"]
 }

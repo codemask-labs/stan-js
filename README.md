@@ -1,3 +1,5 @@
+![](./badge.svg)
+
 ## Features
 - ⚛️ updates outside react components
 - 🪝 easy access to all store values
