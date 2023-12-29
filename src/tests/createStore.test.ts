@@ -1,5 +1,9 @@
 import { renderHook } from '@testing-library/react'
+import { describe, expect, it } from 'bun:test'
 import { createStore, storage } from '..'
+
+/// <reference lib="dom" />
+/// <reference lib="dom.iterable" />
 
 describe('create', () => {
     it('should create store', () => {
@@ -36,7 +40,8 @@ describe('actions', () => {
 
         actions.setA(3)
         actions.setB('hmm')
-        actions.setC(jest.fn)
+        // @ts-ignore
+        actions.setC(() => 1)
         // todo uncomment when typo fixed
         // actions.setC(() => 2)
 

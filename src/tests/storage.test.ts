@@ -1,10 +1,11 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 
+import { describe, expect, it, spyOn } from 'bun:test'
 import { isLocalStorageAvailable, storage } from '../storage'
 
 describe('isLocalStorageAvailable', () => {
-    const windowStub = jest.spyOn(window, 'window', 'get')
+    const windowStub = spyOn(window, 'window')
 
     it('should return false', () => {
         // @ts-ignore
