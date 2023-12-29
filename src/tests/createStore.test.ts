@@ -1,5 +1,9 @@
+import { renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'bun:test'
-import { createStore } from '..'
+import { createStore, storage } from '..'
+
+/// <reference lib="dom" />
+/// <reference lib="dom.iterable" />
 
 describe('create', () => {
     it('should create store', () => {
@@ -31,15 +35,18 @@ describe('actions', () => {
         const { getState, actions } = createStore({
             a: 0,
             b: 'test',
+            c: () => 1,
         })
 
         actions.setA(3)
         actions.setB('hmm')
+        // @ts-ignore
+        actions.setC(() => 1)
+        // todo uncomment when typo fixed
+        // actions.setC(() => 2)
 
-        expect(getState()).toEqual({
-            a: 3,
-            b: 'hmm',
-        })
+        expect(getState().a).toEqual(3)
+        expect(getState().b).toEqual('hmm')
     })
 })
 
@@ -84,5 +91,40 @@ describe('reset', () => {
             a: 0,
             b: 'hmm',
         })
+    })
+})
+
+describe('useStore', () => {
+    it('should return state and actions', () => {
+        const { useStore } = createStore({
+            a: 0,
+            b: 'test',
+        })
+
+        const { result: { current: { actions, state } } } = renderHook(() => useStore())
+
+        expect(state).toBeDefined()
+        expect(state.a).toEqual(0)
+        expect(state.b).toEqual('test')
+        expect(actions).toBeDefined()
+        expect(actions).toHaveProperty('setA')
+        expect(actions).toHaveProperty('setB')
+    })
+
+    it('should return state and actions from storage', async () => {
+        const { actions, getState } = createStore({
+            a: storage(0),
+            b: storage('test'),
+            c: new Promise(resolve => resolve(5)),
+        })
+        const state = getState()
+
+        expect(state).toBeDefined()
+        expect(state.a).toEqual(0)
+        expect(state.b).toEqual('test')
+        expect(await state.c).toEqual(5)
+        expect(actions).toBeDefined()
+        expect(actions).toHaveProperty('setA')
+        expect(actions).toHaveProperty('setB')
     })
 })

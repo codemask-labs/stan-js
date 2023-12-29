@@ -3,7 +3,7 @@
 
 import { Synchronizer } from './types'
 
-const isLocalStorageAvailable = () => {
+export const isLocalStorageAvailable = () => {
     // for SSR
     if (typeof window === 'undefined') {
         return false

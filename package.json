@@ -38,15 +38,17 @@
   ],
   "devDependencies": {
     "@arethetypeswrong/cli": "0.13.3",
+    "@happy-dom/global-registrator": "12.10.3",
     "@parcel/packager-ts": "2.10.3",
     "@parcel/transformer-typescript-types": "2.10.3",
+    "@testing-library/react": "14.1.2",
+    "@types/node": "20.10.5",
     "@types/react": "18.2.45",
     "bun-types": "1.0.18-1",
     "dprint": "0.44.0",
     "husky": "8.0.3",
     "parcel": "2.10.3",
     "publint": "0.2.6",
-    "react": "18.2.0",
     "type-testing": "0.2.0",
     "typescript": "5.3.3"
   },
