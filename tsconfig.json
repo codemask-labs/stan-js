@@ -10,7 +10,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "moduleResolution": "Node",
-    "module": "ESNext",
+    "module": "CommonJS",
     "outDir": "dist",
     "sourceMap": true,
     "declaration": true,
