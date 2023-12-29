@@ -28,7 +28,8 @@
     "build:watch": "parcel watch",
     "postbuild": "cp dist/index.d.ts dist/index.d.mts",
     "check:config": "attw --pack . && publint",
-    "check:typescript": "tsc --noEmit"
+    "check:typescript": "tsc --noEmit",
+    "test": "bun test"
   },
   "author": "@codemaskinc",
   "license": "MIT",
