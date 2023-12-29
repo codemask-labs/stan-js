@@ -9,14 +9,14 @@
     "isolatedModules": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Node",
     "module": "NodeNext",
     "outDir": "dist",
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
     "lib": ["es2022", "dom", "dom.iterable"],
-    "types": ["bun-types"]
+    "types": ["@types/bun"]
   },
   "include": ["src"]
 }
