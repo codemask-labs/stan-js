@@ -1,6 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="dom.iterable" />
-
 import { Synchronizer } from './types'
 
 const isLocalStorageAvailable = () => {
