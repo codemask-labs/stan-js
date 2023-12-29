@@ -46,7 +46,6 @@
     "bun-types": "1.0.18-1",
     "dprint": "0.44.0",
     "husky": "8.0.3",
-    "make-coverage-badge": "1.2.0",
     "parcel": "2.10.3",
     "publint": "0.2.6",
     "type-testing": "0.2.0",
