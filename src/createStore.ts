@@ -13,9 +13,10 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
         [getActionKey(key)]: (value: Dispatch<TState, typeof key>) => {
             if (typeof value === 'function') {
                 const fn = value as (prevState: TState[typeof key]) => TState[typeof key]
+                const newValue = fn(state[key])
 
-                state[key] = fn(state[key])
-                listeners[key].forEach(listener => listener(fn(state[key])))
+                state[key] = newValue
+                listeners[key].forEach(listener => listener(newValue))
 
                 return
             }
@@ -121,7 +122,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
     const useStore = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
         const getSnapshot = useMemo(() => getState(optionalArray(keys, storeKeys)), [])
         const actions = useMemo(() => getActions(optionalArray(keys, storeKeys)), [])
-        const state = useSyncExternalStore(subscribe(optionalArray(keys, storeKeys)), getSnapshot)
+        const state = useSyncExternalStore(subscribe(optionalArray(keys, storeKeys)), getSnapshot, getSnapshot)
 
         return {
             state,
@@ -138,10 +139,19 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
         })
     }
 
+    const effect = <TKeys extends Array<keyof TState>>(run: (state: TState) => void, deps: [...TKeys]) => {
+        run(getState(storeKeys)())
+
+        return subscribe(deps)(() => {
+            run(getState(storeKeys)())
+        })
+    }
+
     return {
         useStore,
         getState: () => state,
         actions,
         reset,
+        effect,
     }
 }

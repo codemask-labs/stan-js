@@ -36,6 +36,7 @@ describe('actions', () => {
             a: 0,
             b: 'test',
             c: () => 1,
+            d: storage(0),
         })
 
         actions.setA(3)
@@ -44,9 +45,14 @@ describe('actions', () => {
         actions.setC(() => 1)
         // todo uncomment when typo fixed
         // actions.setC(() => 2)
+        actions.setD(prev => prev + 1)
 
-        expect(getState().a).toEqual(3)
-        expect(getState().b).toEqual('hmm')
+        const { a, b, d } = getState()
+
+        expect(a).toEqual(3)
+        expect(b).toEqual('hmm')
+        expect(d).toEqual(1)
+        expect(window.localStorage.getItem('d')).toEqual('1')
     })
 })
 
