@@ -142,7 +142,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
     const effect = <TKeys extends Array<keyof TState>>(run: (state: TState) => void, deps: [...TKeys]) => {
         run(getState(storeKeys)())
 
-        subscribe(deps)(() => {
+        return subscribe(deps)(() => {
             run(getState(storeKeys)())
         })
     }
