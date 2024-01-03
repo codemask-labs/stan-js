@@ -108,8 +108,8 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
         }
     }
 
-    const getActions = <TKeys extends Array<keyof TState>>(keys: TKeys) => {
-        return keys.reduce((acc, key) => {
+    const getActions = <TKeys extends Array<keyof TState>>(keys: TKeys) =>
+        keys.reduce((acc, key) => {
             const actionKey = getActionKey(key)
 
             return {
@@ -117,7 +117,6 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
                 [actionKey]: getAction(key),
             }
         }, {} as Actions<TState>)
-    }
 
     const useStore = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
         const getSnapshot = useMemo(() => getState(optionalArray(keys, storeKeys)), [])
