@@ -1,7 +1,7 @@
 import equal from 'fast-deep-equal'
 import { useMemo } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
-import { Actions, Dispatch, NonFunction, Synchronizer } from './types'
+import { Actions, Dispatch, NonFunction, PickState, Synchronizer } from './types'
 import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
 
 export const createStore = <TStateRaw extends Record<string, NonFunction>>(stateRaw: TStateRaw) => {
@@ -91,13 +91,14 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
     }
 
     const getState = <TKeys extends Array<keyof TState>>(keys: TKeys) => {
-        let oldState: { [K in keyof TState]: TState[K] }
+        type State = PickState<TState, TKeys[number]>
+        let oldState: State
 
         return () => {
             const newState = keys.reduce((acc, key) => ({
                 ...acc,
                 [key]: state[key],
-            }), {} as { [K in keyof TState]: TState[K] })
+            }), {}) as State
 
             if (equal(oldState, newState)) {
                 return oldState
@@ -117,12 +118,14 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
                 ...acc,
                 [actionKey]: getAction(key),
             }
-        }, {} as Actions<TState>)
+        }, {} as Actions<PickState<TState, TKeys[number]>>)
 
     const useStore = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
-        const getSnapshot = useMemo(() => getState(optionalArray(keys, storeKeys)), [])
-        const actions = useMemo(() => getActions(optionalArray(keys, storeKeys)), [])
-        const state = useSyncExternalStore(subscribe(optionalArray(keys, storeKeys)), getSnapshot, getSnapshot)
+        type Keys = (TKeys extends [] ? Array<keyof TState> : TKeys)[number]
+
+        const getSnapshot = useMemo(() => getState(optionalArray<Keys>(keys, storeKeys)), [])
+        const actions = useMemo(() => getActions(optionalArray<Keys>(keys, storeKeys)), [])
+        const state = useSyncExternalStore(subscribe(optionalArray<Keys>(keys, storeKeys)), getSnapshot, getSnapshot)
 
         return {
             state,

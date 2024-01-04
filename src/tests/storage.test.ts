@@ -1,6 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="dom.iterable" />
-
 import { describe, expect, it, spyOn } from 'bun:test'
 import { isLocalStorageAvailable, storage } from '../storage'
 

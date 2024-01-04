@@ -33,3 +33,7 @@ export type ExpectedUseStoreActionsTest = Expect<Equal<UseStoreActions, Expected
 
 type UseStoreState = ReturnType<typeof useStore>['state']
 export type ExpectedUseStoreStateTest = Expect<Equal<UseStoreState, ExpectedStateValues>>
+
+const partial = useStore('counter')
+export type ExpectedUseStorePartialStateTest = Expect<Equal<typeof partial['state'], Pick<ExpectedStateValues, 'counter'>>>
+export type ExpectedUseStorePartialActionsTest = Expect<Equal<typeof partial['actions'], Pick<ExpectedActions, 'setCounter'>>>
