@@ -46,6 +46,7 @@
     "@types/bun": "1.0.0",
     "@types/node": "20.10.5",
     "@types/react": "18.2.45",
+    "@types/use-sync-external-store": "^0.0.6",
     "@types/web": "0.0.131",
     "@typescript-eslint/eslint-plugin": "6.17.0",
     "@typescript-eslint/eslint-plugin-tslint": "6.17.0",
@@ -73,6 +74,7 @@
     "react": ">=18.2.0"
   },
   "dependencies": {
-    "fast-deep-equal": "3.1.3"
+    "fast-deep-equal": "3.1.3",
+    "use-sync-external-store": "^1.2.0"
   }
 }

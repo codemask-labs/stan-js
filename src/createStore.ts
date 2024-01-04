@@ -1,5 +1,6 @@
 import equal from 'fast-deep-equal'
-import { useMemo, useSyncExternalStore } from 'react'
+import { useMemo } from 'react'
+import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { Actions, Dispatch, NonFunction, Synchronizer } from './types'
 import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
 
