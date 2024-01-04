@@ -2,9 +2,6 @@ import { renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'bun:test'
 import { createStore, storage } from '..'
 
-/// <reference lib="dom" />
-/// <reference lib="dom.iterable" />
-
 describe('create', () => {
     it('should create store', () => {
         const store = createStore({
@@ -132,5 +129,16 @@ describe('useStore', () => {
         expect(actions).toBeDefined()
         expect(actions).toHaveProperty('setA')
         expect(actions).toHaveProperty('setB')
+    })
+
+    it('should return partial state', () => {
+        const { useStore } = createStore({
+            a: 0,
+            b: 'test',
+        })
+
+        const { result: { current: { state } } } = renderHook(() => useStore('a'))
+
+        expect(state).toStrictEqual({ a: 0 })
     })
 })
