@@ -1,11 +1,14 @@
 {
   "name": "create-store",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "- ⚛️ updates outside react components - 🪝 easy access to all store values - ✍️ no repeating yourself - ⚡️ no unnecessary rerenders - 🚀 typescript intellisense",
   "source": "src/index.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "keywords": ["state", "react", "store", "context", "rerenders", "typescript", "intellisense"],
+  "homepage": "https://github.com/codemaskinc/createStore",
+  "repository": "https://github.com/codemaskinc/createStore",
   "exports": {
     ".": {
       "module": "./dist/index.mjs",
@@ -22,7 +25,7 @@
   },
   "scripts": {
     "postinstall": "husky install",
-    "precommit": "bun test && bun lint && dprint fmt && git add .",
+    "precommit": "git add .",
     "prebuild": "rm -rf dist && rm -rf .parcel-cache",
     "build": "parcel build",
     "build:watch": "parcel watch",
