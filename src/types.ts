@@ -9,3 +9,4 @@ export type NonFunction = string | number | boolean | null | undefined | Array<N
 export type ActionKey<K> = `set${Capitalize<K & string>}`
 export type Actions<TState extends object> = { [K in keyof TState as ActionKey<K>]: (value: Dispatch<TState, K> & {}) => void } & {}
 export type Dispatch<TState extends object, Keys extends keyof TState> = TState[Keys] | ((prevState: TState[Keys]) => TState[Keys])
+export type PickState<TState extends object, TKeys extends keyof TState> = { [K in TKeys]: TState[K] } & {}

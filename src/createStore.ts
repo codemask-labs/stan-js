@@ -1,7 +1,7 @@
 import equal from 'fast-deep-equal'
 import { useMemo } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
-import { Actions, Dispatch, NonFunction, Synchronizer } from './types'
+import { Actions, Dispatch, NonFunction, PickState, Synchronizer } from './types'
 import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
 
 export const createStore = <TStateRaw extends Record<string, NonFunction>>(stateRaw: TStateRaw) => {
@@ -91,7 +91,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
     }
 
     const getState = <TKeys extends Array<keyof TState>>(keys: TKeys) => {
-        type State = { [K in TKeys[number]]: TState[K] } & {}
+        type State = PickState<TState, TKeys[number]>
         let oldState: State
 
         return () => {
@@ -118,7 +118,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
                 ...acc,
                 [actionKey]: getAction(key),
             }
-        }, {} as Actions<{ [K in TKeys[number]]: TState[K] }>)
+        }, {} as Actions<PickState<TState, TKeys[number]>>)
 
     const useStore = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
         type Keys = (TKeys extends [] ? Array<keyof TState> : TKeys)[number]
