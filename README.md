@@ -1,108 +1,99 @@
+## Overview
+
+`@codemaskinc/store` is a lightweight and flexible state management library designed for use in React applications and beyond. It simplifies the process of managing state in your application by providing a simple `createStore` function that seamlessly integrates with React's built-in API, `useSyncExternalStore`. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
+
 ## Features
-- ⚛️ updates outside react components
-- 🪝 easy access to all store values
-- ✍️ no repeating yourself
-- ⚡️ no unnecessary rerenders
-- 🚀 typescript intellisense
 
-## Motivation
-[Zustand](https://github.com/pmndrs/zustand) is great, but you must write your own types for all stores (state, methods, etc.)
---- ---
-[Jotai](https://jotai.org/) is also great, but you would most likely end up creating close to identical code for each store
+- ✍️ **Simplicity:** Easily create and manage stores with a simple `createStore` function. Avoids the redundancy often encountered in Jotai, where similar code is replicated across different stores.
+- ⚛️ **React Integration:** Seamlessly use the stores in your React components with the help of `useSyncExternalStore`.
+- 🚀 **TypeScript Support:** Benefit from TypeScript magic for type-safe state and methods without the need for manual type definitions. Eliminates the complexity of writing your own types for state and methods as required in Zustand.
+- ⚡️ **Performance:** Utilizes `fast-deep-equal` for efficient state comparison, ensuring minimal re-renders and optimal performance.
 
-``([a, setA] = useAtom(aAtom), [b, setB] = useAtom(bAtom))``
---- ---
+## Installation
 
-This simple createStore function solves all of those problems, using simple built in react api [useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore), [fast-deep-equal](https://www.npmjs.com/package/fast-deep-equal) and some typescript magic 🪄
+Install package using preferred package manager:
 
-## Example usage
+```bash
+npm install @codemaskinc/store
+# or
+yarn add @codemaskinc/store
+# or
+bun add @codemaskinc/store
+```
 
-```tsx
-import { storage, createStore } from './store'
+## Getting Started
+
+1. Create a store with initial state:
+
+```typescript
+import { createStore } from '@codemaskinc/store';
 
 const { useStore } = createStore({
-    key1: 'value1',
-    key2: storage('value2')
-})
+    count: 0,
+});
+```
 
-const A = () => {
-    const { state, actions } = useStore('key1')
+3. Use the returned hook in your React component:
 
-    return <input value={state.hello} onChange={event => actions.setHello(event.target.value)} />
-}
-
-const B = () => {
-    const { state, actions } = useStore('key1', 'key2')
-
-    console.log(state.key1) // listens on value change
-
-    return <input value={state.key2} onChange={event => actions.setKey2(event.target.value)} />
-}
+```typescript
+import { useStore } from './someStoreInYourApp';
 
 const App = () => {
+    const { state: { count }, actions: { setCount } } = useStore();
+
     return (
-        <>
-            <A />
-            <br/>
-            <B />
-        </>
-    )
-}
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => setCount(prev => prev + 1)}>Increment</button>
+            <button onClick={() => setCount(prev => prev - 1)}>Decrement</button>
+        </div>
+    );
+};
 ```
 
-## createStore
+## Examples
 
-It takes object which is initial state of the store and returns:
+Access only part of state in store:
 
-### useStore
-Hook that allows to subscribe and update given properties of store, based on keys which you pass into it
+```typescript
+import { createStore } from '@codemaskinc/store';
 
-```ts
-const { useStore } = createStore({ test: 'some value' })
-```
-
-### getState
-Returns current state of the store
-
-```ts
-const { getState } = createStore({ test: 'some value' })
-
-console.log(getState().test) // "some value"
-```
-
-### actions
-Object that contains of all actions to update store properties
-
-```ts
-const { getState, actions } = createStore({ test: 'some value' })
-
-console.log(getState().test) // "some value"
-actions.setTest('hello world')
-console.log(getState().test) // "hello world"
-```
-
-## storage
-
-Allows to synchronize store with localStorage
-
-```ts
 const { useStore } = createStore({
-    hello: storage<string>(), // string | undefined
-    test: storage('value'),
-    user: storage<User | null>(null, 'STORAGE_USER')
-})
+    firstName: 'John',
+    lastName: 'Smith',
+    age: 30
+});
+
+const App = () => {
+    const {
+        state: { firstName, age },
+        actions: { setFirstName, setAge }
+    } = useStore('firstName', 'age');
+
+    return (
+        <div>
+            <p>Name: {firstName}</p>
+            <input
+                type="text"
+                value={firstName}
+                onChange={event => setFirstName(event.currentTarget.value)}
+            />
+            <p>Age: {age}</p>
+            <input
+                type="number"
+                value={age}
+                onChange={event => setAge(event.currentTarget.value)}
+            />
+        </div>
+    );
+};
 ```
-It takes two parameters, both are optional - ``initialValue`` and ``storageKey``
 
-If you want pass storageKey into it, it will use the key that you've used as its name in initial store value (👆 hello and world are examples of that)
+### Synchronizer
 
-## Synchronizer
+Synchronizer is util that allows you to synchronize store with some external object like localStorage, database, device storage etc.
 
-Synchronizer is util that allows to synchronize store with something external localStorage, database, device storage etc.
-
-[storage](#storage) is example of it
-
-```ts
+```typescript
 type Synchronizer<T> = {
     value: T,
     subscribe: (update: (value: T) => void, key: string) => VoidFunction,
@@ -111,3 +102,5 @@ type Synchronizer<T> = {
     update: (value: T, key: string) => void
 }
 ```
+
+You can find sample `Synchronizer` implementation for localStorage [here](https://github.com/codemaskinc/createStore/blob/main/src/storage.ts)
