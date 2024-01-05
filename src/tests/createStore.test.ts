@@ -13,11 +13,13 @@ describe('create', () => {
     })
 
     it('should throw an error when function is passed', () => {
-        expect(createStore({
-            a: 0,
-            // @ts-expect-error
-            b: () => {},
-        })).toThrow()
+        expect(() =>
+            createStore({
+                a: 0,
+                // @ts-expect-error
+                b: () => {},
+            })
+        ).toThrow('Function cannot be passed as top level state value')
     })
 })
 
@@ -52,7 +54,7 @@ describe('actions', () => {
         expect(a).toEqual(3)
         expect(b).toEqual('hmm')
         expect(c).toEqual(1)
-        expect(window.localStorage.getItem('d')).toEqual('1')
+        expect(window.localStorage.getItem('c')).toEqual('1')
     })
 })
 
