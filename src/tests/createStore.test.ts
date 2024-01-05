@@ -11,6 +11,16 @@ describe('create', () => {
 
         expect(store).toBeDefined()
     })
+
+    it('should throw an error when function is passed', () => {
+        expect(() =>
+            createStore({
+                a: 0,
+                // @ts-expect-error
+                b: () => {},
+            })
+        ).toThrow('Function cannot be passed as top level state value')
+    })
 })
 
 describe('state', () => {
@@ -32,24 +42,19 @@ describe('actions', () => {
         const { getState, actions } = createStore({
             a: 0,
             b: 'test',
-            c: () => 1,
-            d: storage(0),
+            c: storage(0),
         })
 
         actions.setA(3)
         actions.setB('hmm')
-        // @ts-ignore
-        actions.setC(() => 1)
-        // todo uncomment when typo fixed
-        // actions.setC(() => 2)
-        actions.setD(prev => prev + 1)
+        actions.setC(prev => prev + 1)
 
-        const { a, b, d } = getState()
+        const { a, b, c } = getState()
 
         expect(a).toEqual(3)
         expect(b).toEqual('hmm')
-        expect(d).toEqual(1)
-        expect(window.localStorage.getItem('d')).toEqual('1')
+        expect(c).toEqual(1)
+        expect(window.localStorage.getItem('c')).toEqual('1')
     })
 })
 
