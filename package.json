@@ -1,6 +1,6 @@
 {
-  "name": "create-store",
-  "version": "0.1.0",
+  "name": "@codemaskinc/store",
+  "version": "0.1.2",
   "description": "- ⚛️ updates outside react components - 🪝 easy access to all store values - ✍️ no repeating yourself - ⚡️ no unnecessary rerenders - 🚀 typescript intellisense",
   "source": "src/index.ts",
   "main": "./dist/index.js",
@@ -36,6 +36,12 @@
     "lint": "eslint -c .eslintrc.js --ext .ts,.tsx src"
   },
   "author": "@codemaskinc",
+  "publishConfig": {
+    "access": "public",
+    "ignore": [
+      "dist/*.map*"
+    ]
+  },
   "license": "MIT",
   "files": [
     "dist"
