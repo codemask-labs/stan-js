@@ -1,10 +1,10 @@
 import equal from 'fast-deep-equal'
 import { useMemo } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
-import { Actions, Dispatch, NonFunction, PickState, Synchronizer } from './types'
+import { Actions, Dispatch, InitialState, PickState, Synchronizer } from './types'
 import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
 
-export const createStore = <TStateRaw extends Record<string, NonFunction>>(stateRaw: TStateRaw) => {
+export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TStateRaw>) => {
     type TState = { [K in keyof TStateRaw]: TStateRaw[K] extends Synchronizer<infer U> ? U : TStateRaw[K] }
 
     const storeKeys = Object.keys(stateRaw) as Array<keyof TState>
@@ -26,6 +26,8 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
             listeners[key].forEach(listener => listener(value))
         },
     }), {} as Actions<TState>)
+
+    // @ts-expect-error
     const getAction = <K extends keyof TState>(key: K) => actions[getActionKey(key)] as (value: unknown) => void
 
     const listeners = storeKeys.reduce((acc, key) => ({
@@ -34,8 +36,12 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
     }), {} as { [K in keyof TState]: Array<(newState: TState[K]) => void> })
 
     const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
+        if (typeof value === 'function') {
+            throw new Error('Function cannot be passed as top level state value')
+        }
+
         if (isSynchronizer(value)) {
-            value.subscribe(getAction(key), key)
+            value.subscribe(getAction(key as keyof TStateRaw), key)
             listeners[key as keyof TState].push(newValue => value.update(newValue, key))
 
             try {
@@ -44,7 +50,7 @@ export const createStore = <TStateRaw extends Record<string, NonFunction>>(state
                 if (isPromise(snapshotValue)) {
                     snapshotValue.then(snapshotValue => {
                         if (snapshotValue !== undefined && snapshotValue !== null) {
-                            getAction(key)(snapshotValue)
+                            getAction(key as keyof TStateRaw)(snapshotValue)
 
                             return
                         }
