@@ -24,7 +24,7 @@
     }
   },
   "scripts": {
-    "postinstall": "husky install",
+    "prepare": "husky install",
     "precommit": "bun test && bun lint && dprint fmt && git add .",
     "prebuild": "rm -rf dist && rm -rf .parcel-cache",
     "build": "parcel build",
