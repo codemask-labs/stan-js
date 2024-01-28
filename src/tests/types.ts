@@ -5,18 +5,21 @@ import { storage } from '../storage'
 const { useStore, getState, actions, reset } = createStore({
     counter: 0,
     user: storage('john'),
+    nullable: null as string | null,
 })
 
-type ExpectedStateKeys = 'counter' | 'user'
+type ExpectedStateKeys = 'counter' | 'user' | 'nullable'
 
 type ExpectedStateValues = {
     counter: number
     user: string
+    nullable: string | null
 }
 
 type ExpectedActions = {
     setCounter: (value: number | ((prevState: number) => number)) => void
     setUser: (value: string | ((prevState: string) => string)) => void
+    setNullable: (value: string | null | ((prevState: string | null) => string | null)) => void
 }
 
 type ResetKeys = Parameters<typeof reset>[number]
