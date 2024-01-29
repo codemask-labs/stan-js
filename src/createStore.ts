@@ -1,5 +1,5 @@
 import equal from 'fast-deep-equal'
-import { useMemo } from 'react'
+import { FC, PropsWithChildren, useMemo } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { Actions, Dispatch, InitialState, PickState, Synchronizer } from './types'
 import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
@@ -156,11 +156,33 @@ export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TSt
         })
     }
 
+    const HydrateStore: FC<PropsWithChildren<{ hydrateState: Partial<TState> }>> = ({
+        hydrateState,
+        children,
+    }) => {
+        Object.entries(hydrateState).forEach(([key, value]) => {
+            getAction(key as keyof TState)(value)
+
+            const initialState = stateRaw[key as keyof TStateRaw]
+
+            if (isSynchronizer(initialState)) {
+                initialState.value = value
+
+                return
+            }
+
+            stateRaw[key as keyof TStateRaw] = value as any
+        })
+
+        return children
+    }
+
     return {
         useStore,
         getState: () => state,
         actions,
         reset,
         effect,
+        HydrateStore,
     }
 }
