@@ -96,8 +96,8 @@ export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TSt
         }
     }
 
-    const getState = <TKeys extends Array<keyof TState>>(keys: TKeys) => {
-        type State = PickState<TState, TKeys[number]>
+    const getState = <TKeys extends keyof TState>(keys: Array<TKeys>) => {
+        type State = { [K in TKeys]: TState[K] } & {}
         let oldState: State
 
         return () => {
