@@ -6,8 +6,10 @@ export type Synchronizer<T> = {
 }
 
 export type ActionKey<K> = `set${Capitalize<K & string>}`
-export type Actions<TState extends object> = { [K in keyof TState as ActionKey<K>]: (value: Dispatch<TState, K> & {}) => void } & {}
-export type Dispatch<TState extends object, Keys extends keyof TState> = TState[Keys] | ((prevState: TState[Keys]) => TState[Keys])
+export type Actions<TState extends object> =
+    & { [K in keyof TState as ActionKey<K>]: (value: TState[K] | ((prevState: TState[K]) => TState[K])) => void }
+    & {}
+export type Dispatch<TState extends object, TKeys extends keyof TState> = TState[TKeys] | ((prevState: TState[TKeys]) => TState[TKeys])
 export type PickState<TState extends object, TKeys extends keyof TState> = { [K in TKeys]: TState[K] } & {}
 
 type IsFunction<T> = T extends Function ? true : false
