@@ -162,6 +162,7 @@ export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TSt
 
             return dispose
         }, [])
+    }
 
     const HydrateStore: FC<PropsWithChildren<{ hydrateState: Partial<TState> }>> = ({
         hydrateState,
