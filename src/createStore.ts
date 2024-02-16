@@ -1,5 +1,5 @@
 import equal from 'fast-deep-equal'
-import { FC, PropsWithChildren, useMemo } from 'react'
+import { FC, PropsWithChildren, useEffect, useMemo } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
 import { Actions, Dispatch, InitialState, PickState, Synchronizer } from './types'
 import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
@@ -41,7 +41,7 @@ export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TSt
         }
 
         if (isSynchronizer(value)) {
-            value.subscribe(getAction(key as keyof TStateRaw), key)
+            value.subscribe?.(getAction(key as keyof TStateRaw), key)
             listeners[key as keyof TState].push(newValue => value.update(newValue, key))
 
             try {
@@ -156,6 +156,14 @@ export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TSt
         })
     }
 
+    const useStoreEffect = <TKeys extends Array<keyof TState>>(run: (state: TState) => void, deps: [...TKeys]) => {
+        useEffect(() => {
+            const dispose = effect(run, deps)
+
+            return dispose
+        }, [])
+    }
+
     const HydrateStore: FC<PropsWithChildren<{ hydrateState: Partial<TState> }>> = ({
         hydrateState,
         children,
@@ -183,6 +191,7 @@ export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TSt
         actions,
         reset,
         effect,
+        useStoreEffect,
         HydrateStore,
     }
 }
