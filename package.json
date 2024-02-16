@@ -7,8 +7,8 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "keywords": ["state", "react", "store", "context", "rerenders", "typescript", "intellisense"],
-  "homepage": "https://github.com/codemaskinc/createStore",
-  "repository": "https://github.com/codemaskinc/createStore",
+  "homepage": "https://github.com/codemaskinc/store",
+  "repository": "https://github.com/codemaskinc/store",
   "exports": {
     ".": {
       "module": "./dist/index.mjs",
