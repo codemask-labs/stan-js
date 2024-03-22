@@ -1,9 +1,11 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'bun:test'
+import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'bun:test'
 import React, { Fragment, FunctionComponent } from 'react'
 import { createScopedStore } from '../scoped'
 
 describe('scoped', () => {
+    afterEach(cleanup)
+
     it('should scope store to given subtree', async () => {
         const { StoreProvider, useScopedStore } = createScopedStore({
             userName: 'Tonny Jest',
@@ -56,6 +58,24 @@ describe('scoped', () => {
 
         render(<App />)
 
+        expect(screen.getByText('John Doe')).toBeDefined()
+    })
+
+    it('should inject scoped store when using HOC', () => {
+        const { withStore, useScopedStore } = createScopedStore({
+            firstName: 'John',
+            lastName: 'Smith',
+        })
+
+        const User = () => {
+            const { useStore } = useScopedStore()
+            const { state: { firstName, lastName } } = useStore('firstName', 'lastName')
+
+            return <p>{firstName} {lastName}</p>
+        }
+        const UserWithStore = withStore(User, { lastName: 'Doe' })
+
+        render(<UserWithStore />)
         expect(screen.getByText('John Doe')).toBeDefined()
     })
 })
