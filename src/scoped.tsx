@@ -21,8 +21,16 @@ export const createScopedStore = <TState extends object>(initialState: InitialSt
         return <StoreContext.Provider children={children} value={store} />
     }
 
+    const withStore =
+        <TProps extends object>(Component: FunctionComponent<TProps>, initialValue?: Partial<InitialState<TState>>) => (props: TProps) => (
+            <StoreProvider initialValue={initialValue}>
+                <Component {...props} />
+            </StoreProvider>
+        )
+
     return {
         StoreProvider,
         useScopedStore,
+        withStore,
     }
 }
