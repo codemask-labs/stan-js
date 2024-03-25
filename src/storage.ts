@@ -36,9 +36,9 @@ const ssrSaveStorage = {
     },
 }
 
-export function storage<T>(initialValue: T, localStorageKey?: string): Synchronizer<T>
+export function storage<T>(initialValue: T, localStorageKey?: string): T
 // eslint-disable-next-line no-redeclare
-export function storage<T>(initialValue?: T, localStorageKey?: string): Synchronizer<T | undefined>
+export function storage<T>(initialValue?: T, localStorageKey?: string): T | undefined
 // eslint-disable-next-line no-redeclare, prefer-arrow/prefer-arrow-functions
 export function storage<T>(initialValue: T, localStorageKey?: string) {
     return {

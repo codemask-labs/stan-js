@@ -1,5 +1,6 @@
 import { describe, expect, it, spyOn } from 'bun:test'
 import { isLocalStorageAvailable, storage } from '../storage'
+import { Synchronizer } from '../types'
 
 describe('isLocalStorageAvailable', () => {
     const windowStub = spyOn(window, 'window')
@@ -23,7 +24,7 @@ describe('storage', () => {
     })
 
     it('should update value', () => {
-        const { update, getSnapshot } = storage(1, 'key')
+        const { update, getSnapshot } = storage(1, 'key') as unknown as Synchronizer<number>
 
         update(2, 'key')
 
