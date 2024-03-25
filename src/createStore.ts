@@ -1,12 +1,10 @@
 import equal from 'fast-deep-equal'
 import { useEffect, useMemo } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
-import { Actions, Dispatch, InitialState, PickState, Synchronizer } from './types'
+import { Actions, Dispatch, InitialState, PickState } from './types'
 import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
 
-export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TStateRaw>) => {
-    type TState = { [K in keyof TStateRaw]: TStateRaw[K] extends Synchronizer<infer U> ? U : TStateRaw[K] }
-
+export const createStore = <TState extends object>(stateRaw: InitialState<TState>) => {
     const storeKeys = Object.keys(stateRaw) as Array<keyof TState>
 
     const actions = storeKeys.reduce((acc, key) => ({
@@ -41,7 +39,7 @@ export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TSt
         }
 
         if (isSynchronizer(value)) {
-            value.subscribe?.(getAction(key as keyof TStateRaw), key)
+            value.subscribe?.(getAction(key as keyof TState), key)
             listeners[key as keyof TState].push(newValue => value.update(newValue, key))
 
             try {
@@ -50,7 +48,7 @@ export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TSt
                 if (isPromise(snapshotValue)) {
                     snapshotValue.then(snapshotValue => {
                         if (snapshotValue !== undefined && snapshotValue !== null) {
-                            getAction(key as keyof TStateRaw)(snapshotValue)
+                            getAction(key as keyof TState)(snapshotValue)
 
                             return
                         }
@@ -142,7 +140,7 @@ export const createStore = <TStateRaw extends object>(stateRaw: InitialState<TSt
     const reset = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
         optionalArray(keys, storeKeys).forEach(key => {
             const valueOrSynchronizer = stateRaw[key]
-            const initialValue = (isSynchronizer(valueOrSynchronizer) ? valueOrSynchronizer.value : valueOrSynchronizer) as TStateRaw[keyof TStateRaw]
+            const initialValue = isSynchronizer(valueOrSynchronizer) ? valueOrSynchronizer.value : valueOrSynchronizer
 
             getAction(key)(initialValue)
         })
