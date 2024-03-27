@@ -126,7 +126,6 @@ actions.setCount(prev => prev + 1)
 actions.setName('Anna') // ❌ error, setName doesn't exist
 ```
 
-
 ```typescript
 const { state, actions } = useStore()
 
@@ -165,6 +164,23 @@ type Synchronizer<T> = {
 
 You can find sample `Synchronizer` implementation for localStorage [here](https://github.com/codemaskinc/createStore/blob/main/src/storage.ts)
 
+## Scoped store
+
+If your app is SSR or for example you just want to have the same store shape but keep different values for different routes you can use scoped store
+
+It returns:
+    - StoreProvider - Provider that passes scoped store down to the React's tree
+    - withStore - HOC that passes scoped store down to the React's tree
+    - useScopedStore - React hook used to access scoped store
+
+```typescript
+import { createScopedStore } from '@codemaskinc/store'
+
+export const { StoreProvider, useScopedStore, withStore } = createScopedStore({
+    count: 0,
+})
+``` 
+
 ## Examples
 
 Access only part of state in store:
@@ -202,3 +218,68 @@ const App = () => {
     );
 };
 ```
+
+SSR scoped store:
+
+```typescript
+import { createScopedStore } from '@codemaskinc/store'
+
+export const { StoreProvider, useScopedStore } = createScopedStore({
+    count: 0,
+    name: 'John'
+})
+``` 
+
+```typescript
+// SSR Layout
+
+<Layout>
+    <StoreProvider initialValue={{ name: await db.getUser().name }}>
+        {children}
+    </StoreProvider>
+</Layout>
+```
+
+```typescript
+// Some client component inside layout
+
+const scopedStore = useScopedStore()
+const { state } = scopedStore.useStore('name')
+
+return (
+    <h1>
+        Hello ${state.name}
+    </h1>
+)
+```
+
+Scoped store with regular routing
+
+```typescript
+import { createScopedStore } from '@codemaskinc/store'
+
+export const { StoreProvider, useScopedStore } = createScopedStore({
+    count: 0,
+    name: 'John'
+})
+``` 
+
+```typescript
+const ProfileScreen = withStore(() => {
+    // Component body...
+})
+```
+
+```typescript
+// Some component inside ProfileScreen
+
+const scopedStore = useScopedStore()
+const { state } = scopedStore.useStore('name')
+
+return (
+    <h1>
+        Hello ${state.name}
+    </h1>
+)
+```
+
