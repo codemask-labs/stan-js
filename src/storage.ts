@@ -36,53 +36,52 @@ const ssrSaveStorage = {
     },
 }
 
-export function storage<T>(initialValue: T, localStorageKey?: string): T
-// eslint-disable-next-line no-redeclare
-export function storage<T>(initialValue?: T, localStorageKey?: string): T | undefined
-// eslint-disable-next-line no-redeclare, prefer-arrow/prefer-arrow-functions
-export function storage<T>(initialValue: T, localStorageKey?: string) {
-    return {
-        value: initialValue,
-        subscribe: (update, key) => {
-            const handleEvent = (event: StorageEvent) => {
-                if (event.storageArea !== localStorage) {
-                    return
-                }
+type Storage = {
+    <T>(initialValue: T, localStorageKey?: string): T
+    <T>(initialValue?: T, localStorageKey?: string): T | undefined
+}
 
-                const storageKey = localStorageKey ?? key
-
-                if (event.key !== storageKey || event.newValue === null) {
-                    return
-                }
-
-                update(JSON.parse(event.newValue))
-            }
-
-            if (!isLocalStorageAvailable()) {
+export const storage: Storage = <T>(initialValue: T, localStorageKey?: string) => ({
+    value: initialValue,
+    subscribe: (update, key) => {
+        const handleEvent = (event: StorageEvent) => {
+            if (event.storageArea !== localStorage) {
                 return
             }
 
-            window.addEventListener('storage', handleEvent)
-
-            return () => {
-                window.removeEventListener('storage', handleEvent)
-            }
-        },
-        update: (value: T, key) => {
             const storageKey = localStorageKey ?? key
 
-            ssrSaveStorage.setItem(storageKey, JSON.stringify(value))
-        },
-        getSnapshot: key => {
-            const storageKey = localStorageKey ?? key
-            const value = ssrSaveStorage.getItem(storageKey)
-
-            if (value === null || value === undefined) {
-                // Value is not in storage
-                throw new Error()
+            if (event.key !== storageKey || event.newValue === null) {
+                return
             }
 
-            return JSON.parse(value)
-        },
-    } as Synchronizer<T>
-}
+            update(JSON.parse(event.newValue))
+        }
+
+        if (!isLocalStorageAvailable()) {
+            return
+        }
+
+        window.addEventListener('storage', handleEvent)
+
+        return () => {
+            window.removeEventListener('storage', handleEvent)
+        }
+    },
+    update: (value: T, key) => {
+        const storageKey = localStorageKey ?? key
+
+        ssrSaveStorage.setItem(storageKey, JSON.stringify(value))
+    },
+    getSnapshot: key => {
+        const storageKey = localStorageKey ?? key
+        const value = ssrSaveStorage.getItem(storageKey)
+
+        if (value === null || value === undefined) {
+            // Value is not in storage
+            throw new Error()
+        }
+
+        return JSON.parse(value)
+    },
+} as Synchronizer<T>)
