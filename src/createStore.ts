@@ -1,8 +1,9 @@
 import equal from 'fast-deep-equal'
-import { useEffect, useMemo } from 'react'
-import { useSyncExternalStore } from 'use-sync-external-store/shim'
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { Actions, Dispatch, InitialState, PickState } from './types'
 import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
+
+const keyInObject = <T extends object>(key: PropertyKey, obj: T): key is keyof T => key in obj
 
 export const createStore = <TState extends object>(stateRaw: InitialState<TState>) => {
     const storeKeys = Object.keys(stateRaw) as Array<keyof TState>
@@ -127,14 +128,44 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
     const useStore = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
         type Keys = (TKeys extends [] ? Array<keyof TState> : TKeys)[number]
 
+        const [shouldSubscribe, setShouldSubscribe] = useState(false)
+        const shouldSubscribeRef = useRef(false)
+
         const getSnapshot = useMemo(() => getState(optionalArray<Keys>(keys, storeKeys)), [])
         const actions = useMemo(() => getActions(optionalArray<Keys>(keys, storeKeys)), [])
-        const state = useSyncExternalStore(subscribe(optionalArray<Keys>(keys, storeKeys)), getSnapshot, getSnapshot)
+        const subscribeStore = useMemo(() => {
+            if (shouldSubscribe) {
+                return subscribe(optionalArray<Keys>(keys, storeKeys))
+            }
 
-        return {
-            state,
-            actions,
-        }
+            return () => () => {}
+        }, [shouldSubscribe])
+        const state = useSyncExternalStore(subscribeStore, getSnapshot, getSnapshot)
+        const proxied = useMemo(() => {
+            if (shouldSubscribe) {
+                return {
+                    state,
+                    actions,
+                }
+            }
+
+            return new Proxy({ state, actions }, {
+                get: (target, key) => {
+                    if (key === 'state' && !shouldSubscribeRef.current) {
+                        shouldSubscribeRef.current = true
+                        setShouldSubscribe(true)
+                    }
+
+                    if (keyInObject(key, target)) {
+                        return target[key]
+                    }
+
+                    return undefined
+                },
+            })
+        }, [state])
+
+        return proxied
     }
 
     const reset = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
