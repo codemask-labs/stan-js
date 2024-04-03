@@ -1,5 +1,6 @@
-import { renderHook } from '@testing-library/react'
-import { describe, expect, it } from 'bun:test'
+import { render, renderHook } from '@testing-library/react'
+import { describe, expect, it, jest } from 'bun:test'
+import React from 'react'
 import { createStore, storage } from '..'
 
 describe('create', () => {
@@ -145,5 +146,31 @@ describe('useStore', () => {
         const { result: { current: { state } } } = renderHook(() => useStore('a'))
 
         expect(state).toStrictEqual({ a: 0 })
+    })
+})
+
+describe('proxy', () => {
+    it.only('shouldn\'t subscribe to state changes', () => {
+        const { useStore } = createStore({
+            counter: 0,
+        })
+
+        const callback = jest.fn()
+
+        const RerenderCounter = () => {
+            const { actions } = useStore()
+
+            callback()
+
+            actions.setCounter(1)
+            setTimeout(() => {
+                actions.setCounter(2)
+            })
+
+            return null
+        }
+
+        render(<RerenderCounter />)
+        expect(callback).toHaveBeenCalledTimes(2)
     })
 })
