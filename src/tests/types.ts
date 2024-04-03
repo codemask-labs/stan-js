@@ -31,6 +31,8 @@ export type ExpectedActionsTest = Expect<Equal<Actions, ExpectedActions>>
 type State = ReturnType<typeof getState>
 export type ExpectedStateTest = Expect<Equal<State, ExpectedStateValues>>
 
+type ReturnType<T extends Function> = T extends () => infer R ? R : never
+
 type UseStoreActions = ReturnType<typeof useStore>['actions']
 export type ExpectedUseStoreActionsTest = Expect<Equal<UseStoreActions, ExpectedActions>>
 
