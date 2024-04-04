@@ -1,3 +1,11 @@
+![TypeScript](https://img.shields.io/badge/typescript-%230276C7?style=for-the-badge&logo=typescript&logoColor=%23fff&link=https%3A%2F%2Fwww.typescriptlang.org%2F)
+![React](https://img.shields.io/badge/react-%23077EA4?style=for-the-badge&logo=react&logoColor=%23fff&link=https%3A%2F%2Freact.dev%2F)
+![ReactNative](https://img.shields.io/badge/react%20native-%23282C34?style=for-the-badge&logo=react&logoColor=%2360DAFB&link=https%3A%2F%2Freact.dev%2F)
+![MIT](https://img.shields.io/npm/l/%40codemaskinc%2Fstore?style=for-the-badge)
+![NPM Version](https://img.shields.io/npm/v/%40codemaskinc%2Fstore?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2F%40codemaskinc%2Fstore)
+![NPM Downloads](https://img.shields.io/npm/dm/%40codemaskinc%2Fstore?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2F%40codemaskinc%2Fstore)
+
+
 ## Overview
 
 `@codemaskinc/store` is a lightweight and flexible state management library designed for use in React applications and beyond. It simplifies the process of managing state in your application by providing a simple `createStore` function that seamlessly integrates with React's built-in API, `useSyncExternalStore`. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
