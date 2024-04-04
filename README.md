@@ -155,7 +155,7 @@ Synchronizer is an util that allows you to synchronize store with something exte
 ```typescript
 type Synchronizer<T> = {
     value: T,
-    subscribe: (update: (value: T) => void, key: string) => VoidFunction,
+    subscribe: (update: (value: T) => void, key: string) => void,
     // If synchronizer doesn't have data that matches passed key, it should throw
     getSnapshot: (key: string) => T | Promise<T>,
     update: (value: T, key: string) => void
