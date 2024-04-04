@@ -23,7 +23,7 @@ bun add @codemaskinc/store
 
 ## Getting Started
 
-1. Create a store with initial state:
+Create a store with initial state:
 
 ```typescript
 import { createStore } from '@codemaskinc/store'
@@ -33,7 +33,7 @@ export const { useStore } = createStore({
 })
 ```
 
-2. Use the returned hook in your React component:
+Use the returned hook in your React component:
 
 ```typescript
 import { useStore } from './store'
@@ -114,6 +114,8 @@ React's hook that allows to access store's values and update them
 
 It takes store's keys as arguments, if you won't provide any argument it will return the **WHOLE** store
 
+It **ONLY** rerenders the component if the given keys' values have changed
+
 It will return object with state, and [actions](#actions). State is object with reactive fields from the store, it will rerender automatically whenever store value has changed
 
 ```typescript
@@ -140,7 +142,7 @@ actions.setName('Anna')
 
 React's hook that uses [effect](#effect) under the hood
 
-Inside React components you should use it, and in the other places you can use effect
+You should use it inside React components, and in the other places you feel free to use ``effect``
 
 ```typescript
 useStoreEffect(({ count }) => {
@@ -150,7 +152,7 @@ useStoreEffect(({ count }) => {
 
 ### Synchronizer
 
-Synchronizer is an util that allows you to synchronize store with something external like localStorage, database, device storage etc.
+Synchronizer is an util that allows you to synchronize store with something external like localStorage, database, device storage (MMKV, AsyncStorage) etc.
 
 ```typescript
 type Synchronizer<T> = {
@@ -162,7 +164,7 @@ type Synchronizer<T> = {
 }
 ```
 
-You can find sample `Synchronizer` implementation for localStorage [here](https://github.com/codemaskinc/createStore/blob/main/src/storage.ts)
+You can find sample `Synchronizer` implementation for localStorage [here](https://github.com/codemaskinc/createStore/blob/main/src/storage.ts) and for react-native-mmkv [here](https://github.com/codemaskinc/createStore/blob/main/examples/mmkvStorage.ts)
 
 ## Scoped store
 

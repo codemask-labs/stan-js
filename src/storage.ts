@@ -64,7 +64,7 @@ export const storage: Storage = <T>(initialValue: T, localStorageKey?: string) =
 
         window.addEventListener('storage', handleEvent)
     },
-    update: (value: T, key) => {
+    update: (value, key) => {
         const storageKey = localStorageKey ?? key
 
         ssrSaveStorage.setItem(storageKey, JSON.stringify(value))
