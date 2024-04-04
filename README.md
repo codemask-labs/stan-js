@@ -84,7 +84,7 @@ console.log(count)
 
 Function that resets store state to the initial values
 
-You can either pass all of the keys that you want to be reset, or if you wan't pass any key **WHOLE** store will be reseted.
+You can either pass all of the keys that you want to be reset, or if you won't pass any key **WHOLE** store will be reseted.
 
 ```typescript
 reset('count')
@@ -96,7 +96,7 @@ reset()
 
 ### effect
 
-Function that allows to subscribe to store's values change and react to the
+Function that allows to subscribe to store's values change and react to them
 
 It takes callback with current store's state that will be triggered on store's change, and as a second argument it takes array of dependencies that will listen to
 
@@ -169,9 +169,9 @@ You can find sample `Synchronizer` implementation for localStorage [here](https:
 If your app is SSR or for example you just want to have the same store shape but keep different values for different routes you can use scoped store
 
 It returns:
-    - StoreProvider - Provider that passes scoped store down to the React's tree
-    - withStore - HOC that passes scoped store down to the React's tree
-    - useScopedStore - React hook used to access scoped store
+- ``StoreProvider`` - Provider that passes scoped store down to the React's tree
+- ``withStore`` - HOC that passes scoped store down to the React's tree
+- ``useScopedStore`` - React hook used to access scoped store
 
 ```typescript
 import { createScopedStore } from '@codemaskinc/store'
@@ -183,7 +183,7 @@ export const { StoreProvider, useScopedStore, withStore } = createScopedStore({
 
 ## Examples
 
-Access only part of state in store:
+#### Access only part of state in store:
 
 ```typescript
 import { createStore } from '@codemaskinc/store'
@@ -219,7 +219,7 @@ const App = () => {
 };
 ```
 
-SSR scoped store:
+#### SSR scoped store:
 
 ```typescript
 import { createScopedStore } from '@codemaskinc/store'
@@ -248,12 +248,12 @@ const { state } = scopedStore.useStore('name')
 
 return (
     <h1>
-        Hello ${state.name}
+        Hello {state.name}
     </h1>
 )
 ```
 
-Scoped store with regular routing
+#### Scoped store with regular routing
 
 ```typescript
 import { createScopedStore } from '@codemaskinc/store'
@@ -278,8 +278,20 @@ const { state } = scopedStore.useStore('name')
 
 return (
     <h1>
-        Hello ${state.name}
+        Hello {state.name}
     </h1>
 )
 ```
 
+#### Syncing values using synchronizer
+
+```typescript
+import { createStore, storage } from '@codemaskinc/store'
+import { type CartItem } from 'lib/models'
+
+const { useStore } = createStore({
+    counter: storage(0), // number
+    user: storage<string>(), // string | undefined
+    cart: [] as Array<CartItem>
+})
+```
