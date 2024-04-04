@@ -1,108 +1,158 @@
+## Overview
+
+`@codemaskinc/store` is a lightweight and flexible state management library designed for use in React applications and beyond. It simplifies the process of managing state in your application by providing a simple `createStore` function that seamlessly integrates with React's built-in API, `useSyncExternalStore`. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
+
 ## Features
-- ⚛️ updates outside react components
-- 🪝 easy access to all store values
-- ✍️ no repeating yourself
-- ⚡️ no unnecessary rerenders
-- 🚀 typescript intellisense
 
-## Motivation
-[Zustand](https://github.com/pmndrs/zustand) is great, but you must write your own types for all stores (state, methods, etc.)
---- ---
-[Jotai](https://jotai.org/) is also great, but you would most likely end up creating close to identical code for each store
+- ✍️ **Simplicity:** Easily create and manage stores with a simple `createStore` function. Avoids the redundancy often encountered in Jotai, where similar code is replicated across different stores.
+- ⚛️ **React Integration:** Seamlessly use the stores in your React components with the help of `useSyncExternalStore`.
+- 🚀 **TypeScript Support:** Benefit from TypeScript magic for type-safe state and methods without the need for manual type definitions. Eliminates the complexity of writing your own types for state and methods as required in Zustand.
+- ⚡️ **Performance:** Utilizes `fast-deep-equal` for efficient state comparison, ensuring minimal re-renders and optimal performance.
 
-``([a, setA] = useAtom(aAtom), [b, setB] = useAtom(bAtom))``
---- ---
+## Installation
 
-This simple createStore function solves all of those problems, using simple built in react api [useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore), [fast-deep-equal](https://www.npmjs.com/package/fast-deep-equal) and some typescript magic 🪄
+Install package using preferred package manager:
 
-## Example usage
+```bash
+npm install @codemaskinc/store
+# or
+yarn add @codemaskinc/store
+# or
+bun add @codemaskinc/store
+```
 
-```tsx
-import { storage, createStore } from './store'
+## Getting Started
 
-const { useStore } = createStore({
-    key1: 'value1',
-    key2: storage('value2')
+1. Create a store with initial state:
+
+```typescript
+import { createStore } from '@codemaskinc/store'
+
+export const { useStore } = createStore({
+    count: 0,
 })
+```
 
-const A = () => {
-    const { state, actions } = useStore('key1')
+2. Use the returned hook in your React component:
 
-    return <input value={state.hello} onChange={event => actions.setHello(event.target.value)} />
-}
-
-const B = () => {
-    const { state, actions } = useStore('key1', 'key2')
-
-    console.log(state.key1) // listens on value change
-
-    return <input value={state.key2} onChange={event => actions.setKey2(event.target.value)} />
-}
+```typescript
+import { useStore } from './store'
 
 const App = () => {
+    const { state: { count }, actions: { setCount } } = useStore()
+
     return (
-        <>
-            <A />
-            <br/>
-            <B />
-        </>
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => setCount(prev => prev + 1)}>Increment</button>
+            <button onClick={() => setCount(prev => prev - 1)}>Decrement</button>
+        </div>
     )
 }
 ```
 
-## createStore
+## Features
 
-It takes object which is initial state of the store and returns:
+```typescript
+import { createStore } from '@codemaskinc/store'
 
-### useStore
-Hook that allows to subscribe and update given properties of store, based on keys which you pass into it
-
-```ts
-const { useStore } = createStore({ test: 'some value' })
-```
-
-### getState
-Returns current state of the store
-
-```ts
-const { getState } = createStore({ test: 'some value' })
-
-console.log(getState().test) // "some value"
+export const { actions, getState, reset, effect, useStore, useStoreEffect } = createStore({
+    count: 0,
+    name: 'John'
+})
 ```
 
 ### actions
-Object that contains of all actions to update store properties
 
-```ts
-const { getState, actions } = createStore({ test: 'some value' })
+Object that contains all functions that allows for updating the store's state
 
-console.log(getState().test) // "some value"
-actions.setTest('hello world')
-console.log(getState().test) // "hello world"
+Action name is generated automatically based on given key to the store ``count -> setCount``
+
+You can pass the next state directly, or a function that calculates it from the previous state - similary to the ``useState`` hook
+
+### getState
+
+Function that returns current state of the store
+
+```typescript
+const { count } = getState()
+
+console.log(count)
 ```
 
-## storage
+### reset
 
-Allows to synchronize store with localStorage
+Function that resets store state to the initial values
 
-```ts
-const { useStore } = createStore({
-    hello: storage<string>(), // string | undefined
-    test: storage('value'),
-    user: storage<User | null>(null, 'STORAGE_USER')
-})
+You can either pass all of the keys that you want to be reset, or if you won't pass any key **WHOLE** store will be reseted.
+
+```typescript
+reset('count')
+// Only count value will be reseted
+
+reset()
+// Whole store will be reseted
 ```
-It takes two parameters, both are optional - ``initialValue`` and ``storageKey``
 
-If you want pass storageKey into it, it will use the key that you've used as its name in initial store value (👆 hello and world are examples of that)
+### effect
 
-## Synchronizer
+Function that allows to subscribe to store's values change and react to them
 
-Synchronizer is util that allows to synchronize store with something external localStorage, database, device storage etc.
+It takes callback with current store's state that will be triggered on store's change, and as a second argument it takes array of dependencies that will listen to
 
-[storage](#storage) is example of it
+```typescript
+const dispose = effect(({ count }) => {
+    console.log(count)
+}, ['count'])
+```
 
-```ts
+If you won't pass any key to the dependencies it will trigger only once at the start - similarly to the ``useEffect`` hook
+
+### useStore
+
+React's hook that allows to access store's values and update them
+
+It takes store's keys as arguments, if you won't provide any argument it will return the **WHOLE** store
+
+It will return object with state, and [actions](#actions). State is object with reactive fields from the store, it will rerender automatically whenever store value has changed
+
+```typescript
+const { state, actions } = useStore('count')
+
+console.log(state.count)
+console.log(state.name) // ❌ error, name doesn't exist
+
+actions.setCount(prev => prev + 1)
+actions.setName('Anna') // ❌ error, setName doesn't exist
+```
+
+```typescript
+const { state, actions } = useStore()
+
+console.log(state.count)
+console.log(state.name)
+
+actions.setCount(prev => prev + 1)
+actions.setName('Anna')
+```
+
+### useStoreEffect
+
+React's hook that uses [effect](#effect) under the hood
+
+Inside React components you should use it, and in the other places you can use effect
+
+```typescript
+useStoreEffect(({ count }) => {
+    console.log(count)
+}, ['count'])
+```
+
+### Synchronizer
+
+Synchronizer is an util that allows you to synchronize store with something external like localStorage, database, device storage etc.
+
+```typescript
 type Synchronizer<T> = {
     value: T,
     subscribe: (update: (value: T) => void, key: string) => VoidFunction,
@@ -110,4 +160,138 @@ type Synchronizer<T> = {
     getSnapshot: (key: string) => T | Promise<T>,
     update: (value: T, key: string) => void
 }
+```
+
+You can find sample `Synchronizer` implementation for localStorage [here](https://github.com/codemaskinc/createStore/blob/main/src/storage.ts)
+
+## Scoped store
+
+If your app is SSR or for example you just want to have the same store shape but keep different values for different routes you can use scoped store
+
+It returns:
+- ``StoreProvider`` - Provider that passes scoped store down to the React's tree
+- ``withStore`` - HOC that passes scoped store down to the React's tree
+- ``useScopedStore`` - React hook used to access scoped store
+
+```typescript
+import { createScopedStore } from '@codemaskinc/store'
+
+export const { StoreProvider, useScopedStore, withStore } = createScopedStore({
+    count: 0,
+})
+``` 
+
+## Examples
+
+#### Access only part of state in store:
+
+```typescript
+import { createStore } from '@codemaskinc/store'
+
+const { useStore } = createStore({
+    firstName: 'John',
+    lastName: 'Smith',
+    age: 30
+})
+
+const App = () => {
+    const {
+        state: { firstName, age },
+        actions: { setFirstName, setAge }
+    } = useStore('firstName', 'age')
+
+    return (
+        <div>
+            <p>Name: {firstName}</p>
+            <input
+                type="text"
+                value={firstName}
+                onChange={event => setFirstName(event.currentTarget.value)}
+            />
+            <p>Age: {age}</p>
+            <input
+                type="number"
+                value={age}
+                onChange={event => setAge(event.currentTarget.value)}
+            />
+        </div>
+    );
+};
+```
+
+#### SSR scoped store:
+
+```typescript
+import { createScopedStore } from '@codemaskinc/store'
+
+export const { StoreProvider, useScopedStore } = createScopedStore({
+    count: 0,
+    name: 'John'
+})
+``` 
+
+```typescript
+// SSR Layout
+
+<Layout>
+    <StoreProvider initialValue={{ name: await db.getUser().name }}>
+        {children}
+    </StoreProvider>
+</Layout>
+```
+
+```typescript
+// Some client component inside layout
+
+const scopedStore = useScopedStore()
+const { state } = scopedStore.useStore('name')
+
+return (
+    <h1>
+        Hello {state.name}
+    </h1>
+)
+```
+
+#### Scoped store with regular routing
+
+```typescript
+import { createScopedStore } from '@codemaskinc/store'
+
+export const { StoreProvider, useScopedStore } = createScopedStore({
+    count: 0,
+    name: 'John'
+})
+``` 
+
+```typescript
+const ProfileScreen = withStore(() => {
+    // Component body...
+})
+```
+
+```typescript
+// Some component inside ProfileScreen
+
+const scopedStore = useScopedStore()
+const { state } = scopedStore.useStore('name')
+
+return (
+    <h1>
+        Hello {state.name}
+    </h1>
+)
+```
+
+#### Syncing values using synchronizer
+
+```typescript
+import { createStore, storage } from '@codemaskinc/store'
+import { type CartItem } from 'lib/models'
+
+const { useStore } = createStore({
+    counter: storage(0), // number
+    user: storage<string>(), // string | undefined
+    cart: [] as Array<CartItem>
+})
 ```
