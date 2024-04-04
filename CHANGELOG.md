@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/codemaskinc/store/compare/v1.0.0...v1.0.1) (2024-04-04)
+
+
+### Bug Fixes
+
+* update readme ([a9e04c8](https://github.com/codemaskinc/store/commit/a9e04c807d066e5efc152bd10b77f2531a020bb2))
+
 # 1.0.0 (2024-04-04)
 
 
