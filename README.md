@@ -33,7 +33,7 @@ export const { useStore } = createStore({
 })
 ```
 
-3. Use the returned hook in your React component:
+2. Use the returned hook in your React component:
 
 ```typescript
 import { useStore } from './store'
