@@ -33,11 +33,13 @@
     "check:config": "attw --pack . && publint",
     "check:typescript": "tsc --noEmit",
     "test": "bun test",
-    "lint": "eslint -c .eslintrc.js --ext .ts,.tsx src"
+    "lint": "eslint -c .eslintrc.js --ext .ts,.tsx src",
+    "prepublishOnly": "bun install && bun run build"
   },
   "author": "@codemaskinc",
   "publishConfig": {
     "access": "public",
+    "provenance": true,
     "ignore": [
       "dist/*.map*"
     ]
