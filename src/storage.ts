@@ -63,10 +63,6 @@ export const storage: Storage = <T>(initialValue: T, localStorageKey?: string) =
         }
 
         window.addEventListener('storage', handleEvent)
-
-        return () => {
-            window.removeEventListener('storage', handleEvent)
-        }
     },
     update: (value: T, key) => {
         const storageKey = localStorageKey ?? key

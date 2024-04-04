@@ -1,6 +1,6 @@
 export type Synchronizer<T> = {
     value: T
-    subscribe?: (update: (value: T) => void, key: string) => VoidFunction
+    subscribe?: (update: (value: T) => void, key: string) => void
     getSnapshot: (key: string) => T | Promise<T>
     update: (value: T, key: string) => void
 }
