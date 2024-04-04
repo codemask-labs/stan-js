@@ -1,12 +1,20 @@
 {
   "name": "@codemaskinc/store",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "- ⚛️ updates outside react components - 🪝 easy access to all store values - ✍️ no repeating yourself - ⚡️ no unnecessary rerenders - 🚀 typescript intellisense",
   "source": "src/index.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "keywords": ["state", "react", "store", "context", "rerenders", "typescript", "intellisense"],
+  "keywords": [
+    "state",
+    "react",
+    "store",
+    "context",
+    "rerenders",
+    "typescript",
+    "intellisense"
+  ],
   "homepage": "https://github.com/codemaskinc/store",
   "repository": "https://github.com/codemaskinc/store",
   "exports": {
