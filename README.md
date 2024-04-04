@@ -1,3 +1,11 @@
+![TypeScript](https://img.shields.io/badge/typescript-%230276C7?style=for-the-badge&logo=typescript&logoColor=%23fff&link=https%3A%2F%2Fwww.typescriptlang.org%2F)
+![React](https://img.shields.io/badge/react-%23077EA4?style=for-the-badge&logo=react&logoColor=%23fff&link=https%3A%2F%2Freact.dev%2F)
+![ReactNative](https://img.shields.io/badge/react%20native-%23282C34?style=for-the-badge&logo=react&logoColor=%2360DAFB&link=https%3A%2F%2Freact.dev%2F)
+![MIT](https://img.shields.io/npm/l/%40codemaskinc%2Fstore?style=for-the-badge)
+![NPM Version](https://img.shields.io/npm/v/%40codemaskinc%2Fstore?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2F%40codemaskinc%2Fstore)
+![NPM Downloads](https://img.shields.io/npm/dm/%40codemaskinc%2Fstore?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2F%40codemaskinc%2Fstore)
+
+
 ## Overview
 
 `@codemaskinc/store` is a lightweight and flexible state management library designed for use in React applications and beyond. It simplifies the process of managing state in your application by providing a simple `createStore` function that seamlessly integrates with React's built-in API, `useSyncExternalStore`. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
@@ -23,7 +31,7 @@ bun add @codemaskinc/store
 
 ## Getting Started
 
-1. Create a store with initial state:
+Create a store with initial state:
 
 ```typescript
 import { createStore } from '@codemaskinc/store'
@@ -33,7 +41,7 @@ export const { useStore } = createStore({
 })
 ```
 
-2. Use the returned hook in your React component:
+Use the returned hook in your React component:
 
 ```typescript
 import { useStore } from './store'
@@ -114,6 +122,8 @@ React's hook that allows to access store's values and update them
 
 It takes store's keys as arguments, if you won't provide any argument it will return the **WHOLE** store
 
+It **ONLY** rerenders the component if the given keys' values have changed
+
 It will return object with state, and [actions](#actions). State is object with reactive fields from the store, it will rerender automatically whenever store value has changed
 
 ```typescript
@@ -140,7 +150,7 @@ actions.setName('Anna')
 
 React's hook that uses [effect](#effect) under the hood
 
-Inside React components you should use it, and in the other places you can use effect
+You should use it inside React components, and in the other places you feel free to use ``effect``
 
 ```typescript
 useStoreEffect(({ count }) => {
@@ -150,7 +160,7 @@ useStoreEffect(({ count }) => {
 
 ### Synchronizer
 
-Synchronizer is an util that allows you to synchronize store with something external like localStorage, database, device storage etc.
+Synchronizer is an util that allows you to synchronize store with something external like localStorage, database, device storage (MMKV, AsyncStorage) etc.
 
 ```typescript
 type Synchronizer<T> = {
@@ -162,7 +172,7 @@ type Synchronizer<T> = {
 }
 ```
 
-You can find sample `Synchronizer` implementation for localStorage [here](https://github.com/codemaskinc/createStore/blob/main/src/storage.ts)
+You can find sample `Synchronizer` implementation for localStorage [here](https://github.com/codemaskinc/createStore/blob/main/src/storage.ts) and for react-native-mmkv [here](https://github.com/codemaskinc/createStore/blob/main/examples/mmkvStorage.ts)
 
 ## Scoped store
 

@@ -1,5 +1,6 @@
 import React, { createContext, FunctionComponent, ReactNode, useContext, useState } from 'react'
-import { createStore, InitialState } from '.'
+import { createStore } from '.'
+import { InitialState } from './types'
 
 type StoreProviderProps<TState extends object> = {
     initialValue?: Partial<InitialState<TState>>
