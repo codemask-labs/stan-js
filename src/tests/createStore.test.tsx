@@ -1,7 +1,8 @@
 import { render, renderHook } from '@testing-library/react'
 import { describe, expect, it, jest } from 'bun:test'
 import React from 'react'
-import { createStore, storage } from '..'
+import { createStore } from '../createStore'
+import { storage } from '../storage'
 
 describe('create', () => {
     it('should create store', () => {
@@ -150,7 +151,7 @@ describe('useStore', () => {
 })
 
 describe('proxy', () => {
-    it.only('shouldn\'t subscribe to state changes', () => {
+    it('shouldn\'t subscribe to state changes', () => {
         const { useStore } = createStore({
             counter: 0,
         })

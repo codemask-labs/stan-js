@@ -1,6 +1,6 @@
 {
-  "recommendations": [
-    "dprint.dprint",
-    "oven.bun-vscode"
-  ]
+    "recommendations": [
+        "dprint.dprint",
+        "oven.bun-vscode"
+    ]
 }
