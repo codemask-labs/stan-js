@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "emitDeclarationOnly": true
+    },
+    "exclude": [
+        "node_modules",
+        "dist",
+        "src/tests"
+    ]
+}

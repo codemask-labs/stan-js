@@ -1,0 +1,1 @@
+export { mmkvStorage } from './mmkv'

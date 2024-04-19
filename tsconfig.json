@@ -1,22 +1,32 @@
 {
-  "compilerOptions": {
-    "jsx": "react",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext",
-    "outDir": "dist",
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "lib": ["es2022", "dom", "dom.iterable"]
-  },
-  "include": ["src"]
+    "compilerOptions": {
+        "jsx": "react",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "es2022",
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
+        "isolatedModules": true,
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "moduleResolution": "NodeNext",
+        "module": "NodeNext",
+        "outDir": "dist",
+        "sourceMap": false,
+        "declaration": true,
+        "declarationMap": false,
+        "lib": [
+            "es2022",
+            "dom",
+            "dom.iterable"
+        ]
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it, spyOn } from 'bun:test'
-import { isLocalStorageAvailable, storage } from '../storage'
+import { storage } from '../storage'
+import { isLocalStorageAvailable } from '../storage/storage'
 import { Synchronizer } from '../types'
 
 describe('isLocalStorageAvailable', () => {

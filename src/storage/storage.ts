@@ -1,4 +1,4 @@
-import { Synchronizer } from './types'
+import { Synchronizer } from '../types'
 
 export const isLocalStorageAvailable = () => {
     // for SSR
