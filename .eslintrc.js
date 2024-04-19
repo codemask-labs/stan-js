@@ -8,5 +8,5 @@ module.exports = {
         'functional/immutable-data': 'off',
         'comma-dangle': ['error', 'always-multiline'],
     },
-    excludeFiles: ['build.ts'],
+    ignorePatterns: ['build.ts'],
 }
