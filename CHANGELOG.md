@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/codemask-labs/store/compare/v1.0.1...v1.1.0) (2024-04-19)
+
+
+### Features
+
+* separated synchronizers ([#49](https://github.com/codemask-labs/store/issues/49)) ([14f6f72](https://github.com/codemask-labs/store/commit/14f6f7265085c7f10dc74eea5515b06d25a40c10))
+
 ## [1.0.1](https://github.com/codemaskinc/store/compare/v1.0.0...v1.0.1) (2024-04-04)
 
 

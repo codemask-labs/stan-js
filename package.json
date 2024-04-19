@@ -1,6 +1,6 @@
 {
     "name": "@codemaskinc/store",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "- ⚛️ updates outside react components - 🪝 easy access to all store values - ✍️ no repeating yourself - ⚡️ no unnecessary rerenders - 🚀 typescript intellisense",
     "keywords": [
         "state",
