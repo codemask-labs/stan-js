@@ -19,6 +19,7 @@ hr {
 p {
     letter-spacing: 1px;
     text-align: center;
+    width: 100%;
 }
 
 .container {

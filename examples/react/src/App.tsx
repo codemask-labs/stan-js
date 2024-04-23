@@ -10,9 +10,6 @@ const CurrentTime = () => {
             <h1>
                 {state.currentTime.toLocaleTimeString()}
             </h1>
-            <p>
-                The timer is updating every second using a setInterval.
-            </p>
         </AnimateRerender>
     )
 }
@@ -41,12 +38,22 @@ const MessageInput = () => {
     )
 }
 
-const Counter = () => {
-    const { state, actions } = useStore('counter')
+const CounterDisplay = () => {
+    const { state } = useStore('counter')
 
     return (
         <AnimateRerender>
             <h1>{state.counter}</h1>
+        </AnimateRerender>
+    )
+}
+
+const Counter = () => {
+    const { actions } = useStore('counter')
+
+    return (
+        <AnimateRerender>
+            <CounterDisplay />
             <div className="buttons-container">
                 <button onClick={() => actions.setCounter(prev => prev - 1)}>Decrement</button>
                 <button onClick={() => actions.setCounter(prev => prev + 1)}>Increment</button>
@@ -59,22 +66,16 @@ const Counter = () => {
     )
 }
 
-const Table = () => {
-    const { state, actions } = useStore('users')
+const UsersList = () => {
+    const { state } = useStore('users')
     const listRef = useRef<HTMLDivElement>(null)
 
-    const fetchMoreUsers = async () => {
-        const users = await fetchUsers()
-
-        actions.setUsers(prev => [...prev, ...users])
-        setTimeout(() => {
-            listRef.current?.scrollTo({
-                top: listRef.current?.scrollHeight,
-                left: 0,
-                behavior: 'smooth',
-            })
-        }, 1)
-    }
+    useEffect(() => {
+        listRef.current?.scrollTo({
+            top: listRef.current.scrollHeight,
+            behavior: 'smooth',
+        })
+    }, [state.users])
 
     return (
         <AnimateRerender>
@@ -88,6 +89,22 @@ const Table = () => {
                     </div>
                 ))}
             </div>
+        </AnimateRerender>
+    )
+}
+
+const Table = () => {
+    const { actions } = useStore('users')
+
+    const fetchMoreUsers = async () => {
+        const users = await fetchUsers()
+
+        actions.setUsers(prev => [...prev, ...users])
+    }
+
+    return (
+        <AnimateRerender>
+            <UsersList />
             <button onClick={fetchMoreUsers}>
                 Fetch more users
             </button>
@@ -110,6 +127,7 @@ export const App = () => {
     return (
         <React.Fragment>
             <CurrentTime />
+            <p>The timer is updating every second using a setInterval.</p>
             <hr />
             <Message />
             <MessageInput />
