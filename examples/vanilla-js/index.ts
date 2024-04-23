@@ -1,4 +1,4 @@
-import { createStore } from '../../dist/index.mjs'
+import { createStore } from '@codemaskinc/store'
 
 const { actions: { setCount }, getState } = createStore({
     count: 0,

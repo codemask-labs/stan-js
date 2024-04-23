@@ -7,6 +7,7 @@ module.exports = {
         'functional/no-let': 'off',
         'functional/immutable-data': 'off',
         'comma-dangle': ['error', 'always-multiline'],
+        'nested-if/nested-if-statements': 'off',
     },
     ignorePatterns: ['build.ts'],
 }

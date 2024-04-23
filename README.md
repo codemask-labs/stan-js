@@ -8,33 +8,40 @@
 
 ## Overview
 
-`@codemaskinc/store` is a lightweight and flexible state management library designed for use in React applications and beyond. It simplifies the process of managing state in your application by providing a simple `createStore` function that seamlessly integrates with React's built-in API, `useSyncExternalStore`. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
+stan-js is a lightweight and flexible state management library designed for use in React applications and beyond. It simplifies the process of managing state in your application by providing a simple `createStore` function. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
 
 ## Features
 
-- ✍️ **Simplicity:** Easily create and manage stores with a simple `createStore` function. Avoids the redundancy often encountered in Jotai, where similar code is replicated across different stores.
-- ⚛️ **React Integration:** Seamlessly use the stores in your React components with the help of `useSyncExternalStore`.
-- 🚀 **TypeScript Support:** Benefit from TypeScript magic for type-safe state and methods without the need for manual type definitions. Eliminates the complexity of writing your own types for state and methods as required in Zustand.
-- ⚡️ **Performance:** Utilizes `fast-deep-equal` for efficient state comparison, ensuring minimal re-renders and optimal performance.
+- ⚡️ Performance and minimal rerenders
+- ✍️ Simple with minimal configuration
+- ⚛️ Out of the box React intergration
+- 🚀 Amazing typescript intellisense
+- 🪶 Very lightweight
 
 ## Installation
 
 Install package using preferred package manager:
 
 ```bash
-npm install @codemaskinc/store
+npm install stan-js
 # or
-yarn add @codemaskinc/store
+yarn add stan-js
 # or
-bun add @codemaskinc/store
+bun add stan-js
 ```
+
+## Demos
+
+##### React
+
+##### Vanilla js
 
 ## Getting Started
 
 Create a store with initial state:
 
 ```typescript
-import { createStore } from '@codemaskinc/store'
+import { createStore } from 'stan-js'
 
 export const { useStore } = createStore({
     count: 0,
@@ -62,7 +69,7 @@ const App = () => {
 ## Features
 
 ```typescript
-import { createStore } from '@codemaskinc/store'
+import { createStore } from 'stan-js'
 
 export const { actions, getState, reset, effect, useStore, useStoreEffect } = createStore({
     count: 0,
@@ -172,7 +179,19 @@ type Synchronizer<T> = {
 }
 ```
 
-You can find sample `Synchronizer` implementation for localStorage [here](https://github.com/codemaskinc/createStore/blob/main/src/storage.ts) and for react-native-mmkv [here](https://github.com/codemaskinc/createStore/blob/main/examples/mmkvStorage.ts)
+There is already implementation for localStorage and react-native-mmkv.
+```ts
+import { storage } from 'stan-js/storage' // localStorage
+
+import { mmkvStorage } from 'stan-js/mmkv' // react-native-mmkv
+```
+
+*For react-native you need to install react-native-mmkv and if you are using react-native older than 18 you need to add this to your metro.config.js*
+```js
+unstable_enablePackageExports: true,
+```
+
+Read more about it [here](https://reactnative.dev/blog/2023/06/21/package-exports-support)
 
 ## Scoped store
 
@@ -184,7 +203,7 @@ It returns:
 - ``useScopedStore`` - React hook used to access scoped store
 
 ```typescript
-import { createScopedStore } from '@codemaskinc/store'
+import { createScopedStore } from 'stan-js'
 
 export const { StoreProvider, useScopedStore, withStore } = createScopedStore({
     count: 0,
@@ -196,7 +215,7 @@ export const { StoreProvider, useScopedStore, withStore } = createScopedStore({
 #### Access only part of state in store:
 
 ```typescript
-import { createStore } from '@codemaskinc/store'
+import { createStore } from 'stan-js'
 
 const { useStore } = createStore({
     firstName: 'John',
@@ -232,7 +251,7 @@ const App = () => {
 #### SSR scoped store:
 
 ```typescript
-import { createScopedStore } from '@codemaskinc/store'
+import { createScopedStore } from 'stan-js'
 
 export const { StoreProvider, useScopedStore } = createScopedStore({
     count: 0,
@@ -266,7 +285,7 @@ return (
 #### Scoped store with regular routing
 
 ```typescript
-import { createScopedStore } from '@codemaskinc/store'
+import { createScopedStore } from 'stan-js'
 
 export const { StoreProvider, useScopedStore } = createScopedStore({
     count: 0,
@@ -296,7 +315,7 @@ return (
 #### Syncing values using synchronizer
 
 ```typescript
-import { createStore, storage } from '@codemaskinc/store'
+import { createStore, storage } from 'stan-js'
 import { type CartItem } from 'lib/models'
 
 const { useStore } = createStore({
