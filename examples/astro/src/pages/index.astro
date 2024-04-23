@@ -1,0 +1,93 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { ReactCounter } from '../components/ReactCounter'
+import AstroCounter from '../components/AstroCounter.astro'
+---
+
+<Layout title="Astro + React stan-js example">
+    <main>
+        <h1 class="title">
+            Sharing state between <span class="astro">Astro</span> and <span class="react">React</span>
+        </h1>
+        <div class="container">
+            <AstroCounter />
+            <ReactCounter client:visible />
+        </div>
+    </main>
+</Layout>
+
+<style is:global>
+    @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400&family=Roboto&display=swap');
+
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        overflow: hidden;
+        font-family: 'Roboto', sans-serif;
+        background-color: #0c093c;
+    }
+
+    .title {
+        color: #fff;
+    }
+
+    span {
+        color: var(--color);
+    }
+
+    .container {
+        display: flex;
+        gap: 64px;
+        margin: 64px auto;
+        justify-content: center;
+    }
+
+    img {
+        width: 160px;
+        height: auto;
+    }
+
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: var(--color);
+        gap: 16px;
+    }
+
+    p {
+        font-size: 72px;
+        margin: 0;
+    }
+
+    div {
+        display: flex;
+        gap: 16px;
+    }
+
+    button {
+        border: none;
+        font-size: 32px;
+        display: block;
+        width: 60px;
+        aspect-ratio: 1;
+        border-radius: 30px;
+        cursor: pointer;
+        background-color: var(--color);
+    }
+
+    .react {
+        --color: #58C4DC;
+    }
+
+    .astro {
+        --color: #FC5C04;
+    }
+</style>
