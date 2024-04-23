@@ -190,7 +190,7 @@ import { storage } from 'stan-js/storage' // localStorage
 import { mmkvStorage } from 'stan-js/mmkv' // react-native-mmkv
 ```
 
-*For react-native you need to install react-native-mmkv and if you are using react-native older than 18 you need to add this to your metro.config.js*
+*For react-native you need to install react-native-mmkv and if you are using react-native older than 0.72 you need to add this to your metro.config.js*
 ```js
 unstable_enablePackageExports: true,
 ```
