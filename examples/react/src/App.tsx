@@ -1,67 +1,140 @@
-import { Fragment, useState } from 'react'
-import { reset, useStore } from './store'
+import React, { useEffect, useRef } from 'react'
+import { AnimateRerender } from './AnimateRerender'
+import { actions, fetchUsers, getState, reset, useCapsMessage, useStore } from './store'
 
-const Todos = () => {
-    const [todo, setTodo] = useState('')
-    const { state: { todos }, actions: { setTodos } } = useStore('todos')
+const CurrentTime = () => {
+    const { state } = useStore('currentTime')
 
     return (
-        <div>
+        <AnimateRerender>
             <h1>
-                Todos
+                {state.currentTime.toLocaleTimeString()}
             </h1>
-            <button onClick={() => reset('todos')}>
-                Reset todos
-            </button>
-            <br />
-            <br />
-            {todos.map((todo, index) => (
-                <Fragment key={`${todo}-${index}`}>
-                    <div>
-                        {todo}&nbsp;
-                        <button onClick={() => setTodos(prev => prev.filter((_, todoIndex) => todoIndex !== index))}>
-                            X
-                        </button>
-                    </div>
-                    <br />
-                </Fragment>
-            ))}
-            <br />
-            <form
-                onSubmit={event => {
-                    event.preventDefault()
+        </AnimateRerender>
+    )
+}
 
-                    if (!todo) {
-                        return
-                    }
-                    setTodos(prev => [...prev, todo])
-                    setTodo('')
-                }}
+const Message = () => {
+    const upperCaseMessage = useCapsMessage()
+
+    return <AnimateRerender>Uppercased message: {upperCaseMessage}</AnimateRerender>
+}
+
+const MessageInput = () => {
+    const { actions } = useStore('message')
+
+    return (
+        <AnimateRerender>
+            <input
+                type="text"
+                defaultValue={getState().message}
+                onChange={(e) => actions.setMessage(e.target.value)}
+            />
+            <p>
+                Message is printed in uppercase using derived hook.<br />
+                Updates are done using <span>actions</span> so Input component won't re-render!
+            </p>
+        </AnimateRerender>
+    )
+}
+
+const CounterDisplay = () => {
+    const { state } = useStore('counter')
+
+    return (
+        <AnimateRerender>
+            <h1>{state.counter}</h1>
+        </AnimateRerender>
+    )
+}
+
+const Counter = () => {
+    const { actions } = useStore('counter')
+
+    return (
+        <AnimateRerender>
+            <CounterDisplay />
+            <div className="buttons-container">
+                <button onClick={() => actions.setCounter(prev => prev - 1)}>Decrement</button>
+                <button onClick={() => actions.setCounter(prev => prev + 1)}>Increment</button>
+            </div>
+            <button onClick={() => reset('counter')}>Reset counter</button>
+            <p>
+                Counter is incremented and decremented using <span>actions</span>,<br />and can be reset using <span>reset</span> function.
+            </p>
+        </AnimateRerender>
+    )
+}
+
+const UsersList = () => {
+    const { state } = useStore('users')
+    const listRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        listRef.current?.scrollTo({
+            top: listRef.current.scrollHeight,
+            behavior: 'smooth',
+        })
+    }, [state.users])
+
+    return (
+        <AnimateRerender>
+            <div
+                className="users"
+                ref={listRef}
             >
-                <input value={todo} onChange={event => setTodo(event.target.value)} />
-                <br />
-                <br />
-                <button type="submit">
-                    Add todo
-                </button>
-            </form>
-        </div>
+                {state.users.map(user => (
+                    <div key={user}>
+                        {user}
+                    </div>
+                ))}
+            </div>
+        </AnimateRerender>
+    )
+}
+
+const Table = () => {
+    const { actions } = useStore('users')
+
+    const fetchMoreUsers = async () => {
+        const users = await fetchUsers()
+
+        actions.setUsers(prev => [...prev, ...users])
+    }
+
+    return (
+        <AnimateRerender>
+            <UsersList />
+            <button onClick={fetchMoreUsers}>
+                Fetch more users
+            </button>
+            <p>
+                Users are fetched from an API<br />and appended to the list asynchronously.
+            </p>
+        </AnimateRerender>
     )
 }
 
 export const App = () => {
-    const { state: { counter, user }, actions: { setCounter } } = useStore('counter', 'user')
+    useEffect(() => {
+        const interval = setInterval(() => {
+            actions.setCurrentTime(new Date())
+        }, 1000)
+
+        return () => clearInterval(interval)
+    }, [])
 
     return (
-        <>
-            <h1>
-                Hi {user}
-            </h1>
-            <button onClick={() => setCounter(prev => prev + 1)}>
-                count is {counter}
-            </button>
+        <React.Fragment>
+            <CurrentTime />
+            <p>The timer is updating every second using a setInterval.</p>
             <hr />
-            <Todos />
-        </>
+            <Message />
+            <MessageInput />
+            <hr />
+            <Counter />
+            <hr />
+            <Table />
+        </React.Fragment>
     )
 }
