@@ -1,8 +1,8 @@
-import { createStore } from '@codemaskinc/store'
+import { createStore } from 'stan-js'
 
 export const { useStore, reset, getState, actions } = createStore({
     counter: 0,
-    message: 'Hello, World!',
+    message: 'Hello, Stan!',
     currentTime: new Date(),
     users: [] as Array<string>,
 })
@@ -21,8 +21,6 @@ export const fetchUsers = async () => {
             },
             body: 'type=firstname&number=20',
             method: 'POST',
-            mode: 'cors',
-            credentials: 'omit',
         })
         const data = await res.json()
 

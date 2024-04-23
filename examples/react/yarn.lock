@@ -213,13 +213,6 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
-"@codemaskinc/store@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@codemaskinc/store/-/store-1.1.0.tgz#0403211fe7f4f8e5198bad6ec1cc2bf26ebaf00e"
-  integrity sha512-o1lkaXiTe9T1mlbnY4tVpuvF7PONpO58vTH19/PAW75PwDpLDjJTnMiBN/QaksoyKhK/fJE65Ff6X5YQ1ARIpA==
-  dependencies:
-    fast-deep-equal "3.1.3"
-
 "@esbuild/aix-ppc64@0.20.2":
   version "0.20.2"
   resolved "https://registry.yarnpkg.com/@esbuild/aix-ppc64/-/aix-ppc64-0.20.2.tgz#a70f4ac11c6a1dfc18b8bbb13284155d933b9537"
@@ -1566,6 +1559,13 @@ source-map-js@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.0.tgz#16b809c162517b5b8c3e7dcd315a2a5c2612b2af"
   integrity sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==
+
+stan-js@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/stan-js/-/stan-js-0.1.0.tgz#9f44c9a4403ae8b891584061adf06f5cfce3a377"
+  integrity sha512-5n6XmUQeZv3Yj8PsyQpkD0knLDnlcrsp8ZlvJoRpC/uSuTPTiObAZinzbrjt+7eItdD9iIZhVKuhJDph90a13A==
+  dependencies:
+    fast-deep-equal "3.1.3"
 
 strip-ansi@^6.0.1:
   version "6.0.1"
