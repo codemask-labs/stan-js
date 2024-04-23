@@ -64,7 +64,7 @@
         "check:config": "attw --pack . --ignore-rules cjs-resolves-to-esm no-resolution unexpected-module-syntax && publint",
         "check:typescript": "tsc --noEmit",
         "test": "bun test",
-        "lint": "eslint -c .eslintrc.js --ext .ts,.tsx src && dprint check",
+        "lint": "eslint -c .eslintrc.json --ext .ts,.tsx src && dprint check",
         "prepublishOnly": "bun install && bun run build"
     },
     "author": "@codemaskinc",
