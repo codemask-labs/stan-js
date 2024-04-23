@@ -2,8 +2,8 @@
 ![React](https://img.shields.io/badge/react-%23077EA4?style=for-the-badge&logo=react&logoColor=%23fff&link=https%3A%2F%2Freact.dev%2F)
 ![ReactNative](https://img.shields.io/badge/react%20native-%23282C34?style=for-the-badge&logo=react&logoColor=%2360DAFB&link=https%3A%2F%2Freact.dev%2F)
 ![MIT](https://img.shields.io/npm/l/%40codemaskinc%2Fstore?style=for-the-badge)
-![NPM Version](https://img.shields.io/npm/v/%40codemaskinc%2Fstore?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2F%40codemaskinc%2Fstore)
-![NPM Downloads](https://img.shields.io/npm/dm/%40codemaskinc%2Fstore?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2F%40codemaskinc%2Fstore)
+![NPM Version](https://img.shields.io/npm/dm/stan-js?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fstan-js)
+![NPM Downloads](https://img.shields.io/npm/dm/stan-js?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fstan-js)
 
 
 ## Overview
@@ -16,6 +16,7 @@ stan-js is a lightweight and flexible state management library designed for use 
 - ✍️ Simple with minimal configuration
 - ⚛️ Out of the box React intergration
 - 🚀 Amazing typescript intellisense
+- 🪝 Easy access to all store values
 - 🪶 Very lightweight
 
 ## Installation
@@ -34,7 +35,10 @@ bun add stan-js
 
 ##### React
 
-##### Vanilla js
+[![Open in repo](https://img.shields.io/badge/github-pages?style=for-the-badge&logo=github&logoColor=white&color=black
+)](https://github.com/codemask-labs/stan-js/tree/main/examples/react)
+[![Open in StackBlitz](https://img.shields.io/badge/Stackblitz-fff?style=for-the-badge&logo=stackblitz&logoColor=white&labelColor=%231374EF&color=%231374EF
+)](https://stackblitz.com/github/codemask-labs/stan-js/tree/main/examples/react)
 
 ## Getting Started
 
