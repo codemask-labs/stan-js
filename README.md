@@ -8,12 +8,12 @@
 
 ## Overview
 
-stan-js is a lightweight and flexible state management library designed for use in React applications and beyond. It simplifies the process of managing state in your application by providing a simple `createStore` function. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
+stan-js is a lightweight and flexible state management library designed for use in React, React Native and event vanilla-js applications. It simplifies the process of managing state in your application by providing a simple `createStore` function. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
 
 ## Features
 
 - ⚡️ Performance and minimal rerenders
-- ✍️ Simple with minimal configuration
+- ✍️ Simple configuration
 - ⚛️ Out of the box React intergration
 - 🚀 Amazing typescript intellisense
 - 🪝 Easy access to all store values
@@ -44,10 +44,11 @@ bun add stan-js
 
 Create a store with initial state:
 
+You can think of a store as your app state. You can define multiple keys/values, each key will create separated subscription ([more explained here](#useStore)). If you want to persist the value - you can simply wrap it in [Synchronizer](#Synchronizer)
+
 ```typescript
 import { createStore } from 'stan-js'
 import { storage } from 'stan-js/storage'
-import { type Notification } from 'lib/models'
 
 export const { useStore } = createStore({
     count: 0,
@@ -282,7 +283,6 @@ return (
 ```typescript
 import { createStore } from 'stan-js'
 import { storage } from 'stan-js/storage'
-import { type CartItem } from 'lib/models'
 
 const { useStore } = createStore({
     counter: storage(0, 'counter-key'), // number
@@ -296,7 +296,6 @@ const { useStore } = createStore({
 ```typescript
 import { createStore } from 'stan-js'
 import { mmkvStorage } from 'stan-js/mmkv'
-import { type CartItem } from 'lib/models'
 
 const { useStore } = createStore({
     counter: mmkvStorage(0, 'counter-key'), // number
