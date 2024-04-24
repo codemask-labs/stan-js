@@ -138,7 +138,7 @@ const { count, setCount, setName } = useStore()
 
 console.log(count)
 
-setCount(prev => prev + 1) // Component will rerende
+setCount(prev => prev + 1) // Component will rerender
 setName('Anna') // Component won't rerender because it doesn't subscribe to name
 ```
 
