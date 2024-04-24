@@ -3,12 +3,12 @@ import { AnimateRerender } from './AnimateRerender'
 import { actions, fetchUsers, getState, reset, useCapsMessage, useStore } from './store'
 
 const CurrentTime = () => {
-    const { state } = useStore('currentTime')
+    const { currentTime } = useStore()
 
     return (
         <AnimateRerender>
             <h1>
-                {state.currentTime.toLocaleTimeString()}
+                {currentTime.toLocaleTimeString()}
             </h1>
         </AnimateRerender>
     )
@@ -21,14 +21,14 @@ const Message = () => {
 }
 
 const MessageInput = () => {
-    const { actions } = useStore('message')
+    const { setMessage } = useStore()
 
     return (
         <AnimateRerender>
             <input
                 type="text"
                 defaultValue={getState().message}
-                onChange={(e) => actions.setMessage(e.target.value)}
+                onChange={(e) => setMessage(e.target.value)}
             />
             <p>
                 Message is printed in uppercase using derived hook.<br />
@@ -39,24 +39,24 @@ const MessageInput = () => {
 }
 
 const CounterDisplay = () => {
-    const { state } = useStore('counter')
+    const { counter } = useStore()
 
     return (
         <AnimateRerender>
-            <h1>{state.counter}</h1>
+            <h1>{counter}</h1>
         </AnimateRerender>
     )
 }
 
 const Counter = () => {
-    const { actions } = useStore('counter')
+    const { setCounter } = useStore()
 
     return (
         <AnimateRerender>
             <CounterDisplay />
             <div className="buttons-container">
-                <button onClick={() => actions.setCounter(prev => prev - 1)}>Decrement</button>
-                <button onClick={() => actions.setCounter(prev => prev + 1)}>Increment</button>
+                <button onClick={() => setCounter(prev => prev - 1)}>Decrement</button>
+                <button onClick={() => setCounter(prev => prev + 1)}>Increment</button>
             </div>
             <button onClick={() => reset('counter')}>Reset counter</button>
             <p>
@@ -67,7 +67,7 @@ const Counter = () => {
 }
 
 const UsersList = () => {
-    const { state } = useStore('users')
+    const { users } = useStore()
     const listRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -75,7 +75,7 @@ const UsersList = () => {
             top: listRef.current.scrollHeight,
             behavior: 'smooth',
         })
-    }, [state.users])
+    }, [users])
 
     return (
         <AnimateRerender>
@@ -83,7 +83,7 @@ const UsersList = () => {
                 className="users"
                 ref={listRef}
             >
-                {state.users.map(user => (
+                {users.map(user => (
                     <div key={user}>
                         {user}
                     </div>
@@ -94,12 +94,12 @@ const UsersList = () => {
 }
 
 const Table = () => {
-    const { actions } = useStore('users')
+    const { setUsers } = useStore()
 
     const fetchMoreUsers = async () => {
         const users = await fetchUsers()
 
-        actions.setUsers(prev => [...prev, ...users])
+        setUsers(prev => [...prev, ...users])
     }
 
     return (

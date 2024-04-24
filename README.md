@@ -58,7 +58,7 @@ Use the returned hook in your React component:
 import { useStore } from './store'
 
 const App = () => {
-    const { state: { count }, actions: { setCount } } = useStore()
+    const { count, setCount } = useStore()
 
     return (
         <div>
@@ -129,32 +129,17 @@ If you won't pass any key to the dependencies it will trigger only once at the s
 
 ### useStore
 
-React's hook that allows to access store's values and update them
+React's hook that allows to access store's values and to update them
 
-It takes store's keys as arguments, if you won't provide any argument it will return the **WHOLE** store
-
-It **ONLY** rerenders the component if the given keys' values have changed
-
-It will return object with state, and [actions](#actions). State is object with reactive fields from the store, it will rerender automatically whenever store value has changed
+It **ONLY** rerenders the component if the values that we access have changed
 
 ```typescript
-const { state, actions } = useStore('count')
+const { count, setCount, setName } = useStore()
 
-console.log(state.count)
-console.log(state.name) // ❌ error, name doesn't exist
+console.log(count)
 
-actions.setCount(prev => prev + 1)
-actions.setName('Anna') // ❌ error, setName doesn't exist
-```
-
-```typescript
-const { state, actions } = useStore()
-
-console.log(state.count)
-console.log(state.name)
-
-actions.setCount(prev => prev + 1)
-actions.setName('Anna')
+setCount(prev => prev + 1) // Component will rerende
+setName('Anna') // Component won't rerender because it doesn't subscribe to name
 ```
 
 ### useStoreEffect
@@ -216,42 +201,6 @@ export const { StoreProvider, useScopedStore, withStore } = createScopedStore({
 
 ## Examples
 
-#### Access only part of state in store:
-
-```typescript
-import { createStore } from 'stan-js'
-
-const { useStore } = createStore({
-    firstName: 'John',
-    lastName: 'Smith',
-    age: 30
-})
-
-const App = () => {
-    const {
-        state: { firstName, age },
-        actions: { setFirstName, setAge }
-    } = useStore('firstName', 'age')
-
-    return (
-        <div>
-            <p>Name: {firstName}</p>
-            <input
-                type="text"
-                value={firstName}
-                onChange={event => setFirstName(event.currentTarget.value)}
-            />
-            <p>Age: {age}</p>
-            <input
-                type="number"
-                value={age}
-                onChange={event => setAge(event.currentTarget.value)}
-            />
-        </div>
-    );
-};
-```
-
 #### SSR scoped store:
 
 ```typescript
@@ -277,11 +226,11 @@ export const { StoreProvider, useScopedStore } = createScopedStore({
 // Some client component inside layout
 
 const scopedStore = useScopedStore()
-const { state } = scopedStore.useStore('name')
+const { name } = scopedStore.useStore()
 
 return (
     <h1>
-        Hello {state.name}
+        Hello {name}
     </h1>
 )
 ```
@@ -307,11 +256,11 @@ const ProfileScreen = withStore(() => {
 // Some component inside ProfileScreen
 
 const scopedStore = useScopedStore()
-const { state } = scopedStore.useStore('name')
+const { name } = scopedStore.useStore()
 
 return (
     <h1>
-        Hello {state.name}
+        Hello {name}
     </h1>
 )
 ```
