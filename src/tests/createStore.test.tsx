@@ -111,14 +111,12 @@ describe('useStore', () => {
             b: 'test',
         })
 
-        const { result: { current: { actions, state } } } = renderHook(() => useStore())
+        const { result: { current: { a, b, setA, setB } } } = renderHook(() => useStore())
 
-        expect(state).toBeDefined()
-        expect(state.a).toEqual(0)
-        expect(state.b).toEqual('test')
-        expect(actions).toBeDefined()
-        expect(actions).toHaveProperty('setA')
-        expect(actions).toHaveProperty('setB')
+        expect(a).toEqual(0)
+        expect(b).toEqual('test')
+        expect(setA).toBeDefined()
+        expect(setB).toBeDefined()
     })
 
     it('should return state and actions from storage', async () => {
@@ -137,17 +135,6 @@ describe('useStore', () => {
         expect(actions).toHaveProperty('setA')
         expect(actions).toHaveProperty('setB')
     })
-
-    it('should return partial state', () => {
-        const { useStore } = createStore({
-            a: 0,
-            b: 'test',
-        })
-
-        const { result: { current: { state } } } = renderHook(() => useStore('a'))
-
-        expect(state).toStrictEqual({ a: 0 })
-    })
 })
 
 describe('proxy', () => {
@@ -159,19 +146,19 @@ describe('proxy', () => {
         const callback = jest.fn()
 
         const RerenderCounter = () => {
-            const { actions } = useStore()
+            const { setCounter } = useStore()
 
             callback()
 
-            actions.setCounter(1)
+            setCounter(1)
             setTimeout(() => {
-                actions.setCounter(2)
+                setCounter(2)
             })
 
             return null
         }
 
         render(<RerenderCounter />)
-        expect(callback).toHaveBeenCalledTimes(2)
+        expect(callback).toHaveBeenCalledTimes(1)
     })
 })

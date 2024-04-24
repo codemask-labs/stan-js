@@ -13,7 +13,7 @@ describe('scoped', () => {
 
         const User: FunctionComponent<{ id: string }> = ({ id }) => {
             const { useStore } = useScopedStore()
-            const { state: { userName } } = useStore('userName')
+            const { userName } = useStore()
 
             return <p data-testid={id}>{userName}</p>
         }
@@ -45,7 +45,7 @@ describe('scoped', () => {
 
         const User = () => {
             const { useStore } = useScopedStore()
-            const { state: { firstName, lastName } } = useStore('firstName', 'lastName')
+            const { firstName, lastName } = useStore()
 
             return <p>{firstName} {lastName}</p>
         }
@@ -69,7 +69,7 @@ describe('scoped', () => {
 
         const User = () => {
             const { useStore } = useScopedStore()
-            const { state: { firstName, lastName } } = useStore('firstName', 'lastName')
+            const { firstName, lastName } = useStore()
 
             return <p>{firstName} {lastName}</p>
         }
