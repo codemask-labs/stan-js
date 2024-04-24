@@ -1,6 +1,6 @@
 import equal from 'fast-deep-equal'
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import { Actions, Dispatch, InitialState, PickState } from './types'
+import { useEffect, useMemo, useReducer, useState, useSyncExternalStore } from 'react'
+import { Actions, Dispatch, InitialState } from './types'
 import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
 
 const keyInObject = <T extends object>(key: PropertyKey, obj: T): key is keyof T => key in obj
@@ -115,57 +115,39 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
         }
     }
 
-    const getActions = <TKeys extends Array<keyof TState>>(keys: TKeys) =>
-        keys.reduce((acc, key) => {
-            const actionKey = getActionKey(key)
-
-            return {
-                ...acc,
-                [actionKey]: getAction(key),
+    const useStore = () => {
+        const [_, recalculate] = useReducer(() => ({}), {})
+        const [subscribeKeys] = useState(() => new Set<keyof TState>())
+        const getSnapshot = useMemo(() => {
+            if (subscribeKeys.size === 0) {
+                return () => state
             }
-        }, {} as Actions<PickState<TState, TKeys[number]>>)
 
-    const useStore = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
-        type Keys = (TKeys extends [] ? Array<keyof TState> : TKeys)[number]
-
-        const [shouldSubscribe, setShouldSubscribe] = useState(false)
-        const shouldSubscribeRef = useRef(false)
-
-        const getSnapshot = useMemo(() => getState(optionalArray<Keys>(keys, storeKeys)), [])
-        const actions = useMemo(() => getActions(optionalArray<Keys>(keys, storeKeys)), [])
+            return getState(Array.from(subscribeKeys))
+        }, [_])
         const subscribeStore = useMemo(() => {
-            if (shouldSubscribe) {
-                return subscribe(optionalArray<Keys>(keys, storeKeys))
+            if (subscribeKeys.size === 0) {
+                return () => () => {}
             }
 
-            return () => () => {}
-        }, [shouldSubscribe])
-        const state = useSyncExternalStore(subscribeStore, getSnapshot, getSnapshot)
-        const proxied = useMemo(() => {
-            if (shouldSubscribe) {
-                return {
-                    state,
-                    actions,
+            return subscribe(Array.from(subscribeKeys))
+        }, [_])
+        const synced = useSyncExternalStore(subscribeStore, getSnapshot, getSnapshot)
+
+        return new Proxy({ ...synced, ...actions }, {
+            get: (target, key) => {
+                if (storeKeys.includes(key as keyof TState) && !subscribeKeys.has(key as keyof TState)) {
+                    subscribeKeys.add(key as keyof TState)
+                    recalculate()
                 }
-            }
 
-            return new Proxy({ state, actions }, {
-                get: (target, key) => {
-                    if (key === 'state' && !shouldSubscribeRef.current) {
-                        shouldSubscribeRef.current = true
-                        setShouldSubscribe(true)
-                    }
+                if (keyInObject(key, target)) {
+                    return target[key]
+                }
 
-                    if (keyInObject(key, target)) {
-                        return target[key]
-                    }
-
-                    return undefined
-                },
-            })
-        }, [state])
-
-        return proxied
+                return undefined
+            },
+        })
     }
 
     const reset = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {

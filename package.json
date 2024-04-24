@@ -83,7 +83,7 @@
     "devDependencies": {
         "@arethetypeswrong/cli": "0.15.3",
         "@happy-dom/global-registrator": "14.7.1",
-        "@testing-library/react": "15.0.2",
+        "@testing-library/react": "15.0.4",
         "@types/bun": "1.1.0",
         "@types/node": "20.12.7",
         "@types/react": "18.2.79",
