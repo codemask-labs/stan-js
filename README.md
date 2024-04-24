@@ -86,7 +86,8 @@ import { createStore } from 'stan-js'
 
 export const { actions, getState, reset, effect, useStore, useStoreEffect } = createStore({
     count: 0,
-    name: 'John'
+    name: 'John',
+    notifications: [] as Array<Notification>
 })
 ```
 
@@ -117,6 +118,9 @@ You can either pass all of the keys that you want to be reset, or if you won't p
 ```typescript
 reset('count')
 // Only count value will be reseted
+
+reset('name', 'notifications')
+// name and notifications will be reseted
 
 reset()
 // Whole store will be reseted
