@@ -46,9 +46,14 @@ Create a store with initial state:
 
 ```typescript
 import { createStore } from 'stan-js'
+import { storage } from 'stan-js/storage'
+import { type Notification } from 'lib/models'
 
 export const { useStore } = createStore({
     count: 0,
+    user: storage(''),
+    selectedLanguage: 'en-US',
+    unreadNotifications: [] as Array<Notification>
 })
 ```
 
@@ -58,10 +63,11 @@ Use the returned hook in your React component:
 import { useStore } from './store'
 
 const App = () => {
-    const { count, setCount } = useStore()
+    const { count, user, setCount } = useStore()
 
     return (
         <div>
+            <h1>Hello {user}!</h1>
             <p>Count: {count}</p>
             <button onClick={() => setCount(prev => prev + 1)}>Increment</button>
             <button onClick={() => setCount(prev => prev - 1)}>Decrement</button>
@@ -69,6 +75,8 @@ const App = () => {
     )
 }
 ```
+
+Check [demos](#Demos) to play more with stan-js
 
 ## Features
 
@@ -138,7 +146,7 @@ const { count, setCount, setName } = useStore()
 
 console.log(count)
 
-setCount(prev => prev + 1) // Component will rerende
+setCount(prev => prev + 1) // Component will rerender
 setName('Anna') // Component won't rerender because it doesn't subscribe to name
 ```
 
@@ -168,12 +176,14 @@ type Synchronizer<T> = {
 }
 ```
 
-There is already implementation for localStorage and react-native-mmkv.
+There is already implementation for [localStorage](#localStorage) and [react-native-mmkv](#react-native-mmkv).
+
 ```ts
 import { storage } from 'stan-js/storage' // localStorage
 
 import { mmkvStorage } from 'stan-js/mmkv' // react-native-mmkv
 ```
+Both ``storage`` and ``mmkvStorage`` takes two paremeters - first is initial value, and the second one which is optional is key that will be stored in localStorage or in mmkv (if the key isn't passed stan-js will pass key from the store)
 
 *For react-native you need to install react-native-mmkv and if you are using react-native older than 0.72 you need to add this to your metro.config.js*
 ```js
@@ -267,13 +277,30 @@ return (
 
 #### Syncing values using synchronizer
 
+##### localStorage
+
 ```typescript
-import { createStore, storage } from 'stan-js'
+import { createStore } from 'stan-js'
+import { storage } from 'stan-js/storage'
 import { type CartItem } from 'lib/models'
 
 const { useStore } = createStore({
-    counter: storage(0), // number
+    counter: storage(0, 'counter-key'), // number
     user: storage<string>(), // string | undefined
+    cart: [] as Array<CartItem>
+})
+```
+
+##### react-native-mmkv
+
+```typescript
+import { createStore } from 'stan-js'
+import { mmkvStorage } from 'stan-js/mmkv'
+import { type CartItem } from 'lib/models'
+
+const { useStore } = createStore({
+    counter: mmkvStorage(0, 'counter-key'), // number
+    user: mmkvStorage<string>(), // string | undefined
     cart: [] as Array<CartItem>
 })
 ```
