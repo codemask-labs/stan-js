@@ -14,7 +14,8 @@
         "module": "ESNext",
         "outDir": "dist",
         "sourceMap": false,
-        "declaration": true,
+        "declaration": false,
+        "removeComments": false,
         "declarationMap": false,
         "lib": [
             "es2022",

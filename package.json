@@ -17,52 +17,50 @@
         "type": "git",
         "url": "git+https://github.com/codemask-labs/stan-js.git"
     },
-    "main": "./dist/index.js",
+    "main": "./dist/index.cjs",
     "exports": {
         ".": {
-            "module": "./dist/index.js",
+            "module": "./dist/index.mjs",
             "import": {
-                "types": "./dist/index.d.ts",
-                "default": "./dist/index.js"
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
             },
             "require": {
-                "types": "./dist/index.d.ts",
-                "default": "./dist/index.js"
+                "types": "./dist/index.d.cts",
+                "default": "./dist/index.cjs"
             },
-            "default": "./dist/index.js"
+            "default": "./dist/index.cjs"
         },
         "./mmkv": {
-            "module": "./dist/mmkv/index.js",
+            "module": "./dist/mmkv/index.mjs",
             "import": {
-                "types": "./dist/mmkv/index.d.ts",
-                "default": "./dist/mmkv/index.js"
+                "types": "./dist/mmkv/index.d.mts",
+                "default": "./dist/mmkv/index.mjs"
             },
             "require": {
-                "types": "./dist/mmkv/index.d.ts",
-                "default": "./dist/mmkv/index.js"
+                "types": "./dist/mmkv/index.d.cts",
+                "default": "./dist/mmkv/index.cjs"
             },
-            "default": "./dist/mmkv/index.js"
+            "default": "./dist/mmkv/index.cjs"
         },
         "./storage": {
-            "module": "./dist/storage/index.js",
+            "module": "./dist/storage/index.mjs",
             "import": {
-                "types": "./dist/storage/index.d.ts",
-                "default": "./dist/storage/index.js"
+                "types": "./dist/storage/index.d.mts",
+                "default": "./dist/storage/index.mjs"
             },
             "require": {
-                "types": "./dist/storage/index.d.ts",
-                "default": "./dist/storage/index.js"
+                "types": "./dist/storage/index.d.cts",
+                "default": "./dist/storage/index.cjs"
             },
-            "default": "./dist/storage/index.js"
+            "default": "./dist/storage/index.cjs"
         }
     },
     "scripts": {
         "prepare": "husky",
         "precommit": "bun test && bun lint",
-        "build": "bun run build:js && bun run build:types",
-        "build:js": "bun run build.ts",
-        "build:types": "tsc -p tsconfig.build.json",
-        "check:config": "attw --pack . --ignore-rules cjs-resolves-to-esm no-resolution unexpected-module-syntax && publint",
+        "build": "unbuild --minify",
+        "check:config": "attw --pack . --ignore-rules no-resolution && publint",
         "check:typescript": "tsc --noEmit",
         "test": "bun test",
         "lint": "eslint -c .eslintrc.json --ext .ts,.tsx src && dprint check",
@@ -107,7 +105,8 @@
         "husky": "9.0.11",
         "publint": "0.2.7",
         "type-testing": "0.2.0",
-        "typescript": "5.4.5"
+        "typescript": "5.4.5",
+        "unbuild": "2.0.0"
     },
     "peerDependencies": {
         "react": ">=18.2.0",
