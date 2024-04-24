@@ -8,7 +8,7 @@
 
 ## Overview
 
-stan-js is a lightweight and flexible state management library designed for use in React, React Native and event vanilla-js applications. It simplifies the process of managing state in your application by providing a simple `createStore` function. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
+stan-js is a lightweight and flexible state management library designed for use in React, React Native and even vanilla-js applications. It simplifies the process of managing state in your application by providing a simple `createStore` function. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
 
 ## Features
 
