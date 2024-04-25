@@ -4,12 +4,25 @@ import { Synchronizer } from '../types'
 const mmkv = new MMKV()
 const pendingChange = new Map<string, true>()
 
-type Storage = {
-    <T>(initialValue: T, localStorageKey?: string): T
-    <T>(initialValue?: T, localStorageKey?: string): T | undefined
+type StorageOptions<T> = {
+    localStorageKey?: string
+    deserialize?: (value: string) => T
+    serialize?: (value: T) => string
 }
 
-export const mmkvStorage: Storage = <T>(initialValue: T, localStorageKey?: string) => ({
+type Storage = {
+    <T>(initialValue: T, options?: StorageOptions<T>): T
+    <T>(initialValue?: T, options?: StorageOptions<T>): T | undefined
+}
+
+export const mmkvStorage: Storage = <T>(
+    initialValue: T,
+    {
+        deserialize = JSON.parse,
+        serialize = JSON.stringify,
+        localStorageKey,
+    }: StorageOptions<T> = {},
+) => ({
     value: initialValue,
     subscribe: (update, key) => {
         mmkv.addOnValueChangedListener(changedKey => {
@@ -31,14 +44,14 @@ export const mmkvStorage: Storage = <T>(initialValue: T, localStorageKey?: strin
                 return
             }
 
-            update(JSON.parse(newValue))
+            update(deserialize(newValue))
         })
     },
     update: (value, key) => {
         const storageKey = localStorageKey ?? key
 
         pendingChange.set(storageKey, true)
-        mmkv.set(storageKey, JSON.stringify(value))
+        mmkv.set(storageKey, serialize(value))
     },
     getSnapshot: key => {
         const storageKey = localStorageKey ?? key
@@ -49,6 +62,6 @@ export const mmkvStorage: Storage = <T>(initialValue: T, localStorageKey?: strin
             throw new Error()
         }
 
-        return JSON.parse(value)
+        return deserialize(value)
     },
 } as Synchronizer<T>)

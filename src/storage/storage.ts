@@ -36,12 +36,25 @@ const ssrSaveStorage = {
     },
 }
 
-type Storage = {
-    <T>(initialValue: T, localStorageKey?: string): T
-    <T>(initialValue?: T, localStorageKey?: string): T | undefined
+type StorageOptions<T> = {
+    localStorageKey?: string
+    deserialize?: (value: string) => T
+    serialize?: (value: T) => string
 }
 
-export const storage: Storage = <T>(initialValue: T, localStorageKey?: string) => ({
+type Storage = {
+    <T>(initialValue: T, options?: StorageOptions<T>): T
+    <T>(initialValue?: T, options?: StorageOptions<T>): T | undefined
+}
+
+export const storage: Storage = <T>(
+    initialValue: T,
+    {
+        deserialize = JSON.parse,
+        serialize = JSON.stringify,
+        localStorageKey,
+    }: StorageOptions<T> = {},
+) => ({
     value: initialValue,
     subscribe: (update, key) => {
         const handleEvent = (event: StorageEvent) => {
@@ -55,7 +68,7 @@ export const storage: Storage = <T>(initialValue: T, localStorageKey?: string) =
                 return
             }
 
-            update(JSON.parse(event.newValue))
+            update(deserialize(event.newValue))
         }
 
         if (!isLocalStorageAvailable()) {
@@ -67,7 +80,7 @@ export const storage: Storage = <T>(initialValue: T, localStorageKey?: string) =
     update: (value, key) => {
         const storageKey = localStorageKey ?? key
 
-        ssrSaveStorage.setItem(storageKey, JSON.stringify(value))
+        ssrSaveStorage.setItem(storageKey, serialize(value))
     },
     getSnapshot: key => {
         const storageKey = localStorageKey ?? key
@@ -78,6 +91,6 @@ export const storage: Storage = <T>(initialValue: T, localStorageKey?: string) =
             throw new Error()
         }
 
-        return JSON.parse(value)
+        return deserialize(value)
     },
 } as Synchronizer<T>)

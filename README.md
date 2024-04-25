@@ -188,7 +188,7 @@ import { storage } from 'stan-js/storage' // localStorage
 
 import { mmkvStorage } from 'stan-js/mmkv' // react-native-mmkv
 ```
-Both ``storage`` and ``mmkvStorage`` takes two paremeters - first is initial value, and the second one which is optional is key that will be stored in localStorage or in mmkv (if the key isn't passed stan-js will pass key from the store)
+Both ``storage`` and ``mmkvStorage`` takes two parameters - first is initial value, and the second one which is optional is options object with key (if the key isn't passed stan-js will pass key from the store), serialize and deserialize functions.
 
 *For react-native you need to install react-native-mmkv and if you are using react-native older than 0.72 you need to add this to your metro.config.js*
 ```js
@@ -196,6 +196,20 @@ unstable_enablePackageExports: true,
 ```
 
 Read more about it [here](https://reactnative.dev/blog/2023/06/21/package-exports-support)
+
+If you want to store more complex objects that aren't supported by JSON you can either write your own storage synchronizer or pass custom `serialize` and `deserialize` functions to the options parameter. For example, you can use [superjson](https://github.com/blitz-js/superjson) package:
+```typescript
+import { createStore } from 'stan-js'
+import { storage } from 'stan-js/storage'
+import superjson from 'superjson'
+
+const { useStore } = createStore({
+    user: storage(new Set())
+}, {
+    serialize: superjson.stringify,
+    deserialize: superjson.deserialize
+})
+```
 
 ## Scoped store
 
@@ -289,7 +303,7 @@ import { createStore } from 'stan-js'
 import { storage } from 'stan-js/storage'
 
 const { useStore } = createStore({
-    counter: storage(0, 'counter-key'), // number
+    counter: storage(0, { localStorageKey: 'counter-key' }), // number
     user: storage<string>(), // string | undefined
     cart: [] as Array<CartItem>
 })
