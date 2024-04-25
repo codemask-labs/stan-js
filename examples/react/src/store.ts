@@ -8,9 +8,9 @@ export const { useStore, reset, getState, actions } = createStore({
 })
 
 export const useCapsMessage = () => {
-    const { state } = useStore('message')
+    const { message } = useStore()
 
-    return state.message.toUpperCase()
+    return message.toUpperCase()
 }
 
 export const fetchUsers = async () => {
