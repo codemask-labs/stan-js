@@ -1,26 +1,15 @@
 import { MMKV } from 'react-native-mmkv'
-import { Synchronizer } from '../types'
+import { Storage, StorageOptions, Synchronizer } from '../types'
 
 const mmkv = new MMKV()
 const pendingChange = new Map<string, true>()
-
-type StorageOptions<T> = {
-    localStorageKey?: string
-    deserialize?: (value: string) => T
-    serialize?: (value: T) => string
-}
-
-type Storage = {
-    <T>(initialValue: T, options?: StorageOptions<T>): T
-    <T>(initialValue?: T, options?: StorageOptions<T>): T | undefined
-}
 
 export const mmkvStorage: Storage = <T>(
     initialValue: T,
     {
         deserialize = JSON.parse,
         serialize = JSON.stringify,
-        localStorageKey,
+        storageKey,
     }: StorageOptions<T> = {},
 ) => ({
     value: initialValue,
@@ -32,9 +21,7 @@ export const mmkvStorage: Storage = <T>(
                 return
             }
 
-            const storageKey = localStorageKey ?? key
-
-            if (changedKey !== storageKey) {
+            if (changedKey !== (storageKey ?? key)) {
                 return
             }
 
@@ -48,14 +35,13 @@ export const mmkvStorage: Storage = <T>(
         })
     },
     update: (value, key) => {
-        const storageKey = localStorageKey ?? key
+        const storageKeyToUse = storageKey ?? key
 
-        pendingChange.set(storageKey, true)
-        mmkv.set(storageKey, serialize(value))
+        pendingChange.set(storageKeyToUse, true)
+        mmkv.set(storageKeyToUse, serialize(value))
     },
     getSnapshot: key => {
-        const storageKey = localStorageKey ?? key
-        const value = mmkv.getString(storageKey)
+        const value = mmkv.getString(storageKey ?? key)
 
         if (value === undefined) {
             // Value is not in storage

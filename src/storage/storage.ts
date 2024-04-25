@@ -1,4 +1,4 @@
-import { Synchronizer } from '../types'
+import { Storage, StorageOptions, Synchronizer } from '../types'
 
 export const isLocalStorageAvailable = () => {
     // for SSR
@@ -36,23 +36,12 @@ const ssrSaveStorage = {
     },
 }
 
-type StorageOptions<T> = {
-    localStorageKey?: string
-    deserialize?: (value: string) => T
-    serialize?: (value: T) => string
-}
-
-type Storage = {
-    <T>(initialValue: T, options?: StorageOptions<T>): T
-    <T>(initialValue?: T, options?: StorageOptions<T>): T | undefined
-}
-
 export const storage: Storage = <T>(
     initialValue: T,
     {
         deserialize = JSON.parse,
         serialize = JSON.stringify,
-        localStorageKey,
+        storageKey,
     }: StorageOptions<T> = {},
 ) => ({
     value: initialValue,
@@ -62,9 +51,7 @@ export const storage: Storage = <T>(
                 return
             }
 
-            const storageKey = localStorageKey ?? key
-
-            if (event.key !== storageKey || event.newValue === null) {
+            if (event.key !== (storageKey ?? key) || event.newValue === null) {
                 return
             }
 
@@ -77,14 +64,9 @@ export const storage: Storage = <T>(
 
         window.addEventListener('storage', handleEvent)
     },
-    update: (value, key) => {
-        const storageKey = localStorageKey ?? key
-
-        ssrSaveStorage.setItem(storageKey, serialize(value))
-    },
+    update: (value, key) => ssrSaveStorage.setItem(storageKey ?? key, serialize(value)),
     getSnapshot: key => {
-        const storageKey = localStorageKey ?? key
-        const value = ssrSaveStorage.getItem(storageKey)
+        const value = ssrSaveStorage.getItem(storageKey ?? key)
 
         if (value === null || value === undefined) {
             // Value is not in storage

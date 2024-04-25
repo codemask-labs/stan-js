@@ -25,7 +25,7 @@ describe('storage', () => {
     })
 
     it('should update value', () => {
-        const { update, getSnapshot } = storage(1, { localStorageKey: 'key' }) as unknown as Synchronizer<number>
+        const { update, getSnapshot } = storage(1, { storageKey: 'key' }) as unknown as Synchronizer<number>
 
         update(2, 'key')
 

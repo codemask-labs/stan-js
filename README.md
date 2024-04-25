@@ -303,7 +303,7 @@ import { createStore } from 'stan-js'
 import { storage } from 'stan-js/storage'
 
 const { useStore } = createStore({
-    counter: storage(0, { localStorageKey: 'counter-key' }), // number
+    counter: storage(0, { storageKey: 'counter-key' }), // number
     user: storage<string>(), // string | undefined
     cart: [] as Array<CartItem>
 })
