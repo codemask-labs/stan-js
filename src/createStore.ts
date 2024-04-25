@@ -6,13 +6,14 @@ import { getActionKey, isPromise, isSynchronizer, optionalArray } from './utils'
 const keyInObject = <T extends object>(key: PropertyKey, obj: T): key is keyof T => key in obj
 
 export const createStore = <TState extends object>(stateRaw: InitialState<TState>) => {
-    const storeKeys = Object.keys(stateRaw) as Array<keyof TState>
+    type TKey = keyof TState
+    const storeKeys = Object.keys(stateRaw) as Array<TKey>
 
     const actions = storeKeys.reduce((acc, key) => ({
         ...acc,
-        [getActionKey(key)]: (value: Dispatch<TState, typeof key>) => {
+        [getActionKey(key)]: (value: Dispatch<TState, TKey>) => {
             if (typeof value === 'function') {
-                const fn = value as (prevState: TState[typeof key]) => TState[typeof key]
+                const fn = value as (prevState: TState[TKey]) => TState[TKey]
                 const newValue = fn(state[key])
 
                 state[key] = newValue
@@ -27,12 +28,12 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
     }), {} as Actions<TState>)
 
     // @ts-expect-error
-    const getAction = <K extends keyof TState>(key: K) => actions[getActionKey(key)] as (value: unknown) => void
+    const getAction = <K extends TKey>(key: K) => actions[getActionKey(key)] as (value: unknown) => void
 
     const listeners = storeKeys.reduce((acc, key) => ({
         ...acc,
         [key]: [],
-    }), {} as { [K in keyof TState]: Array<(newState: TState[K]) => void> })
+    }), {} as { [K in TKey]: Array<(newState: TState[K]) => void> })
 
     const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
         if (typeof value === 'function') {
@@ -40,8 +41,8 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
         }
 
         if (isSynchronizer(value)) {
-            value.subscribe?.(getAction(key as keyof TState), key)
-            listeners[key as keyof TState].push(newValue => value.update(newValue, key))
+            value.subscribe?.(getAction(key as TKey), key)
+            listeners[key as TKey].push(newValue => value.update(newValue, key))
 
             try {
                 const snapshotValue = value.getSnapshot(key)
@@ -49,7 +50,7 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
                 if (isPromise(snapshotValue)) {
                     snapshotValue.then(snapshotValue => {
                         if (snapshotValue !== undefined && snapshotValue !== null) {
-                            getAction(key as keyof TState)(snapshotValue)
+                            getAction(key as TKey)(snapshotValue)
 
                             return
                         }
@@ -83,9 +84,9 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
             ...acc,
             [key]: value,
         }
-    }, {}) as { [K in keyof TState]: TState[K] }
+    }, {} as TState)
 
-    const subscribe = <TKeys extends Array<keyof TState>>(keys: TKeys) => (listener: VoidFunction) => {
+    const subscribe = (keys: Array<TKey>) => (listener: VoidFunction) => {
         keys.forEach(key => listeners[key].push(listener))
 
         return () => {
@@ -95,15 +96,14 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
         }
     }
 
-    const getState = <TKeys extends keyof TState>(keys: Array<TKeys>) => {
-        type State = { [K in TKeys]: TState[K] } & {}
-        let oldState: State
+    const getState = (keys: Array<TKey>) => {
+        let oldState: TState
 
         return () => {
             const newState = keys.reduce((acc, key) => ({
                 ...acc,
                 [key]: state[key],
-            }), {}) as State
+            }), {}) as TState
 
             if (equal(oldState, newState)) {
                 return oldState
@@ -117,7 +117,7 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
 
     const useStore = () => {
         const [_, recalculate] = useReducer(() => ({}), {})
-        const [subscribeKeys] = useState(() => new Set<keyof TState>())
+        const [subscribeKeys] = useState(() => new Set<TKey>())
         const getSnapshot = useMemo(() => {
             if (subscribeKeys.size === 0) {
                 return () => state
@@ -136,8 +136,8 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
 
         return new Proxy({ ...synced, ...actions }, {
             get: (target, key) => {
-                if (storeKeys.includes(key as keyof TState) && !subscribeKeys.has(key as keyof TState)) {
-                    subscribeKeys.add(key as keyof TState)
+                if (storeKeys.includes(key as TKey) && !subscribeKeys.has(key as TKey)) {
+                    subscribeKeys.add(key as TKey)
                     recalculate()
                 }
 
@@ -150,7 +150,7 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
         })
     }
 
-    const reset = <TKeys extends Array<keyof TState>>(...keys: [...TKeys]) => {
+    const reset = (...keys: Array<TKey>) => {
         optionalArray(keys, storeKeys).forEach(key => {
             const valueOrSynchronizer = stateRaw[key]
             const initialValue = isSynchronizer(valueOrSynchronizer) ? valueOrSynchronizer.value : valueOrSynchronizer
@@ -165,8 +165,8 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
         run(
             new Proxy(state, {
                 get: (target, key) => {
-                    if (storeKeys.includes(key as keyof TState)) {
-                        disposers.add(subscribe([key as keyof TState])(() => run(state)))
+                    if (storeKeys.includes(key as TKey)) {
+                        disposers.add(subscribe([key as TKey])(() => run(state)))
                     }
 
                     if (keyInObject(key, target)) {
