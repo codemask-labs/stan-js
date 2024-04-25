@@ -162,3 +162,57 @@ describe('proxy', () => {
         expect(callback).toHaveBeenCalledTimes(1)
     })
 })
+
+describe('effect', () => {
+    it('should run effect', () => {
+        const { effect, actions } = createStore({
+            a: 0,
+            b: 0,
+        })
+
+        const callback = jest.fn()
+        const dispose = effect(({ a }) => {
+            callback(a)
+        })
+
+        expect(callback).toHaveBeenCalledTimes(1)
+
+        actions.setA(prev => prev + 1)
+
+        expect(callback).toHaveBeenCalledTimes(2)
+
+        actions.setB(prev => prev + 1)
+
+        expect(callback).toHaveBeenCalledTimes(2)
+
+        dispose()
+
+        actions.setA(prev => prev + 1)
+
+        expect(callback).toHaveBeenCalledTimes(2)
+    })
+
+    it('should run effect on every store change', () => {
+        const { effect, actions } = createStore({
+            a: 0,
+            b: 0,
+        })
+
+        const callback = jest.fn()
+        const dispose = effect(() => {
+            callback()
+        })
+
+        expect(callback).toHaveBeenCalledTimes(1)
+
+        actions.setA(prev => prev + 1)
+
+        expect(callback).toHaveBeenCalledTimes(2)
+
+        dispose()
+
+        actions.setA(prev => prev + 1)
+
+        expect(callback).toHaveBeenCalledTimes(2)
+    })
+})

@@ -159,17 +159,35 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
         })
     }
 
-    const effect = <TKeys extends Array<keyof TState>>(run: (state: TState) => void, deps: [...TKeys]) => {
-        run(getState(storeKeys)())
+    const effect = (run: (state: TState) => void) => {
+        const disposers = new Set<VoidFunction>()
 
-        return subscribe(deps)(() => {
-            run(getState(storeKeys)())
-        })
+        run(
+            new Proxy(state, {
+                get: (target, key) => {
+                    if (storeKeys.includes(key as keyof TState)) {
+                        disposers.add(subscribe([key as keyof TState])(() => run(state)))
+                    }
+
+                    if (keyInObject(key, target)) {
+                        return target[key]
+                    }
+
+                    return undefined
+                },
+            }),
+        )
+
+        if (disposers.size === 0) {
+            storeKeys.forEach(key => disposers.add(subscribe([key])(() => run(state))))
+        }
+
+        return () => disposers.forEach(dispose => dispose())
     }
 
-    const useStoreEffect = <TKeys extends Array<keyof TState>>(run: (state: TState) => void, deps: [...TKeys]) => {
+    const useStoreEffect = (run: (state: TState) => void) => {
         useEffect(() => {
-            const dispose = effect(run, deps)
+            const dispose = effect(run)
 
             return dispose
         }, [])
