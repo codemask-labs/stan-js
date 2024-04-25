@@ -130,12 +130,12 @@ reset()
 
 Function that allows to subscribe to store's values change and react to them
 
-It takes callback with current store's state that will be triggered on store's change, and as a second argument it takes array of dependencies that will listen to
+It takes callback with current store's state that will be triggered on every store's value that you are using
 
 ```typescript
 const dispose = effect(({ count }) => {
     console.log(count)
-}, ['count'])
+})
 ```
 
 If you won't pass any key to the dependencies it will trigger only once at the start - similarly to the ``useEffect`` hook
@@ -159,12 +159,12 @@ setName('Anna') // Component won't rerender because it doesn't subscribe to name
 
 React's hook that uses [effect](#effect) under the hood
 
-You should use it inside React components, and in the other places you feel free to use ``effect``
+You should use it inside React components, and in the other places feel free to use ``effect``
 
 ```typescript
 useStoreEffect(({ count }) => {
     console.log(count)
-}, ['count'])
+})
 ```
 
 ### Synchronizer
