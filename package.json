@@ -54,6 +54,18 @@
                 "default": "./dist/storage/index.cjs"
             },
             "default": "./dist/storage/index.cjs"
+        },
+        "./vanilla": {
+            "module": "./dist/vanilla/index.mjs",
+            "import": {
+                "types": "./dist/vanilla/index.d.mts",
+                "default": "./dist/vanilla/index.mjs"
+            },
+            "require": {
+                "types": "./dist/vanilla/index.d.cts",
+                "default": "./dist/vanilla/index.cjs"
+            },
+            "default": "./dist/vanilla/index.cjs"
         }
     },
     "scripts": {

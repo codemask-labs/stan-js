@@ -10,3 +10,5 @@ export const optionalArray = <T>(arr: Array<T>, fallback: Array<T>) => arr.lengt
 export const isPromise = <T>(value: unknown): value is Promise<T> => typeof value === 'object' && value !== null && 'then' in value
 
 export const getActionKey = <K>(key: K) => `set${capitalize(String(key))}` as ActionKey<K>
+
+export const keyInObject = <T extends object>(key: PropertyKey, obj: T): key is keyof T => key in obj
