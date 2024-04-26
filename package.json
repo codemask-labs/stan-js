@@ -81,7 +81,7 @@
     "author": "codemask-labs",
     "publishConfig": {
         "access": "public",
-        "provenance": false,
+        "provenance": true,
         "ignore": [
             "dist/*.map*"
         ]
