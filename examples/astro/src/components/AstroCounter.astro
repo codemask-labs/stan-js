@@ -1,0 +1,37 @@
+---
+import { getState } from '../store'
+---
+
+<section class="astro">
+    <img
+        src="/astro.svg"
+        alt="Astro"
+    />
+    <h1>
+        Astro Counter
+    </h1>
+    <p id="counter">
+        {getState().counter}
+    </p>
+    <div>
+        <button id='decrement'>
+            -
+        </button>
+        <button id='increment'>
+            +
+        </button>
+    </div>
+</section>
+
+<script>
+    import { actions, effect } from '../store'
+
+    const p = document.querySelector('#counter')
+    document.querySelector('#decrement')?.addEventListener('click', () => actions.setCounter(prev => prev - 1))
+    document.querySelector('#increment')?.addEventListener('click', () => actions.setCounter(prev => prev + 1))
+    effect(({ counter }) => {
+        if (p) {
+            p.textContent = counter.toString()
+        }
+    })
+</script>

@@ -41,6 +41,13 @@ bun add stan-js
 [![Open in StackBlitz](https://img.shields.io/badge/Stackblitz-fff?style=for-the-badge&logo=stackblitz&logoColor=white&labelColor=%231374EF&color=%231374EF
 )](https://stackblitz.com/github/codemask-labs/stan-js/tree/main/examples/react)
 
+##### Astro + React
+
+[![Open in repo](https://img.shields.io/badge/github-pages?style=for-the-badge&logo=github&logoColor=white&color=black
+)](https://github.com/codemask-labs/stan-js/tree/main/examples/astro)
+[![Open in StackBlitz](https://img.shields.io/badge/Stackblitz-fff?style=for-the-badge&logo=stackblitz&logoColor=white&labelColor=%231374EF&color=%231374EF
+)](https://stackblitz.com/github/codemask-labs/stan-js/tree/main/examples/astro)
+
 ## Getting Started
 
 Create a store with initial state:

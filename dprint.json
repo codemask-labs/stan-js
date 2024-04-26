@@ -17,7 +17,8 @@
         "**/node_modules",
         "**/*-lock.json",
         "dist",
-        "bun.lockb"
+        "bun.lockb",
+        ".astro"
     ],
     "plugins": [
         "https://plugins.dprint.dev/typescript-0.88.7.wasm",

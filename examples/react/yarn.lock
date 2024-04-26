@@ -1560,10 +1560,10 @@ source-map-js@^1.2.0:
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.0.tgz#16b809c162517b5b8c3e7dcd315a2a5c2612b2af"
   integrity sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==
 
-stan-js@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/stan-js/-/stan-js-0.2.0.tgz#97c74dbd1fb72373e2ce534a8ad4387a03245d22"
-  integrity sha512-5ADgb0b9m5by1zvKrryGkh38C6jpzjJjwrIcf1hGsWnzbknp4cYQJ81uuYYI1rOPebRr7cwixf6qW5gZqMCF1w==
+stan-js@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/stan-js/-/stan-js-0.3.0.tgz#2b9889ef368d5349f020a260e3e0d8d07d81907f"
+  integrity sha512-sfE6GPMO9/Qf0b+4g/YoOrztOpJuiDZYk2kkMH84WBaGh5XoxW4Uah/Vq2THPxaFLnF9bhOvktSivbJgH3IOdA==
   dependencies:
     fast-deep-equal "3.1.3"
 
