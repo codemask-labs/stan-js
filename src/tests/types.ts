@@ -31,14 +31,5 @@ export type ExpectedActionsTest = Expect<Equal<Actions, ExpectedActions>>
 type State = ReturnType<typeof getState>
 export type ExpectedStateTest = Expect<Equal<State, ExpectedStateValues>>
 
-type ReturnType<T extends Function> = T extends () => infer R ? R : never
-
-type UseStoreActions = ReturnType<typeof useStore>['actions']
-export type ExpectedUseStoreActionsTest = Expect<Equal<UseStoreActions, ExpectedActions>>
-
-type UseStoreState = ReturnType<typeof useStore>['state']
-export type ExpectedUseStoreStateTest = Expect<Equal<UseStoreState, ExpectedStateValues>>
-
-const partial = useStore('counter')
-export type ExpectedUseStorePartialStateTest = Expect<Equal<typeof partial['state'], Pick<ExpectedStateValues, 'counter'>>>
-export type ExpectedUseStorePartialActionsTest = Expect<Equal<typeof partial['actions'], Pick<ExpectedActions, 'setCounter'>>>
+type UseStoreReturn = ReturnType<typeof useStore>
+export type ExpectedUseStoreTest = Expect<Equal<UseStoreReturn, ExpectedStateValues & ExpectedActions>>

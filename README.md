@@ -8,12 +8,12 @@
 
 ## Overview
 
-stan-js is a lightweight and flexible state management library designed for use in React applications and beyond. It simplifies the process of managing state in your application by providing a simple `createStore` function. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
+stan-js is a lightweight and flexible state management library designed for use in React, React Native and even vanilla-js applications. It simplifies the process of managing state in your application by providing a simple `createStore` function. This package aims to offer a straightforward solution for state management without the need for extensive type definitions or repetitive code.
 
 ## Features
 
 - ⚡️ Performance and minimal rerenders
-- ✍️ Simple with minimal configuration
+- ✍️ Simple configuration
 - ⚛️ Out of the box React intergration
 - 🚀 Amazing typescript intellisense
 - 🪝 Easy access to all store values
@@ -44,11 +44,17 @@ bun add stan-js
 
 Create a store with initial state:
 
+You can think of a store as your app state. You can define multiple keys/values, each key will create separated subscription ([more explained here](#useStore)). If you want to persist the value - you can simply wrap it in [Synchronizer](#Synchronizer)
+
 ```typescript
 import { createStore } from 'stan-js'
+import { storage } from 'stan-js/storage'
 
 export const { useStore } = createStore({
     count: 0,
+    user: storage(''),
+    selectedLanguage: 'en-US',
+    unreadNotifications: [] as Array<Notification>
 })
 ```
 
@@ -58,10 +64,11 @@ Use the returned hook in your React component:
 import { useStore } from './store'
 
 const App = () => {
-    const { state: { count }, actions: { setCount } } = useStore()
+    const { count, user, setCount } = useStore()
 
     return (
         <div>
+            <h1>Hello {user}!</h1>
             <p>Count: {count}</p>
             <button onClick={() => setCount(prev => prev + 1)}>Increment</button>
             <button onClick={() => setCount(prev => prev - 1)}>Decrement</button>
@@ -70,6 +77,8 @@ const App = () => {
 }
 ```
 
+Check [demos](#Demos) to play more with stan-js
+
 ## Features
 
 ```typescript
@@ -77,7 +86,8 @@ import { createStore } from 'stan-js'
 
 export const { actions, getState, reset, effect, useStore, useStoreEffect } = createStore({
     count: 0,
-    name: 'John'
+    name: 'John',
+    notifications: [] as Array<Notification>
 })
 ```
 
@@ -109,6 +119,9 @@ You can either pass all of the keys that you want to be reset, or if you won't p
 reset('count')
 // Only count value will be reseted
 
+reset('name', 'notifications')
+// name and notifications will be reseted
+
 reset()
 // Whole store will be reseted
 ```
@@ -117,56 +130,41 @@ reset()
 
 Function that allows to subscribe to store's values change and react to them
 
-It takes callback with current store's state that will be triggered on store's change, and as a second argument it takes array of dependencies that will listen to
+It takes callback with current store's state that will be triggered on every store's value that you are using
 
 ```typescript
 const dispose = effect(({ count }) => {
     console.log(count)
-}, ['count'])
+})
 ```
 
 If you won't pass any key to the dependencies it will trigger only once at the start - similarly to the ``useEffect`` hook
 
 ### useStore
 
-React's hook that allows to access store's values and update them
+React's hook that allows to access store's values and to update them
 
-It takes store's keys as arguments, if you won't provide any argument it will return the **WHOLE** store
-
-It **ONLY** rerenders the component if the given keys' values have changed
-
-It will return object with state, and [actions](#actions). State is object with reactive fields from the store, it will rerender automatically whenever store value has changed
+It **ONLY** rerenders the component if the values that we access have changed
 
 ```typescript
-const { state, actions } = useStore('count')
+const { count, setCount, setName } = useStore()
 
-console.log(state.count)
-console.log(state.name) // ❌ error, name doesn't exist
+console.log(count)
 
-actions.setCount(prev => prev + 1)
-actions.setName('Anna') // ❌ error, setName doesn't exist
-```
-
-```typescript
-const { state, actions } = useStore()
-
-console.log(state.count)
-console.log(state.name)
-
-actions.setCount(prev => prev + 1)
-actions.setName('Anna')
+setCount(prev => prev + 1) // Component will rerender
+setName('Anna') // Component won't rerender because it doesn't subscribe to name
 ```
 
 ### useStoreEffect
 
 React's hook that uses [effect](#effect) under the hood
 
-You should use it inside React components, and in the other places you feel free to use ``effect``
+You should use it inside React components, and in the other places feel free to use ``effect``
 
 ```typescript
 useStoreEffect(({ count }) => {
     console.log(count)
-}, ['count'])
+})
 ```
 
 ### Synchronizer
@@ -183,12 +181,14 @@ type Synchronizer<T> = {
 }
 ```
 
-There is already implementation for localStorage and react-native-mmkv.
+There is already implementation for [localStorage](#localStorage) and [react-native-mmkv](#react-native-mmkv).
+
 ```ts
 import { storage } from 'stan-js/storage' // localStorage
 
 import { mmkvStorage } from 'stan-js/mmkv' // react-native-mmkv
 ```
+Both ``storage`` and ``mmkvStorage`` takes two parameters - first is initial value, and the second one which is optional is options object with key (if the key isn't passed stan-js will pass key from the store), serialize and deserialize functions.
 
 *For react-native you need to install react-native-mmkv and if you are using react-native older than 0.72 you need to add this to your metro.config.js*
 ```js
@@ -196,6 +196,20 @@ unstable_enablePackageExports: true,
 ```
 
 Read more about it [here](https://reactnative.dev/blog/2023/06/21/package-exports-support)
+
+If you want to store more complex objects that aren't supported by JSON you can either write your own storage synchronizer or pass custom `serialize` and `deserialize` functions to the options parameter. For example, you can use [superjson](https://github.com/blitz-js/superjson) package:
+```typescript
+import { createStore } from 'stan-js'
+import { storage } from 'stan-js/storage'
+import superjson from 'superjson'
+
+const { useStore } = createStore({
+    user: storage(new Set(), {
+        serialize: superjson.stringify,
+        deserialize: superjson.deserialize
+    })
+})
+```
 
 ## Scoped store
 
@@ -215,42 +229,6 @@ export const { StoreProvider, useScopedStore, withStore } = createScopedStore({
 ``` 
 
 ## Examples
-
-#### Access only part of state in store:
-
-```typescript
-import { createStore } from 'stan-js'
-
-const { useStore } = createStore({
-    firstName: 'John',
-    lastName: 'Smith',
-    age: 30
-})
-
-const App = () => {
-    const {
-        state: { firstName, age },
-        actions: { setFirstName, setAge }
-    } = useStore('firstName', 'age')
-
-    return (
-        <div>
-            <p>Name: {firstName}</p>
-            <input
-                type="text"
-                value={firstName}
-                onChange={event => setFirstName(event.currentTarget.value)}
-            />
-            <p>Age: {age}</p>
-            <input
-                type="number"
-                value={age}
-                onChange={event => setAge(event.currentTarget.value)}
-            />
-        </div>
-    );
-};
-```
 
 #### SSR scoped store:
 
@@ -277,11 +255,11 @@ export const { StoreProvider, useScopedStore } = createScopedStore({
 // Some client component inside layout
 
 const scopedStore = useScopedStore()
-const { state } = scopedStore.useStore('name')
+const { name } = scopedStore.useStore()
 
 return (
     <h1>
-        Hello {state.name}
+        Hello {name}
     </h1>
 )
 ```
@@ -307,24 +285,39 @@ const ProfileScreen = withStore(() => {
 // Some component inside ProfileScreen
 
 const scopedStore = useScopedStore()
-const { state } = scopedStore.useStore('name')
+const { name } = scopedStore.useStore()
 
 return (
     <h1>
-        Hello {state.name}
+        Hello {name}
     </h1>
 )
 ```
 
 #### Syncing values using synchronizer
 
+##### localStorage
+
 ```typescript
-import { createStore, storage } from 'stan-js'
-import { type CartItem } from 'lib/models'
+import { createStore } from 'stan-js'
+import { storage } from 'stan-js/storage'
 
 const { useStore } = createStore({
-    counter: storage(0), // number
+    counter: storage(0, { storageKey: 'counter-key' }), // number
     user: storage<string>(), // string | undefined
+    cart: [] as Array<CartItem>
+})
+```
+
+##### react-native-mmkv
+
+```typescript
+import { createStore } from 'stan-js'
+import { mmkvStorage } from 'stan-js/mmkv'
+
+const { useStore } = createStore({
+    counter: mmkvStorage(0, { storageKey: 'counter-key' }), // number
+    user: mmkvStorage<string>(), // string | undefined
     cart: [] as Array<CartItem>
 })
 ```

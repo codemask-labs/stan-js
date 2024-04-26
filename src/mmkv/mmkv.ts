@@ -1,15 +1,17 @@
 import { MMKV } from 'react-native-mmkv'
-import { Synchronizer } from '../types'
+import { Storage, StorageOptions, Synchronizer } from '../types'
 
 const mmkv = new MMKV()
 const pendingChange = new Map<string, true>()
 
-type Storage = {
-    <T>(initialValue: T, localStorageKey?: string): T
-    <T>(initialValue?: T, localStorageKey?: string): T | undefined
-}
-
-export const mmkvStorage: Storage = <T>(initialValue: T, localStorageKey?: string) => ({
+export const mmkvStorage: Storage = <T>(
+    initialValue: T,
+    {
+        deserialize = JSON.parse,
+        serialize = JSON.stringify,
+        storageKey,
+    }: StorageOptions<T> = {},
+) => ({
     value: initialValue,
     subscribe: (update, key) => {
         mmkv.addOnValueChangedListener(changedKey => {
@@ -19,9 +21,7 @@ export const mmkvStorage: Storage = <T>(initialValue: T, localStorageKey?: strin
                 return
             }
 
-            const storageKey = localStorageKey ?? key
-
-            if (changedKey !== storageKey) {
+            if (changedKey !== (storageKey ?? key)) {
                 return
             }
 
@@ -31,24 +31,23 @@ export const mmkvStorage: Storage = <T>(initialValue: T, localStorageKey?: strin
                 return
             }
 
-            update(JSON.parse(newValue))
+            update(deserialize(newValue))
         })
     },
     update: (value, key) => {
-        const storageKey = localStorageKey ?? key
+        const storageKeyToUse = storageKey ?? key
 
-        pendingChange.set(storageKey, true)
-        mmkv.set(storageKey, JSON.stringify(value))
+        pendingChange.set(storageKeyToUse, true)
+        mmkv.set(storageKeyToUse, serialize(value))
     },
     getSnapshot: key => {
-        const storageKey = localStorageKey ?? key
-        const value = mmkv.getString(storageKey)
+        const value = mmkv.getString(storageKey ?? key)
 
         if (value === undefined) {
             // Value is not in storage
             throw new Error()
         }
 
-        return JSON.parse(value)
+        return deserialize(value)
     },
 } as Synchronizer<T>)
