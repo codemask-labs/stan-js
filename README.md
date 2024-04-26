@@ -5,6 +5,7 @@
 ![NPM Version](https://img.shields.io/npm/dm/stan-js?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fstan-js)
 ![NPM Downloads](https://img.shields.io/npm/dm/stan-js?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fstan-js)
 
+<img src="./assets/baner.png" alt="stan-js" width="100%" height="auto" />
 
 ## Overview
 
