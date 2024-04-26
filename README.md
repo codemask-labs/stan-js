@@ -204,10 +204,10 @@ import { storage } from 'stan-js/storage'
 import superjson from 'superjson'
 
 const { useStore } = createStore({
-    user: storage(new Set())
-}, {
-    serialize: superjson.stringify,
-    deserialize: superjson.deserialize
+    user: storage(new Set(), {
+        serialize: superjson.stringify,
+        deserialize: superjson.deserialize
+    })
 })
 ```
 
@@ -316,7 +316,7 @@ import { createStore } from 'stan-js'
 import { mmkvStorage } from 'stan-js/mmkv'
 
 const { useStore } = createStore({
-    counter: mmkvStorage(0, 'counter-key'), // number
+    counter: mmkvStorage(0, { storageKey: 'counter-key' }), // number
     user: mmkvStorage<string>(), // string | undefined
     cart: [] as Array<CartItem>
 })
