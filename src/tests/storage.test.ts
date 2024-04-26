@@ -25,10 +25,23 @@ describe('storage', () => {
     })
 
     it('should update value', () => {
-        const { update, getSnapshot } = storage(1, 'key') as unknown as Synchronizer<number>
+        const { update, getSnapshot } = storage(1, { storageKey: 'key' }) as unknown as Synchronizer<number>
 
         update(2, 'key')
 
         expect(getSnapshot('key')).toEqual(2)
+    })
+
+    it('should serialize date as UNIX timestamp and deserialize it correctly', () => {
+        const { update, getSnapshot } = storage(new Date(), {
+            serialize: value => value.getTime().toString(),
+            deserialize: value => new Date(Number(value)),
+        }) as unknown as Synchronizer<Date>
+
+        update(new Date('2020-01-02'), 'date')
+        expect(localStorage.getItem('date')).toBe('1577923200000')
+
+        localStorage.setItem('date', '1641081600000')
+        expect(getSnapshot('date')).toEqual(new Date('2022-01-02'))
     })
 })

@@ -15,3 +15,14 @@ type IsFunction<T> = T extends Function ? true : false
 export type InitialState<TState extends object> = {
     [K in keyof TState]: IsFunction<TState[K]> extends true ? 'Function cannot be passed as top level state value' : TState[K]
 }
+
+export type StorageOptions<T> = {
+    storageKey?: string
+    deserialize?: (value: string) => T
+    serialize?: (value: T) => string
+}
+
+export type Storage = {
+    <T>(initialValue: T, options?: StorageOptions<T>): T
+    <T>(initialValue?: T, options?: StorageOptions<T>): T | undefined
+}

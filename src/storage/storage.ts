@@ -1,4 +1,4 @@
-import { Synchronizer } from '../types'
+import { Storage, StorageOptions, Synchronizer } from '../types'
 
 export const isLocalStorageAvailable = () => {
     // for SSR
@@ -36,12 +36,14 @@ const ssrSaveStorage = {
     },
 }
 
-type Storage = {
-    <T>(initialValue: T, localStorageKey?: string): T
-    <T>(initialValue?: T, localStorageKey?: string): T | undefined
-}
-
-export const storage: Storage = <T>(initialValue: T, localStorageKey?: string) => ({
+export const storage: Storage = <T>(
+    initialValue: T,
+    {
+        deserialize = JSON.parse,
+        serialize = JSON.stringify,
+        storageKey,
+    }: StorageOptions<T> = {},
+) => ({
     value: initialValue,
     subscribe: (update, key) => {
         const handleEvent = (event: StorageEvent) => {
@@ -49,13 +51,11 @@ export const storage: Storage = <T>(initialValue: T, localStorageKey?: string) =
                 return
             }
 
-            const storageKey = localStorageKey ?? key
-
-            if (event.key !== storageKey || event.newValue === null) {
+            if (event.key !== (storageKey ?? key) || event.newValue === null) {
                 return
             }
 
-            update(JSON.parse(event.newValue))
+            update(deserialize(event.newValue))
         }
 
         if (!isLocalStorageAvailable()) {
@@ -64,20 +64,15 @@ export const storage: Storage = <T>(initialValue: T, localStorageKey?: string) =
 
         window.addEventListener('storage', handleEvent)
     },
-    update: (value, key) => {
-        const storageKey = localStorageKey ?? key
-
-        ssrSaveStorage.setItem(storageKey, JSON.stringify(value))
-    },
+    update: (value, key) => ssrSaveStorage.setItem(storageKey ?? key, serialize(value)),
     getSnapshot: key => {
-        const storageKey = localStorageKey ?? key
-        const value = ssrSaveStorage.getItem(storageKey)
+        const value = ssrSaveStorage.getItem(storageKey ?? key)
 
         if (value === null || value === undefined) {
             // Value is not in storage
             throw new Error()
         }
 
-        return JSON.parse(value)
+        return deserialize(value)
     },
 } as Synchronizer<T>)
