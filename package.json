@@ -1,6 +1,6 @@
 {
     "name": "stan-js",
-    "version": "1.0.0",
+    "version": "0.9.0",
     "type": "module",
     "description": "Lightweight and flexible state management library designed for use in React applications and beyond",
     "keywords": [
