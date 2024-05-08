@@ -7,7 +7,7 @@ export const isLocalStorageAvailable = () => {
     }
 
     try {
-        window.localStorage
+        window.localStorage.length
 
         return true
     } catch {
