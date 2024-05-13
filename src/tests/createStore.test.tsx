@@ -119,6 +119,15 @@ describe('useStore', () => {
         expect(setB).toBeDefined()
     })
 
+    it('should return undefined when invalid value is accessed', () => {
+        const { useStore } = createStore({})
+
+        // @ts-expect-error
+        const { result: { current: { a } } } = renderHook(() => useStore())
+
+        expect(a).toEqual(undefined)
+    })
+
     it('should return state and actions from storage', async () => {
         const { actions, getState } = createStore({
             a: storage(0),
@@ -212,6 +221,33 @@ describe('effect', () => {
         dispose()
 
         actions.setA(prev => prev + 1)
+
+        expect(callback).toHaveBeenCalledTimes(2)
+    })
+})
+
+describe('useStoreEffect', () => {
+    it('should run effect', () => {
+        const { useStoreEffect, actions } = createStore({
+            a: 0,
+            b: 0,
+        })
+
+        const callback = jest.fn()
+
+        renderHook(() =>
+            useStoreEffect(({ a }) => {
+                callback(a)
+            })
+        )
+
+        expect(callback).toHaveBeenCalledTimes(1)
+
+        actions.setA(prev => prev + 1)
+
+        expect(callback).toHaveBeenCalledTimes(2)
+
+        actions.setB(prev => prev + 1)
 
         expect(callback).toHaveBeenCalledTimes(2)
     })
