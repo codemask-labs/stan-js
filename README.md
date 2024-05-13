@@ -19,6 +19,7 @@ stan-js is a lightweight and flexible state management library designed for use 
 - 🚀 Amazing typescript intellisense
 - 🪝 Easy access to all store values
 - 🪶 Very lightweight
+- 🛡️ 100% Test coverage
 
 ## Installation
 
