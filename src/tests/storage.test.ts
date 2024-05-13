@@ -6,6 +6,8 @@ import { Synchronizer } from '../types'
 const windowStub = spyOn(window, 'window')
 const originalWindow = { ...window }
 
+const getStorage = () => storage(1, { storageKey: 'key' }) as unknown as Synchronizer<number>
+
 describe('isLocalStorageAvailable', () => {
     it('should return false', () => {
         // @ts-ignore
@@ -26,7 +28,7 @@ describe('storage', () => {
     })
 
     it('should update value', () => {
-        const { update, getSnapshot } = storage(1, { storageKey: 'key' }) as unknown as Synchronizer<number>
+        const { update, getSnapshot } = getStorage()
 
         update(2, 'key')
 
@@ -54,7 +56,7 @@ describe('disabled localStorage', () => {
                 localStorage: undefined,
             })) as never,
         )
-        const { getSnapshot, update, subscribe } = storage(1, { storageKey: 'key' }) as unknown as Synchronizer<number>
+        const { getSnapshot, update, subscribe } = getStorage()
 
         subscribe?.(() => {}, 'key')
         expect(window).toBeDefined()
@@ -69,7 +71,7 @@ describe('disabled localStorage', () => {
 describe('SSR', () => {
     it('should work', () => {
         windowStub.mockImplementation((() => undefined) as never)
-        const { getSnapshot, update } = storage(1, { storageKey: 'ssr' }) as unknown as Synchronizer<number>
+        const { getSnapshot, update } = getStorage()
 
         expect(typeof window).toBe('undefined')
         expect(isLocalStorageAvailable()).toBeFalsy()
@@ -84,7 +86,7 @@ describe('storage change', () => {
     it('should trigger update on change', () => {
         windowStub.mockImplementation((() => originalWindow) as never)
 
-        const { subscribe } = storage(1, { storageKey: 'key' }) as unknown as Synchronizer<number>
+        const { subscribe } = getStorage()
 
         const callback = jest.fn()
 
@@ -100,7 +102,7 @@ describe('storage change', () => {
     })
 
     it('should not trigger update on sessionStorage change', () => {
-        const { subscribe } = storage(1, { storageKey: 'key' }) as unknown as Synchronizer<number>
+        const { subscribe } = getStorage()
 
         const callback = jest.fn()
 
@@ -116,7 +118,7 @@ describe('storage change', () => {
     })
 
     it('should not trigger update on different key change', () => {
-        const { subscribe } = storage(1, { storageKey: 'key' }) as unknown as Synchronizer<number>
+        const { subscribe } = getStorage()
 
         const callback = jest.fn()
 
