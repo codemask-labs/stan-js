@@ -128,10 +128,33 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
     }
 
     return {
+        /**
+         * Function that returns current state of the store
+         * @see {@link https://github.com/codemask-labs/stan-js#getState}
+         */
         getState: () => state,
+        /**
+         * Object that contains all functions that allows for updating the store's state
+         * @see {@link https://github.com/codemask-labs/stan-js#actions}
+         */
         actions,
+        /**
+         * Function that resets store state to the initial values
+         * @param keys - keys of the store that should be reset
+         * @see {@link https://github.com/codemask-labs/stan-js#reset}
+         */
         reset,
+        /**
+         * Function that allows to subscribe to store's values change and react to them by calling the listener callback
+         * @param run - callback that will be called when store's values change
+         * @see {@link https://github.com/codemask-labs/stan-js#effect}
+         */
         effect,
+        /**
+         * Function that returns a function that allows to listen to store's values change
+         * @param keys - keys of the store that should be listened to
+         * @returns Function that allows for listening to store's values change
+         */
         subscribe,
     }
 }

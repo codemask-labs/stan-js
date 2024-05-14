@@ -36,6 +36,14 @@ const ssrSaveStorage = {
     },
 }
 
+/**
+ * A Synchronizer implementation using localStorage
+ * @param initialValue - initial value of the storage
+ * @param options.deserialize - function to deserialize the value from storage
+ * @param options.serialize - function to serialize the value to storage
+ * @param options.storageKey - key to use in storage
+ * @see {@link https://github.com/codemask-labs/stan-js#Synchronizer}
+ */
 export const storage: Storage = <T>(
     initialValue: T,
     {

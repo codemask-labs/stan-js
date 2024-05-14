@@ -73,11 +73,18 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
     }
 
     return {
-        actions: store.actions,
-        getState: store.getState,
-        effect: store.effect,
-        reset: store.reset,
+        ...store,
+        /**
+         * React's hook that allows to access store's values and to update them
+         * @returns Store's values and actions
+         * @see {@link https://github.com/codemask-labs/stan-js#useStore}
+         */
         useStore,
+        /**
+         * React's hook that allows to subscribe to store's values and react to them by calling the listener callback
+         * @param run - callback that will be called when store's values change
+         * @see {@link https://github.com/codemask-labs/stan-js#useStoreEffect}
+         */
         useStoreEffect,
     }
 }
