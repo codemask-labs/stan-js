@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/codemask-labs/stan-js/compare/v1.0.1...v1.1.0) (2024-05-14)
+
+
+### Bug Fixes
+
+* js-docs ([f72f8a5](https://github.com/codemask-labs/stan-js/commit/f72f8a5150c8df6a31dd1edd9dde0aeb42f80b29))
+
+
+### Features
+
+* universal storage ([a172474](https://github.com/codemask-labs/stan-js/commit/a17247454cf37ec7f28c775324e8252f0f46df3f))
+
 ## [1.0.1](https://github.com/codemask-labs/stan-js/compare/v1.0.0...v1.0.1) (2024-05-14)
 
 
