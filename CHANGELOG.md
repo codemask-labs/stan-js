@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/codemask-labs/stan-js/compare/v1.0.0...v1.0.1) (2024-05-14)
+
+
+### Bug Fixes
+
+* allow common js ([424baae](https://github.com/codemask-labs/stan-js/commit/424baae1c5f00c21df71c49baabb17bc1cada57e))
+
 # 1.0.0 (2024-05-06)
 
 
