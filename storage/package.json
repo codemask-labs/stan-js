@@ -1,4 +1,6 @@
 {
     "main": "../dist/storage/index.cjs",
+    "react-native": "../dist/storage/mmkv.cjs",
+    "browser": "../dist/storage/index.cjs",
     "types": "../dist/storage/index.d.cts"
 }
