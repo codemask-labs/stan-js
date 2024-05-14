@@ -37,7 +37,7 @@ const ssrSaveStorage = {
 }
 
 /**
- * A Synchronizer implementation using localStorage
+ * A Synchronizer implementation using localStorage and mmkv
  * @param initialValue - initial value of the storage
  * @param options.deserialize - function to deserialize the value from storage
  * @param options.serialize - function to serialize the value to storage

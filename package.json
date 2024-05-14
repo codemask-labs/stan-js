@@ -31,20 +31,10 @@
             },
             "default": "./dist/index.cjs"
         },
-        "./mmkv": {
-            "module": "./dist/mmkv/index.mjs",
-            "import": {
-                "types": "./dist/mmkv/index.d.mts",
-                "default": "./dist/mmkv/index.mjs"
-            },
-            "require": {
-                "types": "./dist/mmkv/index.d.cts",
-                "default": "./dist/mmkv/index.cjs"
-            },
-            "default": "./dist/mmkv/index.cjs"
-        },
         "./storage": {
             "module": "./dist/storage/index.mjs",
+            "react-native": "./dist/storage/mmkv.cjs",
+            "browser": "./dist/storage/index.cjs",
             "import": {
                 "types": "./dist/storage/index.d.mts",
                 "default": "./dist/storage/index.mjs"

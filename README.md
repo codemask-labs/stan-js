@@ -190,14 +190,12 @@ type Synchronizer<T> = {
 }
 ```
 
-There is already implementation for [localStorage](#localStorage) and [react-native-mmkv](#react-native-mmkv).
+There is already implementation for persisting data on both platforms (react and react-native).
 
 ```ts
-import { storage } from 'stan-js/storage' // localStorage
-
-import { mmkvStorage } from 'stan-js/mmkv' // react-native-mmkv
+import { storage } from 'stan-js/storage'
 ```
-Both ``storage`` and ``mmkvStorage`` takes two parameters - first is initial value, and the second one which is optional is options object with key (if the key isn't passed stan-js will pass key from the store), serialize and deserialize functions.
+It takes two parameters - first is initial value, and the second one (which is optional) is options object with key (if the key isn't passed stan-js will pass key from the store), serialize and deserialize functions.
 
 *For react-native you need to install react-native-mmkv and if you are using react-native older than 0.72 you need to add this to your metro.config.js*
 ```js
@@ -305,7 +303,7 @@ return (
 
 #### Syncing values using synchronizer
 
-##### localStorage
+##### storage
 
 ```typescript
 import { createStore } from 'stan-js'
@@ -318,15 +316,3 @@ const { useStore } = createStore({
 })
 ```
 
-##### react-native-mmkv
-
-```typescript
-import { createStore } from 'stan-js'
-import { mmkvStorage } from 'stan-js/mmkv'
-
-const { useStore } = createStore({
-    counter: mmkvStorage(0, { storageKey: 'counter-key' }), // number
-    user: mmkvStorage<string>(), // string | undefined
-    cart: [] as Array<CartItem>
-})
-```

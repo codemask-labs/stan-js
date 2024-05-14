@@ -1,4 +1,0 @@
-{
-    "main": "../dist/mmkv/index.cjs",
-    "types": "../dist/mmkv/index.d.cts"
-}
