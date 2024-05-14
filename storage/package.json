@@ -1,0 +1,4 @@
+{
+    "main": "../dist/storage/index.cjs",
+    "types": "../dist/storage/index.d.cts"
+}

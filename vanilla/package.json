@@ -1,0 +1,4 @@
+{
+    "main": "../dist/vanilla/index.cjs",
+    "types": "../dist/vanilla/index.d.cts"
+}
