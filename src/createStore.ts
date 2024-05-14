@@ -73,7 +73,10 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
     }
 
     return {
-        ...store,
+        actions: store.actions,
+        getState: store.getState,
+        effect: store.effect,
+        reset: store.reset,
         /**
          * React's hook that allows to access store's values and to update them
          * @returns Store's values and actions
