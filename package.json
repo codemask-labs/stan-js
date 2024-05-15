@@ -117,6 +117,14 @@
         "react": ">=18.2.0",
         "react-native-mmkv": ">=2.0.0"
     },
+    "peerDependenciesMeta": {
+        "react": {
+            "optional": true
+        },
+        "react-native-mmkv": {
+            "optional": true
+        }
+    },
     "dependencies": {
         "fast-deep-equal": "3.1.3"
     }
