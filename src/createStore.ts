@@ -29,8 +29,10 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
         }
     }
 
+    const init = {}
+
     const useStore = () => {
-        const [_, recalculate] = useReducer(() => ({}), {})
+        const [_, recalculate] = useReducer(() => ({}), init)
         const [subscribeKeys] = useState(() => new Set<TKey>())
         const getSnapshot = useMemo(() => {
             if (subscribeKeys.size === 0) {
@@ -47,6 +49,10 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
             return store.subscribe(Array.from(subscribeKeys))
         }, [_])
         const synced = useSyncExternalStore(subscribeStore, getSnapshot, getSnapshot)
+
+        if (_ !== init) {
+            return { ...synced, ...store.actions }
+        }
 
         return new Proxy({ ...synced, ...store.actions }, {
             get: (target, key) => {
