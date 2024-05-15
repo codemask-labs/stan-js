@@ -197,7 +197,8 @@ import { storage } from 'stan-js/storage'
 ```
 It takes two parameters - first is initial value, and the second one (which is optional) is options object with key (if the key isn't passed stan-js will pass key from the store), serialize and deserialize functions.
 
-*For react-native you need to install react-native-mmkv and if you are using react-native older than 0.72 you need to add this to your metro.config.js*
+> [!IMPORTANT]  
+> For react-native you need to install [react-native-mmkv](https://www.npmjs.com/package/react-native-mmkv) and if you are using react-native older than 0.72 you need to add this to your `metro.config.js`
 ```js
 unstable_enablePackageExports: true,
 ```
