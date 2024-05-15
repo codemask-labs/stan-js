@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/codemask-labs/stan-js/compare/v1.1.0...v1.1.1) (2024-05-15)
+
+
+### Bug Fixes
+
+* add peerDependenciesMeta ([66f5d98](https://github.com/codemask-labs/stan-js/commit/66f5d9808eb94f688d65c6735cc7dc776d3072d3))
+
 # [1.1.0](https://github.com/codemask-labs/stan-js/compare/v1.0.1...v1.1.0) (2024-05-14)
 
 
