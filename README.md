@@ -153,6 +153,9 @@ If you won't pass any key to the dependencies it will trigger only once at the s
 
 React's hook that allows to access store's values and to update them
 
+
+You **should** destructure values from this hook - to let the store know what values you will access
+
 It **ONLY** rerenders the component if the values that we access have changed
 
 ```typescript
