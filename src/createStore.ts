@@ -1,5 +1,5 @@
 import equal from 'fast-deep-equal'
-import { useEffect, useMemo, useReducer, useState, useSyncExternalStore } from 'react'
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { InitialState } from './types'
 import { keyInObject } from './utils'
 import { createStore as createStoreVanilla } from './vanilla'
@@ -30,7 +30,7 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
     }
 
     const useStore = () => {
-        const [_, recalculate] = useReducer(() => ({}), {})
+        const [isInitialized, setIsInitialized] = useState(false)
         const [subscribeKeys] = useState(() => new Set<TKey>())
         const getSnapshot = useMemo(() => {
             if (subscribeKeys.size === 0) {
@@ -38,21 +38,25 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
             }
 
             return getState(Array.from(subscribeKeys))
-        }, [_])
+        }, [isInitialized])
         const subscribeStore = useMemo(() => {
             if (subscribeKeys.size === 0) {
                 return () => () => {}
             }
 
             return store.subscribe(Array.from(subscribeKeys))
-        }, [_])
+        }, [isInitialized])
         const synced = useSyncExternalStore(subscribeStore, getSnapshot, getSnapshot)
+
+        if (isInitialized) {
+            return { ...synced, ...store.actions }
+        }
 
         return new Proxy({ ...synced, ...store.actions }, {
             get: (target, key) => {
                 if (storeKeys.includes(key as TKey) && !subscribeKeys.has(key as TKey)) {
                     subscribeKeys.add(key as TKey)
-                    recalculate()
+                    setIsInitialized(true)
                 }
 
                 if (keyInObject(key, target)) {
