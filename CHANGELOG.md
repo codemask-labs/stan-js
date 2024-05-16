@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/codemask-labs/stan-js/compare/v1.1.1...v1.1.2) (2024-05-16)
+
+
+### Bug Fixes
+
+* disable proxy after recalculate ([f0cfab2](https://github.com/codemask-labs/stan-js/commit/f0cfab21b0aba145ec0b4b51674351975db99863))
+
 ## [1.1.1](https://github.com/codemask-labs/stan-js/compare/v1.1.0...v1.1.1) (2024-05-15)
 
 
