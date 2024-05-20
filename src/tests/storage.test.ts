@@ -47,6 +47,29 @@ describe('storage', () => {
         localStorage.setItem('date', '1641081600000')
         expect(getSnapshot('date')).toEqual(new Date('2022-01-02'))
     })
+
+    it('should remove value from storage', () => {
+        type UserData = {
+            username: string
+            accessToken: string
+            refreshToken: string
+        }
+        const userData = {
+            username: 'test',
+            accessToken: 'access',
+            refreshToken: 'refresh',
+        }
+
+        const { update, getSnapshot } = storage<UserData | undefined>(undefined, {
+            storageKey: 'user',
+        }) as unknown as Synchronizer<UserData | undefined>
+
+        update(userData, 'user')
+        expect(getSnapshot('user')).toEqual(userData)
+
+        update(undefined, 'user')
+        expect(() => getSnapshot('user')).toThrow()
+    })
 })
 
 describe('disabled localStorage', () => {
