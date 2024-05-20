@@ -38,6 +38,13 @@ export const storage: Storage = <T>(
         const storageKeyToUse = storageKey ?? key
 
         pendingChange.set(storageKeyToUse, true)
+
+        if (value === undefined) {
+            mmkv.delete(storageKeyToUse)
+
+            return
+        }
+
         mmkv.set(storageKeyToUse, serialize(value))
     },
     getSnapshot: key => {

@@ -34,6 +34,15 @@ const ssrSaveStorage = {
 
         return mapStorage.get(key)
     },
+    removeItem: (key: string) => {
+        if (isLocalStorageAvailable()) {
+            localStorage.removeItem(key)
+
+            return
+        }
+
+        mapStorage.delete(key)
+    },
 }
 
 /**
@@ -72,7 +81,15 @@ export const storage: Storage = <T>(
 
         window.addEventListener('storage', handleEvent)
     },
-    update: (value, key) => ssrSaveStorage.setItem(storageKey ?? key, serialize(value)),
+    update: (value, key) => {
+        if (value === undefined) {
+            ssrSaveStorage.removeItem(storageKey ?? key)
+
+            return
+        }
+
+        ssrSaveStorage.setItem(storageKey ?? key, serialize(value))
+    },
     getSnapshot: key => {
         const value = ssrSaveStorage.getItem(storageKey ?? key)
 
