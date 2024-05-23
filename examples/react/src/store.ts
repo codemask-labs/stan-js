@@ -3,15 +3,10 @@ import { createStore } from 'stan-js'
 export const { useStore, reset, getState, actions } = createStore({
     counter: 0,
     message: 'Hello, Stan!',
+    upperCaseMessage: ({ message }) => message.toUpperCase(),
     currentTime: new Date(),
     users: [] as Array<string>,
 })
-
-export const useCapsMessage = () => {
-    const { message } = useStore()
-
-    return message.toUpperCase()
-}
 
 export const fetchUsers = async () => {
     try {

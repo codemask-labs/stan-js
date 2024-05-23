@@ -13,16 +13,6 @@ describe('create', () => {
 
         expect(store).toBeDefined()
     })
-
-    it('should throw an error when function is passed', () => {
-        expect(() =>
-            createStore({
-                a: 0,
-                // @ts-expect-error
-                b: () => {},
-            })
-        ).toThrow('Function cannot be passed as top level state value')
-    })
 })
 
 describe('state', () => {
@@ -30,11 +20,13 @@ describe('state', () => {
         const { getState } = createStore({
             a: 0,
             b: 'test',
+            c: ({ a }) => a + 1,
         })
 
         expect(getState()).toEqual({
             a: 0,
             b: 'test',
+            c: 1,
         })
     })
 })
@@ -45,17 +37,19 @@ describe('actions', () => {
             a: 0,
             b: 'test',
             c: storage(0),
+            d: ({ a }) => a + 1,
         })
 
         actions.setA(3)
         actions.setB('hmm')
         actions.setC(prev => prev + 1)
 
-        const { a, b, c } = getState()
+        const { a, b, c, d } = getState()
 
         expect(a).toEqual(3)
         expect(b).toEqual('hmm')
         expect(c).toEqual(1)
+        expect(d).toEqual(4)
         expect(window.localStorage.getItem('c')).toEqual('1')
     })
 })
@@ -177,28 +171,35 @@ describe('effect', () => {
         const { effect, actions } = createStore({
             a: 0,
             b: 0,
+            c: ({ a }) => a + 1,
         })
 
         const callback = jest.fn()
         const dispose = effect(({ a }) => {
             callback(a)
         })
+        const computedCallback = jest.fn()
+        const computedDispose = effect(({ c }) => computedCallback(c))
 
         expect(callback).toHaveBeenCalledTimes(1)
+        expect(computedCallback).toHaveBeenCalledWith(1)
 
         actions.setA(prev => prev + 1)
 
         expect(callback).toHaveBeenCalledTimes(2)
+        expect(computedCallback).toHaveBeenCalledWith(2)
 
         actions.setB(prev => prev + 1)
 
         expect(callback).toHaveBeenCalledTimes(2)
 
         dispose()
+        computedDispose()
 
         actions.setA(prev => prev + 1)
 
         expect(callback).toHaveBeenCalledTimes(2)
+        expect(computedCallback).toHaveBeenCalledTimes(2)
     })
 
     it('should run effect on every store change', () => {

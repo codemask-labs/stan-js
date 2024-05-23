@@ -15,7 +15,7 @@ const CurrentTime = () => {
 }
 
 const Message = () => {
-    const upperCaseMessage = useCapsMessage()
+    const { upperCaseMessage } = useStore()
 
     return <AnimateRerender>Uppercased message: {upperCaseMessage}</AnimateRerender>
 }
