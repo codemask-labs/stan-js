@@ -6,7 +6,7 @@ import { createStore as createStoreVanilla } from './vanilla'
 export const createStore = <TState extends object>(stateRaw: TState) => {
     type TKey = keyof TState
     const storeKeys = Object.keys(stateRaw) as Array<TKey>
-    const store = createStoreVanilla<TState>(stateRaw)
+    const store = createStoreVanilla(stateRaw)
 
     const getState = (keys: Array<TKey>) => {
         let oldState: TState

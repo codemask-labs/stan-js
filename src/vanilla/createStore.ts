@@ -33,7 +33,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
 
     const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
         if (typeof value === 'function') {
-            return acc
+            throw new Error('Function cannot be passed as top level state value')
         }
 
         if (isSynchronizer(value)) {
@@ -92,31 +92,29 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         }
     }
 
-    const storeEntries = Object.entries(stateRaw) as Array<[TKey, unknown]>
-
-    storeEntries.forEach(([key, value]) => {
-        if (typeof value !== 'function') {
+    storeKeys.forEach(key => {
+        if (Object.getOwnPropertyDescriptor(stateRaw, key)?.get === undefined) {
             return
         }
 
         const proxiedState = new Proxy(state, {
-            get: (target, dependencyKey) => {
+            get: (target, dependencyKey, receiver) => {
                 if (!keyInObject(dependencyKey, target)) {
                     return undefined
                 }
 
                 subscribe([dependencyKey])(() => {
-                    const newValue = value(target)
+                    const newValue = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(target)
 
                     target[key] = newValue
                     listeners[key].forEach(listener => listener(newValue))
                 })
 
-                return target[dependencyKey]
+                return Reflect.get(target, dependencyKey, receiver)
             },
         })
 
-        state[key] = value(proxiedState)
+        Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(proxiedState)
     })
 
     const reset = (...keys: Array<TKey>) => {

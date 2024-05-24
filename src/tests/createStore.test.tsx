@@ -13,6 +13,15 @@ describe('create', () => {
 
         expect(store).toBeDefined()
     })
+
+    it('should throw an error when function is passed', () => {
+        expect(() =>
+            createStore({
+                a: 0,
+                b: () => {},
+            })
+        ).toThrow('Function cannot be passed as top level state value')
+    })
 })
 
 describe('state', () => {
@@ -20,7 +29,9 @@ describe('state', () => {
         const { getState } = createStore({
             a: 0,
             b: 'test',
-            c: ({ a }) => a + 1,
+            get c() {
+                return this.a + 1
+            },
         })
 
         expect(getState()).toEqual({
@@ -28,6 +39,18 @@ describe('state', () => {
             b: 'test',
             c: 1,
         })
+    })
+
+    it('should failed with invalid computed property', () => {
+        const { getState } = createStore({
+            a: 0,
+            get b(): undefined {
+                // @ts-expect-error
+                return this.c
+            },
+        })
+
+        expect(getState().b).toEqual(undefined)
     })
 })
 
@@ -37,7 +60,9 @@ describe('actions', () => {
             a: 0,
             b: 'test',
             c: storage(0),
-            d: ({ a }) => a + 1,
+            get d() {
+                return this.a + 1
+            },
         })
 
         actions.setA(3)
@@ -171,7 +196,9 @@ describe('effect', () => {
         const { effect, actions } = createStore({
             a: 0,
             b: 0,
-            c: ({ a }) => a + 1,
+            get c() {
+                return this.a + 1
+            },
         })
 
         const callback = jest.fn()

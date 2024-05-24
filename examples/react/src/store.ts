@@ -1,9 +1,11 @@
-import { createStore } from 'stan-js'
+import { createStore } from '../../../src/createStore'
 
 export const { useStore, reset, getState, actions } = createStore({
     counter: 0,
     message: 'Hello, Stan!',
-    upperCaseMessage: ({ message }) => message.toUpperCase(),
+    get upperCaseMessage() {
+        return this.message.toUpperCase() + this.counter
+    },
     currentTime: new Date(),
     users: [] as Array<string>,
 })
