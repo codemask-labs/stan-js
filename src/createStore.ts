@@ -1,10 +1,9 @@
 import equal from 'fast-deep-equal'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
-import { InitialState } from './types'
 import { keyInObject } from './utils'
 import { createStore as createStoreVanilla } from './vanilla'
 
-export const createStore = <TState extends object>(stateRaw: InitialState<TState>) => {
+export const createStore = <TState extends object>(stateRaw: TState) => {
     type TKey = keyof TState
     const storeKeys = Object.keys(stateRaw) as Array<TKey>
     const store = createStoreVanilla<TState>(stateRaw)

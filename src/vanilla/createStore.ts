@@ -1,7 +1,7 @@
-import { Actions, Dispatch, InitialState } from '../types'
+import { Actions, Dispatch } from '../types'
 import { getActionKey, isPromise, isSynchronizer, keyInObject, optionalArray } from '../utils'
 
-export const createStore = <TState extends object>(stateRaw: InitialState<TState>) => {
+export const createStore = <TState extends object>(stateRaw: TState) => {
     type TKey = keyof TState
     const storeKeys = Object.keys(stateRaw) as Array<TKey>
 
@@ -92,25 +92,31 @@ export const createStore = <TState extends object>(stateRaw: InitialState<TState
         }
     }
 
-    Object.entries(stateRaw).forEach(([key, value]) => {
+    const storeEntries = Object.entries(stateRaw) as Array<[TKey, unknown]>
+
+    storeEntries.forEach(([key, value]) => {
         if (typeof value !== 'function') {
             return
         }
 
         const proxiedState = new Proxy(state, {
             get: (target, dependencyKey) => {
-                subscribe([dependencyKey as TKey])(() => {
+                if (!keyInObject(dependencyKey, target)) {
+                    return undefined
+                }
+
+                subscribe([dependencyKey])(() => {
                     const newValue = value(target)
 
-                    target[key as TKey] = newValue
-                    listeners[key as TKey].forEach(listener => listener(newValue))
+                    target[key] = newValue
+                    listeners[key].forEach(listener => listener(newValue))
                 })
 
-                return target[dependencyKey as TKey]
+                return target[dependencyKey]
             },
         })
 
-        state[key as TKey] = value(proxiedState)
+        state[key] = value(proxiedState)
     })
 
     const reset = (...keys: Array<TKey>) => {
