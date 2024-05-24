@@ -5,23 +5,29 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     type TKey = keyof TState
     const storeKeys = Object.keys(stateRaw) as Array<TKey>
 
-    const actions = storeKeys.reduce((acc, key) => ({
-        ...acc,
-        [getActionKey(key)]: (value: Dispatch<TState, TKey>) => {
-            if (typeof value === 'function') {
-                const fn = value as (prevState: TState[TKey]) => TState[TKey]
-                const newValue = fn(state[key])
+    const actions = storeKeys.reduce((acc, key) => {
+        if (Object.getOwnPropertyDescriptor(stateRaw, key)?.get !== undefined) {
+            return acc
+        }
 
-                state[key] = newValue
-                listeners[key].forEach(listener => listener(newValue))
+        return {
+            ...acc,
+            [getActionKey(key)]: (value: Dispatch<TState, TKey>) => {
+                if (typeof value === 'function') {
+                    const fn = value as (prevState: TState[TKey]) => TState[TKey]
+                    const newValue = fn(state[key])
 
-                return
-            }
+                    state[key] = newValue
+                    listeners[key].forEach(listener => listener(newValue))
 
-            state[key] = value
-            listeners[key].forEach(listener => listener(value))
-        },
-    }), {} as Actions<TState>)
+                    return
+                }
+
+                state[key] = value
+                listeners[key].forEach(listener => listener(value))
+            },
+        }
+    }, {} as Actions<TState>)
 
     // @ts-expect-error
     const getAction = <K extends TKey>(key: K) => actions[getActionKey(key)] as (value: unknown) => void
