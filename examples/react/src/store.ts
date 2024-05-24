@@ -1,4 +1,4 @@
-import { createStore } from '../../../src/createStore'
+import { createStore } from 'stan-js'
 
 export const { useStore, reset, getState, actions } = createStore({
     counter: 0,
