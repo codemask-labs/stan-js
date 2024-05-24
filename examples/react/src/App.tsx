@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { AnimateRerender } from './AnimateRerender'
-import { actions, fetchUsers, getState, reset, useCapsMessage, useStore } from './store'
+import { actions, fetchUsers, getState, reset, useStore } from './store'
 
 const CurrentTime = () => {
     const { currentTime } = useStore()
