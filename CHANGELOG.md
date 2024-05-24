@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/codemask-labs/stan-js/compare/v1.1.2...v1.2.0) (2024-05-24)
+
+
+### Bug Fixes
+
+* fix types ([b74e662](https://github.com/codemask-labs/stan-js/commit/b74e662e59363f0c5520ef2fd2e70e6523717795))
+
+
+### Features
+
+* add computed/derived state ([7958796](https://github.com/codemask-labs/stan-js/commit/7958796d4813a4c7cc9cda7b51f75d4cea491ee3))
+* support removing data from storage ([#63](https://github.com/codemask-labs/stan-js/issues/63)) ([2040627](https://github.com/codemask-labs/stan-js/commit/2040627d10f87a63a9f5f03ffab1f5b5c1f21dbb))
+* update syntax ([2496eb1](https://github.com/codemask-labs/stan-js/commit/2496eb15f7dfe661bab64ea6697f4ca79d08729d))
+
 ## [1.1.2](https://github.com/codemask-labs/stan-js/compare/v1.1.1...v1.1.2) (2024-05-16)
 
 
