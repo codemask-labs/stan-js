@@ -1,4 +1,4 @@
-import { Actions, Dispatch } from '../types'
+import { Actions, Dispatch, RemoveReadonly } from '../types'
 import { getActionKey, isPromise, isSynchronizer, keyInObject, optionalArray } from '../utils'
 
 export const createStore = <TState extends object>(stateRaw: TState) => {
@@ -27,7 +27,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                 listeners[key].forEach(listener => listener(value))
             },
         }
-    }, {} as Actions<TState>)
+    }, {} as Actions<RemoveReadonly<TState>>)
 
     // @ts-expect-error
     const getAction = <K extends TKey>(key: K) => actions[getActionKey(key)] as (value: unknown) => void
