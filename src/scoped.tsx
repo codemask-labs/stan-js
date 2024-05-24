@@ -1,13 +1,12 @@
 import React, { createContext, FunctionComponent, ReactNode, useContext, useState } from 'react'
 import { createStore } from '.'
-import { InitialState } from './types'
 
 type StoreProviderProps<TState extends object> = {
-    initialValue?: Partial<InitialState<TState>>
+    initialValue?: Partial<TState>
     children: ReactNode
 }
 
-export const createScopedStore = <TState extends object>(initialState: InitialState<TState>) => {
+export const createScopedStore = <TState extends object>(initialState: TState) => {
     const StoreContext = createContext(createStore(initialState))
     const useScopedStore = () => useContext(StoreContext)
 
@@ -22,12 +21,11 @@ export const createScopedStore = <TState extends object>(initialState: InitialSt
         return <StoreContext.Provider children={children} value={store} />
     }
 
-    const withStore =
-        <TProps extends object>(Component: FunctionComponent<TProps>, initialValue?: Partial<InitialState<TState>>) => (props: TProps) => (
-            <StoreProvider initialValue={initialValue}>
-                <Component {...props} />
-            </StoreProvider>
-        )
+    const withStore = <TProps extends object>(Component: FunctionComponent<TProps>, initialValue?: Partial<TState>) => (props: TProps) => (
+        <StoreProvider initialValue={initialValue}>
+            <Component {...props} />
+        </StoreProvider>
+    )
 
     return {
         StoreProvider,
