@@ -52,6 +52,18 @@ describe('state', () => {
 
         expect(getState().b).toEqual(undefined)
     })
+
+    it('should work when computing state from synchronizer', () => {
+        const store = createStore({
+            counter: storage(2),
+            get parity() {
+                return this.counter % 2 === 0 ? 'even' : 'odd'
+            },
+        })
+
+        expect(store.getState().counter).toEqual(2)
+        expect(store.getState().parity).toEqual('even')
+    })
 })
 
 describe('actions', () => {
@@ -120,6 +132,20 @@ describe('reset', () => {
             a: 0,
             b: 'hmm',
         })
+    })
+
+    it('should allow resetting when computed in store', () => {
+        const store = createStore({
+            counter: 2,
+            get parity() {
+                return this.counter % 2 === 0 ? 'even' : 'odd'
+            },
+        })
+
+        store.actions.setCounter(3)
+        store.reset()
+
+        expect(store.getState().counter).toEqual(2)
     })
 })
 
@@ -251,6 +277,23 @@ describe('effect', () => {
         actions.setA(prev => prev + 1)
 
         expect(callback).toHaveBeenCalledTimes(2)
+    })
+
+    it('should not re-calculate computed state when not needed', () => {
+        const store = createStore({
+            counter: 2,
+            get parity() {
+                return this.counter % 2 === 0 ? 'even' : 'odd'
+            },
+        })
+        const callback = jest.fn()
+
+        store.effect(({ parity }) => callback(parity))
+
+        store.actions.setCounter(2)
+        store.actions.setCounter(2)
+
+        expect(callback).toHaveBeenCalledTimes(1)
     })
 })
 
