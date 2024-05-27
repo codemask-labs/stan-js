@@ -40,6 +40,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         }, [isInitialized])
         const subscribeStore = useMemo(() => {
             if (subscribeKeys.size === 0) {
+                // eslint-disable-next-line no-empty-function
                 return () => () => {}
             }
 
