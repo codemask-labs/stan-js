@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/codemask-labs/stan-js/compare/v1.2.0...v1.2.1) (2024-05-27)
+
+
+### Bug Fixes
+
+* fix reset when computed used, fix computed usage with synchronizer ([#65](https://github.com/codemask-labs/stan-js/issues/65)) ([53a456a](https://github.com/codemask-labs/stan-js/commit/53a456ac5d5d23df1ce6cd226dc75ba0414b0e64))
+
 # [1.2.0](https://github.com/codemask-labs/stan-js/compare/v1.1.2...v1.2.0) (2024-05-24)
 
 
