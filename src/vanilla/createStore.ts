@@ -1,3 +1,4 @@
+import equal from 'fast-deep-equal'
 import { Actions, Dispatch, RemoveReadonly } from '../types'
 import { getActionKey, isPromise, isSynchronizer, keyInObject, optionalArray } from '../utils'
 
@@ -38,6 +39,10 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     }), {} as { [K in TKey]: Array<(newState: TState[K]) => void> })
 
     const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
+        if (Object.getOwnPropertyDescriptor(stateRaw, key)?.get !== undefined) {
+            return acc
+        }
+
         if (typeof value === 'function') {
             throw new Error('Function cannot be passed as top level state value')
         }
@@ -112,6 +117,10 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                 subscribe([dependencyKey])(() => {
                     const newValue = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(target)
 
+                    if (equal(target[key], newValue)) {
+                        return
+                    }
+
                     target[key] = newValue
                     listeners[key].forEach(listener => listener(newValue))
                 })
@@ -120,15 +129,15 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
             },
         })
 
-        Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(proxiedState)
+        state[key] = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(proxiedState)
     })
 
-    const reset = (...keys: Array<TKey>) => {
+    const reset = (...keys: Array<keyof RemoveReadonly<TState>>) => {
         optionalArray(keys, storeKeys).forEach(key => {
             const valueOrSynchronizer = stateRaw[key]
             const initialValue = isSynchronizer(valueOrSynchronizer) ? valueOrSynchronizer.value : valueOrSynchronizer
 
-            getAction(key)(initialValue)
+            getAction(key)?.(initialValue)
         })
     }
 
