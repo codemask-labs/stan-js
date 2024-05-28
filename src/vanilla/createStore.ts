@@ -48,9 +48,6 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         }
 
         if (isSynchronizer(value)) {
-            value.subscribe?.(getAction(key as TKey), key)
-            listeners[key as TKey].push(newValue => value.update(newValue, key))
-
             try {
                 const snapshotValue = value.getSnapshot(key)
 
@@ -84,6 +81,9 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                     ...acc,
                     [key]: value.value,
                 }
+            } finally {
+                listeners[key as TKey].push(newValue => value.update(newValue, key))
+                value.subscribe?.(getAction(key as TKey), key)
             }
         }
 
