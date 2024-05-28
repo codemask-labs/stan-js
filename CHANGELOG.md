@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/codemask-labs/stan-js/compare/v1.2.1...v1.2.2) (2024-05-28)
+
+
+### Bug Fixes
+
+* move subscribe to later ([47bbca5](https://github.com/codemask-labs/stan-js/commit/47bbca5daa20a690ecfd5528cc614a30053770fc))
+
 ## [1.2.1](https://github.com/codemask-labs/stan-js/compare/v1.2.0...v1.2.1) (2024-05-27)
 
 
