@@ -1,6 +1,5 @@
-import equal from 'fast-deep-equal'
 import { Actions, Dispatch, RemoveReadonly } from '../types'
-import { getActionKey, isPromise, isSynchronizer, keyInObject, optionalArray } from '../utils'
+import { equal, getActionKey, isPromise, isSynchronizer, keyInObject, optionalArray } from '../utils'
 
 export const createStore = <TState extends object>(stateRaw: TState) => {
     type TKey = keyof TState
@@ -18,9 +17,17 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                     const fn = value as (prevState: TState[TKey]) => TState[TKey]
                     const newValue = fn(state[key])
 
+                    if (equal(state[key], newValue)) {
+                        return
+                    }
+
                     state[key] = newValue
                     listeners[key].forEach(listener => listener(newValue))
 
+                    return
+                }
+
+                if (equal(state[key], value)) {
                     return
                 }
 
@@ -115,11 +122,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                 }
 
                 subscribe([dependencyKey])(() => {
-                    const newValue = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(target)
-
-                    if (equal(target[key], newValue)) {
-                        return
-                    }
+                    const newValue = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(target) as TState[TKey]
 
                     target[key] = newValue
                     listeners[key].forEach(listener => listener(newValue))

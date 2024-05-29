@@ -1,6 +1,5 @@
-import equal from 'fast-deep-equal'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
-import { keyInObject } from './utils'
+import { equal, keyInObject } from './utils'
 import { createStore as createStoreVanilla } from './vanilla'
 
 export const createStore = <TState extends object>(stateRaw: TState) => {
@@ -8,23 +7,19 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     const storeKeys = Object.keys(stateRaw) as Array<TKey>
     const store = createStoreVanilla(stateRaw)
 
-    const getState = (keys: Array<TKey>) => {
+    const getState = () => {
         let oldState: TState
 
         return () => {
-            const currentState = store.getState()
-            const newState = keys.reduce((acc, key) => ({
-                ...acc,
-                [key]: currentState[key],
-            }), {} as TState)
+            const currentState = { ...store.getState() }
 
-            if (equal(oldState, newState)) {
+            if (equal(oldState, currentState)) {
                 return oldState
             }
 
-            oldState = newState
+            oldState = currentState
 
-            return newState
+            return currentState
         }
     }
 
@@ -36,7 +31,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                 return store.getState
             }
 
-            return getState(Array.from(subscribeKeys))
+            return getState()
         }, [isInitialized])
         const subscribeStore = useMemo(() => {
             if (subscribeKeys.size === 0) {
