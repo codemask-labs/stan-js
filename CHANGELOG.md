@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/codemask-labs/stan-js/compare/v1.2.3...v1.2.4) (2024-06-14)
+
+
+### Bug Fixes
+
+* stop listening on MMKV changes to not create infinite loop ([22dc225](https://github.com/codemask-labs/stan-js/commit/22dc22585e00f5d8cb5c6b06a61dfa3b852bc18c))
+
 ## [1.2.3](https://github.com/codemask-labs/stan-js/compare/v1.2.2...v1.2.3) (2024-06-14)
 
 
