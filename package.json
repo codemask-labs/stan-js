@@ -61,7 +61,7 @@
     "scripts": {
         "prepare": "husky",
         "precommit": "bun test && bun lint",
-        "build": "unbuild --minify",
+        "build": "unbuild",
         "check:config": "attw --pack . && publint",
         "check:typescript": "tsc --noEmit",
         "test": "bun test",
