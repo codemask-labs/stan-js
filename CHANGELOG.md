@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/codemask-labs/stan-js/compare/v1.2.2...v1.2.3) (2024-06-14)
+
+
+### Bug Fixes
+
+* publish non-minified code to npm ([fa6c4ae](https://github.com/codemask-labs/stan-js/commit/fa6c4ae884eea09f9b611e64847929a6a43d6043))
+
 ## [1.2.2](https://github.com/codemask-labs/stan-js/compare/v1.2.1...v1.2.2) (2024-05-28)
 
 
