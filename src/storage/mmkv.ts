@@ -2,7 +2,6 @@ import { MMKV } from 'react-native-mmkv'
 import { Storage, StorageOptions, Synchronizer } from '../types'
 
 const mmkv = new MMKV()
-const pendingChange = new Map<string, true>()
 
 export const storage: Storage = <T>(
     initialValue: T,
@@ -13,31 +12,8 @@ export const storage: Storage = <T>(
     }: StorageOptions<T> = {},
 ) => ({
     value: initialValue,
-    subscribe: (update, key) => {
-        mmkv.addOnValueChangedListener(changedKey => {
-            if (pendingChange.has(changedKey)) {
-                pendingChange.delete(changedKey)
-
-                return
-            }
-
-            if (changedKey !== (storageKey ?? key)) {
-                return
-            }
-
-            const newValue = mmkv.getString(changedKey)
-
-            if (newValue === undefined) {
-                return
-            }
-
-            update(deserialize(newValue))
-        })
-    },
     update: (value, key) => {
         const storageKeyToUse = storageKey ?? key
-
-        pendingChange.set(storageKeyToUse, true)
 
         if (value === undefined) {
             mmkv.delete(storageKeyToUse)
