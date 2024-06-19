@@ -89,6 +89,29 @@ describe('actions', () => {
         expect(d).toEqual(4)
         expect(window.localStorage.getItem('c')).toEqual('1')
     })
+
+    it('shouldn\'t trigger update for the same value', () => {
+        const { effect, actions } = createStore({
+            counter: 0,
+            get doubleCounter() {
+                return this.counter * 2
+            },
+        })
+
+        const callback = jest.fn()
+
+        effect(({ counter, doubleCounter }) => callback(counter, doubleCounter))
+
+        expect(callback).toHaveBeenCalledTimes(1)
+
+        actions.setCounter(0)
+
+        expect(callback).toHaveBeenCalledTimes(1)
+
+        actions.setCounter(prev => prev)
+
+        expect(callback).toHaveBeenCalledTimes(1)
+    })
 })
 
 describe('reset', () => {

@@ -16,6 +16,8 @@ export default [
             'functional/no-let': 'off',
             'react/no-children-prop': 'off',
             'react/hook-use-state': 'off',
+            '@typescript-eslint/naming-convention': 'off',
+            '@typescript-eslint/no-floating-promises': 'off',
         },
     },
     {
