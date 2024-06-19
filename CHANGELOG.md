@@ -1,3 +1,11 @@
+## [1.2.5](https://github.com/codemask-labs/stan-js/compare/v1.2.4...v1.2.5) (2024-06-19)
+
+
+### Bug Fixes
+
+* fix synchronizer detection ([22e7d0a](https://github.com/codemask-labs/stan-js/commit/22e7d0ae68abb6712e5dbc2072df806c99928e3c))
+* remove fast-deep-equal ([#67](https://github.com/codemask-labs/stan-js/issues/67)) ([9342d0a](https://github.com/codemask-labs/stan-js/commit/9342d0abdd24a1beb6e4ba7c26491304a24168f3))
+
 ## [1.2.4](https://github.com/codemask-labs/stan-js/compare/v1.2.3...v1.2.4) (2024-06-14)
 
 
