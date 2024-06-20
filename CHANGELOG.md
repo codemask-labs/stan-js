@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/codemask-labs/stan-js/compare/v1.2.5...v1.2.6) (2024-06-20)
+
+
+### Bug Fixes
+
+* fix dependencies detection in getters ([#68](https://github.com/codemask-labs/stan-js/issues/68)) ([0e77b63](https://github.com/codemask-labs/stan-js/commit/0e77b630f78053584f9fd11b9df459707c9cbb5a))
+
 ## [1.2.5](https://github.com/codemask-labs/stan-js/compare/v1.2.4...v1.2.5) (2024-06-19)
 
 
