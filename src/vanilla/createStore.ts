@@ -115,24 +115,36 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
             return
         }
 
+        const dependencies = new Set<TKey>()
         const proxiedState = new Proxy(state, {
             get: (target, dependencyKey, receiver) => {
                 if (!keyInObject(dependencyKey, target)) {
                     return undefined
                 }
 
-                subscribe([dependencyKey])(() => {
-                    const newValue = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(target) as TState[TKey]
+                dependencies.add(dependencyKey)
 
-                    target[key] = newValue
-                    listeners[key].forEach(listener => listener(newValue))
-                })
+                const getterBody = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.toString()
+
+                // Heuristic for detecting dependencies in getter body
+                getterBody?.match(/this.([$_\p{ID_Start}][$\u200c\u200d\p{ID_Continue}]*)/ug)
+                    ?.map(dependency => dependency.replace('this.', ''))
+                    .forEach(dependency => dependencies.add(JSON.parse(`"${String(dependency)}"`) as TKey))
+                Array.from(getterBody?.matchAll(/this\[['"`](.*)['"`]\]/g) ?? [])
+                    .forEach(([, dependency]) => dependencies.add(JSON.parse(`"${String(dependency)}"`) as TKey))
 
                 return Reflect.get(target, dependencyKey, receiver)
             },
         })
 
         state[key] = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(proxiedState)
+
+        subscribe(Array.from(dependencies))(() => {
+            const newValue = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(state) as TState[TKey]
+
+            state[key] = newValue
+            listeners[key].forEach(listener => listener(newValue))
+        })
     })
 
     const reset = (...keys: Array<keyof RemoveReadonly<TState>>) => {
