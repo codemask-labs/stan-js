@@ -176,6 +176,7 @@ dist
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/*.code-snippets
+docs/.vscode/*
 
 # Local History for Visual Studio Code
 .history/
