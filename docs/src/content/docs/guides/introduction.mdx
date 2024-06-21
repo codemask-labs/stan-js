@@ -1,0 +1,86 @@
+---
+title: Introduction
+description: A guide on how to setup stan-js in your project.
+next: { link: /guides/createStore, label: createStore }
+sidebar:
+    order: 1
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+
+## Installation
+
+To install stan-js run the following command in your terminal:
+
+<Tabs syncKey="pkg">
+<TabItem label="npm">
+
+```sh
+npm install stan-js
+```
+
+</TabItem>
+<TabItem label="yarn">
+
+```sh
+yarn add stan-js
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm add stan-js
+```
+
+</TabItem>
+<TabItem label="bun">
+
+```sh
+bun add stan-js
+```
+
+</TabItem>
+</Tabs>
+
+## Create a store
+
+To create a store, you need to import the `createStore` function from `stan-js` and pass it an object with the initial state.
+
+#### Create a new store:
+
+```typescript
+// store.ts
+import { createStore } from 'stan-js'
+import { storage } from 'stan-js/storage'
+
+export const { useStore } = createStore({
+    count: 0,
+    get doubleCounter() {
+        return this.counter * 2
+    }, 
+    user: storage(''),
+    selectedLanguage: 'en-US',
+    unreadNotifications: [] as Array<Notification>
+})
+```
+
+#### Use the returned hook in your React component:
+
+```typescript
+// App.tsx
+import { useStore } from './store'
+
+const App = () => {
+    const { count, user, setCount } = useStore()
+
+    return (
+        <div>
+            <h1>Hello {user}!</h1>
+            <p>Count: {count}</p>
+            <button onClick={() => setCount(prev => prev + 1)}>Increment</button>
+            <button onClick={() => setCount(prev => prev - 1)}>Decrement</button>
+        </div>
+    )
+}
+```

@@ -1,0 +1,43 @@
+
+.hero img {
+    transform: scaleX(-1);
+}
+
+.site-title span {
+    display: none;
+}
+
+iframe {
+    border: none;
+    width: 100%;
+    min-height: 700px;
+}
+
+:root {
+	--sl-color-accent-low: #2f2018;
+	--sl-color-accent: #915a3f;
+	--sl-color-accent-high: #d9c3ba;
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #eceeee;
+	--sl-color-gray-2: #c0c2c2;
+	--sl-color-gray-3: #888d8c;
+	--sl-color-gray-4: #545959;
+	--sl-color-gray-5: #353939;
+	--sl-color-gray-6: #242828;
+	--sl-color-black: #171918;
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: #e3d3cb;
+	--sl-color-accent: #945c40;
+	--sl-color-accent-high: #442b20;
+	--sl-color-white: #031d1c;
+	--sl-color-gray-1: #002e2d;
+	--sl-color-gray-2: #004141;
+	--sl-color-gray-3: #236362;
+	--sl-color-gray-4: #5a9896;
+	--sl-color-gray-5: #abc9c8;
+	--sl-color-gray-6: #dbf4f2;
+	--sl-color-gray-7: #edf9f9;
+	--sl-color-black: #ffffff;
+}

@@ -1,0 +1,69 @@
+---
+title: Synchronizer
+description: Synchronizer - API Reference
+sidebar:
+    order: 2
+---
+import { Aside } from '@astrojs/starlight/components'
+
+Synchronizer is an util that allows you to synchronize store with something external like localStorage, database, device storage (MMKV, AsyncStorage) etc.
+
+```typescript
+type Synchronizer<T> = {
+    value: T,
+    subscribe?: (update: (value: T) => void, key: string) => void,
+    // If synchronizer doesn't have data that matches passed key, it should throw
+    getSnapshot: (key: string) => T | Promise<T>,
+    update: (value: T, key: string) => void
+}
+```
+
+There is already implementation for persisting data on both platforms (react and react-native).
+
+```ts
+import { storage } from 'stan-js/storage'
+```
+It takes two parameters - first is initial value, and the second one (which is optional) is options object with key (if the key isn't passed stan-js will pass key from the store), serialize and deserialize functions.
+
+
+<Aside type="note" title="React Native MMKV">
+For react-native you need to install [react-native-mmkv](https://www.npmjs.com/package/react-native-mmkv)
+</Aside>
+<Aside type="caution" title="React native < 0.72">
+If you are using react-native older than 0.72 you need to add this to your `metro.config.js`
+
+```js
+unstable_enablePackageExports: true,
+```
+
+You can read more about it [here](https://reactnative.dev/blog/2023/06/21/package-exports-support)
+</Aside>
+
+#### Syncing values using synchronizer
+
+```typescript
+import { createStore } from 'stan-js'
+import { storage } from 'stan-js/storage'
+
+const { useStore } = createStore({
+    counter: storage(0, { storageKey: 'counter-key' }), // number
+    user: storage<string>(), // string | undefined
+    cart: [] as Array<CartItem>
+})
+```
+
+#### Custom serializer
+
+If you want to store more complex objects that aren't supported by JSON you can either write your own storage synchronizer or pass custom `serialize` and `deserialize` functions to the options parameter. For example, you can use [superjson](https://github.com/blitz-js/superjson) package:
+```typescript
+import { createStore } from 'stan-js'
+import { storage } from 'stan-js/storage'
+import superjson from 'superjson'
+
+const { useStore } = createStore({
+    user: storage(new Set(), {
+        serialize: superjson.stringify,
+        deserialize: superjson.deserialize
+    })
+})
+```

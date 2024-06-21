@@ -1,0 +1,74 @@
+---
+title: Why you should destructure?
+description: Reasons to always use destructuring assignment in stan-js
+sidebar:
+    order: 2
+---
+
+import { Aside } from '@astrojs/starlight/components'
+
+stan-js relates highly on Proxy and it comes with some limitations that you should be aware of.
+
+```ts
+export const store = createStore({
+    accessToken: null as string | null,
+    userInfo: null as UserInfo | null,
+    get isAuthenticated() {
+        return Boolean(this.accessToken) && Boolean(this.userInfo)
+    }
+})
+```
+
+At first you may not spot the problem with this code, but let's first change how our computed value is defined:
+
+```ts
+export const store = createStore({
+    accessToken: null as string | null,
+    userInfo: null as UserInfo | null,
+    get isAuthenticated() {
+        if (!this.accessToken) {
+            return false
+        }
+
+        return Boolean(this.userInfo)
+    }
+})
+```
+
+It does exactly the same thing, but it is much easier to spot the problem now.
+
+At the initial load stan-js has seen that `isAuthenicated` getter tried to access only `accessToken` property, because it was escaped with `false` before it accessed `userInfo` property. So it didn't subscribed to `userInfo` change.
+
+We can fix this by changing our implementation to:
+
+```ts
+export const store = createStore({
+    accessToken: null as string | null,
+    userInfo: null as UserInfo | null,
+    get isAuthenticated() {
+        return [this.accessToken, this.userInfo].every(Boolean)
+    }
+})
+```
+
+And this will work as expected. But we highly encourage you to use destructuring assignment to avoid this kind of problems.
+
+```ts
+export const store = createStore({
+    accessToken: null as string | null,
+    userInfo: null as UserInfo | null,
+    get isAuthenticated() {
+        const { accessToken, userInfo } = this
+
+        return Boolean(accessToken) && Boolean(userInfo)
+    }
+})
+```
+
+<Aside type="caution" title="This logic applies to most of our methods such as:">
+- effect
+- useStoreEffect
+- useStore
+
+So keep it in mind when you are using them.
+</Aside>
