@@ -1,19 +1,19 @@
 {
-  "name": "docs",
-  "type": "module",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro check && astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "@astrojs/starlight": "^0.24.4",
-    "astro": "^4.10.2",
-    "sharp": "^0.32.5",
-    "@astrojs/check": "^0.7.0",
-    "typescript": "^5.5.2"
-  }
+    "name": "stan-js-docs",
+    "type": "module",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "astro dev",
+        "start": "astro dev",
+        "build": "astro check && astro build",
+        "preview": "astro preview",
+        "astro": "astro"
+    },
+    "dependencies": {
+        "@astrojs/starlight": "0.24.4",
+        "astro": "4.11.0",
+        "sharp": "0.33.4",
+        "@astrojs/check": "0.7.0",
+        "typescript": "5.5.2"
+    }
 }
