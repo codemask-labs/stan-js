@@ -1,9 +1,5 @@
 name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: [ main, starlight-docs ]
-  workflow_dispatch:
+on: workflow_dispatch
 
 permissions:
   contents: read

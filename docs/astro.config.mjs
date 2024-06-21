@@ -2,6 +2,8 @@ import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
 
 export default defineConfig({
+    site: 'https://codemask-labs.github.io',
+    base: 'stan-js',
     integrations: [
         starlight({
             title: 'stan-js',
