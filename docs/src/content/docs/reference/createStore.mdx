@@ -8,7 +8,7 @@ import { Aside } from '@astrojs/starlight/components'
 
 Function that creates a store.
 
-You can think of a store as your app state. You can define multiple keys/values, each key will create separated subscription ([more explained here](#useStore)). If you want to persist the value - you can simply wrap it in [Synchronizer](../synchronizer)
+You can think of a store as your app state. You can define multiple keys/values, each key will create separated subscription ([more explained here](#usestore)). If you want to persist the value - you can simply wrap it in [Synchronizer](../synchronizer)
 
 It can be imported from `stan-js` or from `stan-js/vanilla` you can read more about usage with vanilla-js [here](../vanilla)
 
@@ -24,12 +24,12 @@ export const { actions, getState, reset, effect, useStore, useStoreEffect } = cr
 
 ## createStore returns such things:
 - [actions](#actions)
-- [getState](#getState)
+- [getState](#getstate)
 - [reset](#reset)
 - [effect](#effect)
-- [useStore](#useStore)
-- [useStoreEffect](#useStoreEffect)
-- [batchUpdates](#batchUpdates)
+- [useStore](#usestore)
+- [useStoreEffect](#usestoreeffect)
+- [batchUpdates](#batchupdates)
 
 ### actions
 
@@ -182,7 +182,7 @@ batchUpdates(() => {
 ```
 
 <Aside type="note">
-You should keep this function in mind when you are using it with effect or useStoreEffect
+You should keep this function in mind when you are using it with effect or `useStoreEffect`
 
-In useStore hook it will be automatically batched by React useSyncExternalStore hook
+In useStore hook it will be automatically batched by React `useSyncExternalStore` hook
 </Aside>
