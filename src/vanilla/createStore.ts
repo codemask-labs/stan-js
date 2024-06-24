@@ -124,15 +124,6 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
 
                 dependencies.add(dependencyKey)
 
-                const getterBody = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.toString()
-
-                // Heuristic for detecting dependencies in getter body
-                getterBody?.match(/this.([$_\p{ID_Start}][$\u200c\u200d\p{ID_Continue}]*)/ug)
-                    ?.map(dependency => dependency.replace('this.', ''))
-                    .forEach(dependency => dependencies.add(JSON.parse(`"${String(dependency)}"`) as TKey))
-                Array.from(getterBody?.matchAll(/this\[['"`](.*)['"`]\]/g) ?? [])
-                    .forEach(([, dependency]) => dependencies.add(JSON.parse(`"${String(dependency)}"`) as TKey))
-
                 return Reflect.get(target, dependencyKey, receiver)
             },
         })

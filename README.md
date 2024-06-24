@@ -89,4 +89,4 @@ const App = () => {
 }
 ```
 
-Check out our [Docs](#) for more information and examples.
+Check out our [Docs](https://codemask-labs.github.io/stan-js/) for more information and examples.

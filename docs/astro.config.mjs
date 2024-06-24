@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config'
 
 export default defineConfig({
     site: 'https://codemask-labs.github.io',
-    base: 'stan-js',
+    base: import.meta.env.DEV ? '/' : '/stan-js/',
     integrations: [
         starlight({
             title: 'stan-js',

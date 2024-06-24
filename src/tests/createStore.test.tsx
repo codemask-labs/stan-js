@@ -345,40 +345,4 @@ describe('useStoreEffect', () => {
 
         expect(callback).toHaveBeenCalledTimes(2)
     })
-
-    it('should update computed state when short-circuiting or using complex identifiers', () => {
-        const store = createStore({
-            firstName: 'John',
-            'second.😂$%^&#ĦĔĽĻŎName': undefined as string | undefined,
-            lastName: 'Smith',
-            showSecondName: false,
-            get name() {
-                return this.showSecondName
-                    ? `${this.firstName} ${this['second.😂$%^&#ĦĔĽĻŎName']} ${this.lastName}`
-                    : `${this.firstName} ${this.lastName}`
-            },
-        })
-
-        expect(store.getState().name).toBe('John Smith')
-
-        store.actions.setShowSecondName(true)
-        store.actions['setSecond.😂$%^&#ĦĔĽĻŎName']('Andrzej')
-
-        expect(store.getState().name).toBe('John Andrzej Smith')
-    })
-
-    it('should deduplicate dependency listeners', () => {
-        const store = createStore({
-            firstName: 'John',
-            get name() {
-                return `${this.firstName} ${this.firstName} ${this.firstName} ${this.firstName} ${this.firstName}`
-            },
-        })
-
-        const callback = jest.fn()
-        store.effect(({ name }) => callback(name))
-        store.actions.setFirstName('Andrzej')
-
-        expect(callback).toHaveBeenCalledTimes(2)
-    })
 })
