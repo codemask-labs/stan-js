@@ -27,6 +27,10 @@ export default defineConfig({
                     autogenerate: { directory: 'examples' },
                 },
                 {
+                    label: 'Other',
+                    autogenerate: { directory: 'other' },
+                },
+                {
                     label: 'Codemask',
                     link: 'https://codemask.com',
                 },
