@@ -10,7 +10,7 @@ Function that creates a store.
 
 You can think of a store as your app state. You can define multiple keys/values, each key will create separated subscription ([more explained here](#useStore)). If you want to persist the value - you can simply wrap it in [Synchronizer](../synchronizer)
 
-It can be imported from `stan-js` or  from `stan-js/vanilla` you can read more about usage with vanilla-js [here](../vanilla)
+It can be imported from `stan-js` or from `stan-js/vanilla` you can read more about usage with vanilla-js [here](../vanilla)
 
 ```ts
 import { createStore } from 'stan-js'
@@ -37,7 +37,7 @@ Object that contains all functions that allows for updating the store's state
 
 Action name is generated automatically based on given key to the store ``count -> setCount``
 
-You can pass the next state directly, or a function that calculates it from the previous state - similary to the ``useState`` hook
+You can pass the next state directly, or a function that calculates it from the previous state - similarly to the ``useState`` hook
 
 ### getState
 
@@ -53,17 +53,17 @@ console.log(count)
 
 Function that resets store state to the initial values
 
-You can either pass all of the keys that you want to be reset, or if you won't pass any key **WHOLE** store will be reseted.
+You can either pass all the keys that you want to be reset, or if you won't pass any key **WHOLE** store will be reset.
 
 ```typescript
 reset('count')
-// Only count value will be reseted
+// Only count value will be reset
 
 reset('name', 'notifications')
-// name and notifications will be reseted
+// name and notifications will be reset
 
 reset()
-// Whole store will be reseted
+// Whole store will be reset
 ```
 
 ### effect
@@ -95,14 +95,14 @@ const { count, setCount, setName } = useStore()
 
 console.log(count)
 
-setCount(prev => prev + 1) // Component will rerender
-setName('Anna') // Component won't rerender because it doesn't subscribe to name
+setCount(prev => prev + 1) // Component will re-render
+setName('Anna') // Component won't re-render because it doesn't subscribe to name
 ```
 
 <Aside type="caution">
 You **should** destructure values from this hook - to let the store know what values you will access
 
-It **ONLY** rerenders the component if the values that we have accessed changed
+It **ONLY** re-renders the component if the values that we have accessed changed
 
 You can read more about it [here](../../reference/destructure)
 </Aside>
@@ -184,5 +184,5 @@ batchUpdates(() => {
 <Aside type="note">
 You should keep this function in mind when you are using it with effect or useStoreEffect
 
-In useStore hook it will be autobatched by React useSyncExternalStore hook
+In useStore hook it will be automatically batched by React useSyncExternalStore hook
 </Aside>

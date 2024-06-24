@@ -6,7 +6,7 @@ sidebar:
 ---
 import { Aside } from '@astrojs/starlight/components'
 
-Synchronizer is an util that allows you to synchronize store with something external like localStorage, database, device storage (MMKV, AsyncStorage) etc.
+Synchronizer is a utility that allows you to synchronize store with something external like localStorage, database, device storage (MMKV, AsyncStorage) etc.
 
 ```typescript
 type Synchronizer<T> = {
@@ -29,7 +29,7 @@ It takes two parameters - first is initial value, and the second one (which is o
 <Aside type="note" title="React Native MMKV">
 For react-native you need to install [react-native-mmkv](https://www.npmjs.com/package/react-native-mmkv)
 </Aside>
-<Aside type="caution" title="React native < 0.72">
+<Aside type="caution" title="React Native < 0.72">
 If you are using react-native older than 0.72 you need to add this to your `metro.config.js`
 
 ```js
@@ -54,7 +54,7 @@ const { useStore } = createStore({
 
 #### Custom serializer
 
-If you want to store more complex objects that aren't supported by JSON you can either write your own storage synchronizer or pass custom `serialize` and `deserialize` functions to the options parameter. For example, you can use [superjson](https://github.com/blitz-js/superjson) package:
+If you want to store more complex objects that aren't supported by JSON you can either write your own storage synchronizer or pass custom `serialize` and `deserialize` functions to the options' parameter. For example, you can use [superjson](https://github.com/blitz-js/superjson) package:
 ```typescript
 import { createStore } from 'stan-js'
 import { storage } from 'stan-js/storage'

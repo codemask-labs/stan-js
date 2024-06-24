@@ -9,25 +9,25 @@ You may ask yourself, should I use stan-js over other state management solutions
 
 ## Why stan-js over zustand?
 
-[Zustand](https://github.com/pmndrs/zustand) is a popular state management solution for React, however you may find yourself writing too many boilerplate code to even get started. The way zustand creates stores blocks this library from automatic type inference which is described in [their docs](https://docs.pmnd.rs/zustand/guides/typescript)
+[Zustand](https://github.com/pmndrs/zustand) is a popular state management solution for React, however you may find yourself writing too much boilerplate code to even get started. The way Zustand creates stores blocks this library from automatic type inference which is described in [their docs](https://docs.pmnd.rs/zustand/guides/typescript)
 
-Another issue with zustand is that you must create all update methods yourself, and even simple functionality like `reset` needs to be created from scratch.
+Another issue with Zustand is that you must create all update methods yourself, and even simple functionality like `reset` needs to be created from scratch.
 
-There is also no built in data persistence for localStorage or React Native, again you need to write your own logic to do this.
+There is also no built-in data persistence for localStorage or React Native, again you need to write your own logic to do this.
 
 And finally, you manually specify what you are listening to, and what methods from the store you need to use - using `selectors`.
 
-## Why stan-js over jotai?
+## Why stan-js over Jotai?
 
 [Jotai](https://github.com/pmndrs/jotai) is another popular state management solution mostly for React, it uses atoms to manage state.
 
-The main difference between jotai and stan-js is that jotai uses atoms to manage state, which means that you have to create a new atom for each piece of state you want to manage. This is a bit of a pain, especially if you are using a lot of state.
+The main difference between Jotai and stan-js is that Jotai uses atoms to manage state, which means that you have to create a new atom for each piece of state you want to manage. This is a bit of a pain, especially if you are using a lot of state.
 
-Also to decide whether or not you want to listen to the atom or not, you have to import different hooks.
+Also, to decide whether you want to listen to the atom or not, you have to import different hooks.
 
 ## Other state management solutions
 
-We can talk more and more about other state management solutions, and their cons, but jotai and zustand are the most popular ones, so we will focus on them.
+We can talk more and more about other state management solutions, and their cons, but Jotai and Zustand are the most popular ones, so we will focus on them.
 
 ## Conclusion
 

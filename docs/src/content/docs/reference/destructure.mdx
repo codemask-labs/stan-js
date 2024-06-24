@@ -7,7 +7,7 @@ sidebar:
 
 import { Aside } from '@astrojs/starlight/components'
 
-stan-js relates highly on Proxy and it comes with some limitations that you should be aware of.
+stan-js relates highly on Proxy, and it comes with some limitations that you should be aware of.
 
 ```ts
 export const store = createStore({
@@ -19,7 +19,7 @@ export const store = createStore({
 })
 ```
 
-At first you may not spot the problem with this code, but let's first change how our computed value is defined:
+At first, you may not spot the problem with this code, but let's first change how our computed value is defined:
 
 ```ts
 export const store = createStore({
@@ -37,7 +37,7 @@ export const store = createStore({
 
 It does exactly the same thing, but it is much easier to spot the problem now.
 
-At the initial load stan-js has seen that `isAuthenicated` getter tried to access only `accessToken` property, because it was escaped with `false` before it accessed `userInfo` property. So it didn't subscribed to `userInfo` change.
+At the initial load stan-js has seen that `isAuthenticated` getter tried to access only `accessToken` property, because it was escaped with `false` before it accessed `userInfo` property. So it didn't subscribe to `userInfo` change.
 
 We can fix this by changing our implementation to:
 
