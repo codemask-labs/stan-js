@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/codemask-labs/stan-js/compare/v1.3.0...v1.3.1) (2024-06-24)
+
+
+### Bug Fixes
+
+* computed + storage ([f4578e1](https://github.com/codemask-labs/stan-js/commit/f4578e1219ff536562be1b26641745a13e99d140))
+
 # [1.3.0](https://github.com/codemask-labs/stan-js/compare/v1.2.6...v1.3.0) (2024-06-24)
 
 
