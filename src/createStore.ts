@@ -88,5 +88,6 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
          * @see {@link https://github.com/codemask-labs/stan-js#useStoreEffect}
          */
         useStoreEffect,
+        batchUpdates: store.batchUpdates,
     }
 }
