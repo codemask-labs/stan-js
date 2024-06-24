@@ -318,6 +318,21 @@ describe('effect', () => {
 
         expect(callback).toHaveBeenCalledTimes(1)
     })
+
+    it('should deduplicate dependency listeners', () => {
+        const store = createStore({
+            firstName: 'John',
+            get name() {
+                return `${this.firstName} ${this.firstName} ${this.firstName} ${this.firstName} ${this.firstName}`
+            },
+        })
+
+        const callback = jest.fn()
+        store.effect(({ name }) => callback(name))
+        store.actions.setFirstName('Andrzej')
+
+        expect(callback).toHaveBeenCalledTimes(2)
+    })
 })
 
 describe('useStoreEffect', () => {
@@ -344,5 +359,43 @@ describe('useStoreEffect', () => {
         actions.setB(prev => prev + 1)
 
         expect(callback).toHaveBeenCalledTimes(2)
+    })
+})
+
+describe('batch', () => {
+    it('should batch updates', () => {
+        const { effect, actions, batchUpdates } = createStore({
+            a: 0,
+            b: 0,
+            c: 0,
+            d: 0,
+        })
+        const callback1 = jest.fn()
+        const callback2 = jest.fn()
+        const callback3 = jest.fn()
+
+        effect(({ a, b, c }) => callback1())
+        effect(({ a, b, c }) => callback2())
+        effect(({ c, d }) => callback3())
+
+        batchUpdates(() => {
+            actions.setA(1)
+            actions.setB(2)
+            actions.setC(3)
+            actions.setD(4)
+        })
+
+        // All effects should be called only once (beside initial call)
+        expect(callback1).toBeCalledTimes(2)
+        expect(callback2).toBeCalledTimes(2)
+        expect(callback3).toBeCalledTimes(2)
+
+        actions.setB(0)
+        actions.setC(0)
+
+        // First two effect should be called 2 more times { b, c }, third 1 more time { c }
+        expect(callback1).toBeCalledTimes(4)
+        expect(callback2).toBeCalledTimes(4)
+        expect(callback3).toBeCalledTimes(3)
     })
 })

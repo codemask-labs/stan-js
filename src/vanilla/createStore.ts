@@ -4,6 +4,8 @@ import { equal, getActionKey, isPromise, isSynchronizer, keyInObject, optionalAr
 export const createStore = <TState extends object>(stateRaw: TState) => {
     type TKey = keyof TState
     const storeKeys = Object.keys(stateRaw) as Array<TKey>
+    let isBatching = false
+    const batchedKeys = new Set<string>()
 
     const actions = storeKeys.reduce((acc, key) => {
         if (Object.getOwnPropertyDescriptor(stateRaw, key)?.get !== undefined) {
@@ -22,7 +24,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                     }
 
                     state[key] = newValue
-                    listeners[key].forEach(listener => listener(newValue))
+                    notifyUpdates(key)
 
                     return
                 }
@@ -32,7 +34,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                 }
 
                 state[key] = value
-                listeners[key].forEach(listener => listener(value))
+                notifyUpdates(key)
             },
         }
     }, {} as Actions<RemoveReadonly<TState>>)
@@ -43,7 +45,34 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     const listeners = storeKeys.reduce((acc, key) => ({
         ...acc,
         [key]: [],
-    }), {} as { [K in TKey]: Array<(newState: TState[K]) => void> })
+    }), {} as Record<string, Array<(newState: unknown) => void>>)
+
+    const notifyUpdates = (keyToNotify: TKey) => {
+        Object.entries(listeners).forEach(([compositeKey, listenersArray]) => {
+            if (compositeKey.split('\0').every(key => key !== keyToNotify)) {
+                return
+            }
+
+            if (isBatching) {
+                return batchedKeys.add(compositeKey)
+            }
+
+            listenersArray.forEach(listener => listener(state[compositeKey as TKey]))
+        })
+    }
+
+    const batchUpdates = (callback: VoidFunction) => {
+        try {
+            isBatching = true
+            callback()
+        } finally {
+            batchedKeys.forEach(key => {
+                listeners[key]?.forEach(listener => listener(state[key as TKey]))
+            })
+            isBatching = false
+            batchedKeys.clear()
+        }
+    }
 
     const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
         if (Object.getOwnPropertyDescriptor(stateRaw, key)?.get !== undefined) {
@@ -89,7 +118,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                     [key]: value.value,
                 }
             } finally {
-                listeners[key as TKey].push(newValue => value.update(newValue, key))
+                listeners[key]?.push(newValue => value.update(newValue, key))
                 value.subscribe?.(getAction(key as TKey), key)
             }
         }
@@ -101,12 +130,12 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     }, {} as TState)
 
     const subscribe = (keys: Array<TKey>) => (listener: VoidFunction) => {
-        keys.forEach(key => listeners[key].push(listener))
+        const compositeKey = keys.join('\0')
+        listeners[compositeKey] ??= []
+        listeners[compositeKey]?.push(listener)
 
         return () => {
-            keys.forEach(key => {
-                listeners[key] = listeners[key].filter(l => l !== listener)
-            })
+            listeners[compositeKey] = listeners[compositeKey]?.filter(l => l !== listener) ?? []
         }
     }
 
@@ -134,7 +163,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
             const newValue = Object.getOwnPropertyDescriptor(stateRaw, key)?.get?.call(state) as TState[TKey]
 
             state[key] = newValue
-            listeners[key].forEach(listener => listener(newValue))
+            notifyUpdates(key)
         })
     })
 
@@ -148,13 +177,13 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     }
 
     const effect = (run: (state: TState) => void) => {
-        const disposers = new Set<VoidFunction>()
+        const keysToListen = new Set<TKey>()
 
         run(
             new Proxy(state, {
                 get: (target, key) => {
                     if (storeKeys.includes(key as TKey)) {
-                        disposers.add(subscribe([key as TKey])(() => run(state)))
+                        keysToListen.add(key as TKey)
                     }
 
                     if (keyInObject(key, target)) {
@@ -166,34 +195,30 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
             }),
         )
 
-        if (disposers.size === 0) {
-            storeKeys.forEach(key => disposers.add(subscribe([key])(() => run(state))))
-        }
-
-        return () => disposers.forEach(dispose => dispose())
+        return subscribe(keysToListen.size === 0 ? storeKeys : Array.from(keysToListen))(() => run(state))
     }
 
     return {
         /**
          * Function that returns current state of the store
-         * @see {@link https://github.com/codemask-labs/stan-js#getState}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#getState}
          */
         getState: () => state,
         /**
          * Object that contains all functions that allows for updating the store's state
-         * @see {@link https://github.com/codemask-labs/stan-js#actions}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore/#actions}
          */
         actions,
         /**
          * Function that resets store state to the initial values
          * @param keys - keys of the store that should be reset
-         * @see {@link https://github.com/codemask-labs/stan-js#reset}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#reset}
          */
         reset,
         /**
          * Function that allows to subscribe to store's values change and react to them by calling the listener callback
          * @param run - callback that will be called when store's values change
-         * @see {@link https://github.com/codemask-labs/stan-js#effect}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#effect}
          */
         effect,
         /**
@@ -202,5 +227,11 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
          * @returns Function that allows for listening to store's values change
          */
         subscribe,
+        /**
+         * Function that allows to batch updates to the store's state
+         * @param callback - callback that will be called after all updates are batched
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#batchUpdates}
+         */
+        batchUpdates,
     }
 }
