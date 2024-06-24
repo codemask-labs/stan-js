@@ -45,7 +45,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     const listeners = storeKeys.reduce((acc, key) => ({
         ...acc,
         [key]: [],
-    }), {} as { [K: string]: Array<(newState: unknown) => void> })
+    }), {} as Record<string, Array<(newState: unknown) => void>>)
 
     const notifyUpdates = (keyToNotify: TKey) => {
         Object.entries(listeners).forEach(([compositeKey, listenersArray]) => {
@@ -118,7 +118,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                     [key]: value.value,
                 }
             } finally {
-                listeners[key as TKey]?.push(newValue => value.update(newValue, key))
+                listeners[key]?.push(newValue => value.update(newValue, key))
                 value.subscribe?.(getAction(key as TKey), key)
             }
         }
