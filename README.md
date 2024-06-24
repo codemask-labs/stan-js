@@ -53,7 +53,7 @@ bun add stan-js
 
 Create a store with initial state:
 
-You can think of a store as your app state. You can define multiple keys/values, each key will create separated subscription ([more explained here](#useStore)). If you want to persist the value - you can simply wrap it in [Synchronizer](#Synchronizer)
+You can think of a store as your app state. You can define multiple keys/values, each key will create separated subscription ([more explained here](https://codemask-labs.github.io/stan-js/reference/createstore/#usestore)). If you want to persist the value - you can simply wrap it in [Synchronizer](https://codemask-labs.github.io/stan-js/reference/synchronizer/)
 
 ```typescript
 import { createStore } from 'stan-js'
