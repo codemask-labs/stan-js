@@ -318,6 +318,21 @@ describe('effect', () => {
 
         expect(callback).toHaveBeenCalledTimes(1)
     })
+
+    it('should deduplicate dependency listeners', () => {
+        const store = createStore({
+            firstName: 'John',
+            get name() {
+                return `${this.firstName} ${this.firstName} ${this.firstName} ${this.firstName} ${this.firstName}`
+            },
+        })
+
+        const callback = jest.fn()
+        store.effect(({ name }) => callback(name))
+        store.actions.setFirstName('Andrzej')
+
+        expect(callback).toHaveBeenCalledTimes(2)
+    })
 })
 
 describe('useStoreEffect', () => {

@@ -201,24 +201,24 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     return {
         /**
          * Function that returns current state of the store
-         * @see {@link https://github.com/codemask-labs/stan-js#getState}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#getState}
          */
         getState: () => state,
         /**
          * Object that contains all functions that allows for updating the store's state
-         * @see {@link https://github.com/codemask-labs/stan-js#actions}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore/#actions}
          */
         actions,
         /**
          * Function that resets store state to the initial values
          * @param keys - keys of the store that should be reset
-         * @see {@link https://github.com/codemask-labs/stan-js#reset}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#reset}
          */
         reset,
         /**
          * Function that allows to subscribe to store's values change and react to them by calling the listener callback
          * @param run - callback that will be called when store's values change
-         * @see {@link https://github.com/codemask-labs/stan-js#effect}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#effect}
          */
         effect,
         /**
@@ -227,6 +227,11 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
          * @returns Function that allows for listening to store's values change
          */
         subscribe,
+        /**
+         * Function that allows to batch updates to the store's state
+         * @param callback - callback that will be called after all updates are batched
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#batchUpdates}
+         */
         batchUpdates,
     }
 }
