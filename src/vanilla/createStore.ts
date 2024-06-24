@@ -74,10 +74,12 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         }
     }
 
-    const state = Object.entries(stateRaw).reduce((acc, [key, value]) => {
+    const state = Object.keys(stateRaw).reduce((acc, key) => {
         if (Object.getOwnPropertyDescriptor(stateRaw, key)?.get !== undefined) {
             return acc
         }
+
+        const value = stateRaw[key as TKey]
 
         if (typeof value === 'function') {
             throw new Error('Function cannot be passed as top level state value')

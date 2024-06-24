@@ -399,3 +399,16 @@ describe('batch', () => {
         expect(callback3).toBeCalledTimes(3)
     })
 })
+
+describe('storage + computed', () => {
+    it('storage should work with computed', () => {
+        const { getState } = createStore({
+            test: [1],
+            get computedTest() {
+                return this.test.at(0)
+            },
+        })
+
+        expect(getState().computedTest).toEqual(1)
+    })
+})
