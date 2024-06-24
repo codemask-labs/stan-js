@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/codemask-labs/stan-js/compare/v1.2.6...v1.3.0) (2024-06-24)
+
+
+### Features
+
+* add updates batching ([#70](https://github.com/codemask-labs/stan-js/issues/70)) ([21edc01](https://github.com/codemask-labs/stan-js/commit/21edc01a59457acfdd9ed36297d88f43b17995d0))
+
 ## [1.2.6](https://github.com/codemask-labs/stan-js/compare/v1.2.5...v1.2.6) (2024-06-20)
 
 
