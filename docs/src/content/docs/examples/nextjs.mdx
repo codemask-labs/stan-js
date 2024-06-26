@@ -1,0 +1,19 @@
+---
+title: Next.js SSR
+description: 'Example of using stan-js with Next.js and Server Side Rendering'
+sidebar:
+    order: 1
+---
+
+import { Code } from '@/code'
+import { Aside } from '@astrojs/starlight/components'
+
+<iframe src="https://stackblitz.com/github/codemask-labs/stan-js/tree/main/examples/nextjs?embed=1&hideExplorer=1&view=preview" />
+
+<Code path="nextjs/src/store.ts" />
+<Aside type="note">
+Remember to add 'use client' to the top of the file, since React.Context is not available on the server
+</Aside>
+<Code path="nextjs/src/app/layout.tsx" />
+<Code path="nextjs/src/app/page.tsx" />
+<Code path="nextjs/src/Counter.tsx" />
