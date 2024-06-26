@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-image: linear-gradient(to bottom, #33bbff, #7a62f6);
+    height: 100vh;
+    color: #fff;
+    display: grid;
+    place-items: center;
+}
+
+button {
+    background-color: #bb33ff;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
