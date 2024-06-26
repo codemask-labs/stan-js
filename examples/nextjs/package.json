@@ -6,7 +6,8 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "postinstall": "npm i -g npm@latest"
     },
     "dependencies": {
         "react": "18.3.1",
