@@ -7,8 +7,8 @@ const HomePage = () => {
     const { user } = useScopedStore().useStore()
 
     return (
-        <main className="flex flex-col gap-10 items-center">
-            <h1 className="text-4xl">
+        <main>
+            <h1>
                 Hello {user}!
             </h1>
             <Counter />
