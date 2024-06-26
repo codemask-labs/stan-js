@@ -12,7 +12,7 @@
         "typescript",
         "intellisense"
     ],
-    "homepage": "https://github.com/codemask-labs/stan-js",
+    "homepage": "https://codemask-labs.github.io/stan-js/",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/codemask-labs/stan-js.git"
