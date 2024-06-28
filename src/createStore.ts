@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import { DependencyList, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { equal, keyInObject } from './utils'
 import { createStore as createStoreVanilla } from './vanilla'
 
@@ -63,12 +63,30 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         })
     }
 
-    const useStoreEffect = (run: (state: TState) => void) => {
+    const useStoreEffect = (run: (state: TState) => void, deps: DependencyList = []) => {
+        const isMounted = useRef(false)
+        const callbackRef = useRef(run)
+
         useEffect(() => {
             const dispose = store.effect(run)
 
             return dispose
         }, [])
+
+        useEffect(() => {
+            callbackRef.current = run
+        }, [run])
+
+        useEffect(() => {
+            // To prevent double callback firing on mount
+            if (!isMounted.current) {
+                isMounted.current = true
+
+                return
+            }
+
+            run(store.getState())
+        }, [deps])
     }
 
     return {
