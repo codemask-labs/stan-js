@@ -68,8 +68,8 @@ import { storage } from 'stan-js/storage'
 
 export const { useStore } = createStore({
     count: 0,
-    get doubleCounter() {
-        return this.counter * 2
+    get doubleCount() {
+        return this.count * 2
     }, 
     user: storage(''),
     selectedLanguage: 'en-US',
