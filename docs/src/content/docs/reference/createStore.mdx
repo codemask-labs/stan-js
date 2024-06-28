@@ -119,6 +119,16 @@ useStoreEffect(({ count }) => {
 })
 ```
 
+If you want to react to changes in the store and a component's state, you can pass a second argument - an array of dependencies
+
+```typescript
+const [componentState, setComponentState] = useState(0)
+
+useStoreEffect(({ count }) => {
+    console.log(count + componentState)
+}, [componentState])
+```
+
 <Aside type="caution">
 You **should** destructure values from this hook - to let the store know what values you will access
 
