@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/codemask-labs/stan-js/compare/v1.3.1...v1.4.0) (2024-06-28)
+
+
+### Features
+
+* useStoreEffect enchancement ([#73](https://github.com/codemask-labs/stan-js/issues/73)) ([bf730b6](https://github.com/codemask-labs/stan-js/commit/bf730b6cd42d1300427e3cea4fe54fc7c557036a))
+
 ## [1.3.1](https://github.com/codemask-labs/stan-js/compare/v1.3.0...v1.3.1) (2024-06-24)
 
 
