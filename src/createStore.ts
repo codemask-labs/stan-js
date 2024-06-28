@@ -68,7 +68,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         const callbackRef = useRef(run)
 
         useEffect(() => {
-            const dispose = store.effect(run)
+            const dispose = store.effect(callbackRef.current)
 
             return dispose
         }, [])
