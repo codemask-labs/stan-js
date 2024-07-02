@@ -12,12 +12,14 @@ If your app is SSR or for example you just want to have the same store shape but
 It returns:
 - ``StoreProvider`` - Provider that passes scoped store down to the React's tree
 - ``withStore`` - HOC that passes scoped store down to the React's tree
-- ``useScopedStore`` - React hook used to access scoped store
+- ``useScopedStore`` - React hook used to access scoped store (actions, effect, etc.)
+- ``useStore`` - Regular [useStore](../createstore#usestore) hook but with the scoped store
+- ``useStoreEffect`` - Regular [useStoreEffect](../createstore#usestoreeffect) hook but with the scoped store
 
 ```typescript
 import { createScopedStore } from 'stan-js'
 
-export const { StoreProvider, useScopedStore, withStore } = createScopedStore({
+export const { StoreProvider, useScopedStore, withStore, useStore, useStoreEffect } = createScopedStore({
     count: 0,
 })
 ``` 
