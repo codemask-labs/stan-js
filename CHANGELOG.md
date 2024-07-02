@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/codemask-labs/stan-js/compare/v1.4.0...v1.4.1) (2024-07-02)
+
+
+### Bug Fixes
+
+* scoped store with react compiler ([#76](https://github.com/codemask-labs/stan-js/issues/76)) ([8360765](https://github.com/codemask-labs/stan-js/commit/8360765013d2edee098ebe6aa1484e1767ac1def))
+
 # [1.4.0](https://github.com/codemask-labs/stan-js/compare/v1.3.1...v1.4.0) (2024-06-28)
 
 
