@@ -9,6 +9,9 @@
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview"
     },
+    "stackblitz": {
+        "startCommand": "yarn install --no-lockfile && yarn dev"
+    },
     "dependencies": {
         "react": "18.2.0",
         "react-dom": "18.2.0",

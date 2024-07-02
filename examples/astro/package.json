@@ -9,6 +9,9 @@
         "preview": "astro preview",
         "astro": "astro"
     },
+    "stackblitz": {
+        "startCommand": "yarn install --no-lockfile && yarn dev"
+    },
     "dependencies": {
         "@astrojs/check": "0.5.10",
         "@astrojs/react": "3.3.1",

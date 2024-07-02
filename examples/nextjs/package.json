@@ -8,6 +8,9 @@
         "start": "next start",
         "lint": "next lint"
     },
+    "stackblitz": {
+        "startCommand": "yarn install --no-lockfile && yarn dev"
+    },
     "dependencies": {
         "react": "18.3.1",
         "react-dom": "18.3.1",
