@@ -1,9 +1,10 @@
 [![TypeScript](https://img.shields.io/badge/typescript-%230276C7?style=for-the-badge&logo=typescript&logoColor=%23fff&link=https%3A%2F%2Fwww.typescriptlang.org%2F)](https://typescriptlang.org)
 [![React](https://img.shields.io/badge/react-%23077EA4?style=for-the-badge&logo=react&logoColor=%23fff&link=https%3A%2F%2Freact.dev%2F)](https://react.dev/)
 [![ReactNative](https://img.shields.io/badge/react%20native-%23282C34?style=for-the-badge&logo=react&logoColor=%2360DAFB&link=https%3A%2F%2Freact.dev%2F)](https://reactnative.dev/)
+[![platform - ssr](https://img.shields.io/badge/SSR-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![MIT](https://img.shields.io/npm/l/%40codemaskinc%2Fstore?style=for-the-badge)](https://mit-license.org/)
 [![NPM Version](https://img.shields.io/npm/v/stan-js?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fstan-js)](https://www.npmjs.com/package/stan-js)
-[![NPM Downloads](https://img.shields.io/npm/dm/stan-js?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fstan-js)](https://www.npmjs.com/package/stan-js)
+[![NPM Downloads](https://img.shields.io/npm/dw/stan-js?style=for-the-badge&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fstan-js)](https://www.npmjs.com/package/stan-js)
 
 <img src="./assets/baner.png" alt="stan-js" width="100%" height="auto" />
 
@@ -16,6 +17,7 @@ stan-js is a lightweight and flexible state management library designed for use 
 - ⚡️ Performance and minimal re-renders
 - ✍️ Simple configuration
 - ⚛️ Out of the box React integration
+- 💾 Built in data persistence
 - 🚀 Amazing typescript IntelliSense
 - 🪝 Easy access to all store values
 - 🪶 Very lightweight
