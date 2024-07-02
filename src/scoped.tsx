@@ -1,4 +1,4 @@
-import React, { createContext, FunctionComponent, ReactNode, useContext, useState } from 'react'
+import React, { createContext, DependencyList, FunctionComponent, ReactNode, useContext, useState } from 'react'
 import { createStore } from '.'
 
 type StoreProviderProps<TState extends object> = {
@@ -9,6 +9,18 @@ type StoreProviderProps<TState extends object> = {
 export const createScopedStore = <TState extends object>(initialState: TState) => {
     const StoreContext = createContext(createStore(initialState))
     const useScopedStore = () => useContext(StoreContext)
+
+    const useStore = () => {
+        const { useStore } = useContext(StoreContext)
+
+        return useStore()
+    }
+
+    const useStoreEffect = (run: (state: TState) => void, deps: DependencyList = []) => {
+        const { useStoreEffect } = useContext(StoreContext)
+
+        useStoreEffect(run, deps)
+    }
 
     const StoreProvider: FunctionComponent<StoreProviderProps<TState>> = ({ children, initialValue }) => {
         const [store] = useState(() =>
@@ -31,5 +43,7 @@ export const createScopedStore = <TState extends object>(initialState: TState) =
         StoreProvider,
         useScopedStore,
         withStore,
+        useStore,
+        useStoreEffect,
     }
 }

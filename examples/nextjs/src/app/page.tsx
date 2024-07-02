@@ -1,10 +1,10 @@
 'use client'
 
 import { Counter } from '@/Counter'
-import { useScopedStore } from '@/store'
+import { useStore } from '@/store'
 
 const HomePage = () => {
-    const { user } = useScopedStore().useStore()
+    const { user } = useStore()
 
     return (
         <main>

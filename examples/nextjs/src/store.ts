@@ -1,8 +1,8 @@
 'use client'
 
-import { createScopedStore } from 'stan-js'
+import { createScopedStore } from '../../../dist'
 
-export const { StoreProvider, useScopedStore } = createScopedStore({
+export const { StoreProvider, useScopedStore, useStore } = createScopedStore({
     user: '',
     counter: 0,
 })

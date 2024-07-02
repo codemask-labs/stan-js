@@ -1,7 +1,7 @@
-import { useScopedStore } from './store'
+import { useStore } from './store'
 
 export const Counter = () => {
-    const { counter, setCounter } = useScopedStore().useStore()
+    const { counter, setCounter } = useStore()
 
     return (
         <section>
