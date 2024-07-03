@@ -41,12 +41,15 @@ describe('scoped', () => {
         const { StoreProvider, useStore } = createScopedStore({
             firstName: 'John',
             lastName: 'Smith',
+            get name() {
+                return `${this.firstName} ${this.lastName}`
+            },
         })
 
         const User = () => {
-            const { firstName, lastName } = useStore()
+            const { firstName, lastName, name } = useStore()
 
-            return <p>{firstName} {lastName}</p>
+            return <p>{firstName} {lastName} ({name})</p>
         }
 
         const App = () => (
@@ -57,7 +60,7 @@ describe('scoped', () => {
 
         render(<App />)
 
-        expect(screen.getByText('John Doe')).toBeDefined()
+        expect(screen.getByText('John Doe (John Doe)')).toBeDefined()
     })
 
     it('should inject scoped store when using HOC', () => {

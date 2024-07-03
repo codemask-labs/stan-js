@@ -1,8 +1,10 @@
 import React, { createContext, DependencyList, FunctionComponent, ReactNode, useContext, useState } from 'react'
 import { createStore } from '.'
+import { RemoveReadonly } from './types'
+import { mergeState } from './utils'
 
 type StoreProviderProps<TState extends object> = {
-    initialValue?: Partial<TState>
+    initialValue?: Partial<RemoveReadonly<TState>>
     children: ReactNode
 }
 
@@ -23,12 +25,7 @@ export const createScopedStore = <TState extends object>(initialState: TState) =
     }
 
     const StoreProvider: FunctionComponent<StoreProviderProps<TState>> = ({ children, initialValue }) => {
-        const [store] = useState(() =>
-            createStore({
-                ...initialState,
-                ...initialValue,
-            })
-        )
+        const [store] = useState(() => createStore(mergeState(initialState, initialValue ?? {})))
 
         return <StoreContext.Provider children={children} value={store} />
     }

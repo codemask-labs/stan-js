@@ -1,4 +1,4 @@
-import { ActionKey, Synchronizer } from './types'
+import { ActionKey, RemoveReadonly, Synchronizer } from './types'
 
 export const capitalize = (str: string) => `${str.charAt(0).toUpperCase()}${str.slice(1)}`
 
@@ -38,4 +38,19 @@ export const equal = <T>(a: T, b: T) => {
     }
 
     return keysA.every(key => Object.is(a[key], b[key]) && Object.prototype.hasOwnProperty.call(b, key))
+}
+
+export const mergeState = <TState extends object>(state: TState, partialState: Partial<RemoveReadonly<TState>>) => {
+    const newState = { ...state }
+
+    Object.defineProperties(newState, Object.getOwnPropertyDescriptors(state))
+    Object.keys(partialState).forEach(key => {
+        const stateKey = key as keyof TState
+
+        if (Object.getOwnPropertyDescriptor(newState, stateKey)?.get === undefined) {
+            newState[stateKey] = partialState?.[key as keyof typeof partialState] ?? state[stateKey]
+        }
+    })
+
+    return newState
 }
