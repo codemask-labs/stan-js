@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/codemask-labs/stan-js/compare/v1.4.1...v1.4.2) (2024-07-03)
+
+
+### Bug Fixes
+
+* do not override getters in scoped store ([#78](https://github.com/codemask-labs/stan-js/issues/78)) ([64b6eac](https://github.com/codemask-labs/stan-js/commit/64b6eac2bb2872b2b51a3006111bd9a29cb5a3e7))
+
 ## [1.4.1](https://github.com/codemask-labs/stan-js/compare/v1.4.0...v1.4.1) (2024-07-02)
 
 
