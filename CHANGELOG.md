@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/codemask-labs/stan-js/compare/v1.4.2...v1.4.3) (2024-07-16)
+
+
+### Bug Fixes
+
+* update store provider state after value changed ([#80](https://github.com/codemask-labs/stan-js/issues/80)) ([8b8f433](https://github.com/codemask-labs/stan-js/commit/8b8f43311235dbc2aeff867e4a0b2208c0d42346))
+
 ## [1.4.2](https://github.com/codemask-labs/stan-js/compare/v1.4.1...v1.4.2) (2024-07-03)
 
 
