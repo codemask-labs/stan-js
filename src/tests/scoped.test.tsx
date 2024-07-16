@@ -1,6 +1,6 @@
 import { cleanup, render, renderHook, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, jest } from 'bun:test'
-import React, { Fragment, FunctionComponent } from 'react'
+import React, { Fragment, FunctionComponent, useEffect, useRef } from 'react'
 import { createScopedStore } from '../scoped'
 
 describe('scoped', () => {
@@ -105,5 +105,37 @@ describe('scoped', () => {
         actions.setB(prev => prev + 1)
 
         expect(callback).toHaveBeenCalledTimes(2)
+    })
+
+    it('should update state on initial value change', () => {
+        const { StoreProvider, useStore } = createScopedStore({
+            test: '',
+        })
+
+        const User = () => {
+            const { test } = useStore()
+
+            return <p>{test}</p>
+        }
+
+        const App = () => {
+            const isRendered = useRef(false)
+
+            useEffect(() => {
+                isRendered.current = true
+            }, [])
+
+            return (
+                <StoreProvider initialValue={{ test: isRendered.current ? 'Next value' : 'Initial value' }}>
+                    <User />
+                </StoreProvider>
+            )
+        }
+
+        const { rerender } = render(<App />)
+        expect(screen.getByText('Initial value')).toBeDefined()
+
+        rerender(<App />)
+        expect(screen.getByText('Next value')).toBeDefined()
     })
 })

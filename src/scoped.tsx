@@ -1,7 +1,7 @@
-import React, { createContext, DependencyList, FunctionComponent, ReactNode, useContext, useState } from 'react'
+import React, { createContext, DependencyList, FunctionComponent, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import { createStore } from '.'
 import { RemoveReadonly } from './types'
-import { mergeState } from './utils'
+import { getActionKey, mergeState } from './utils'
 
 type StoreProviderProps<TState extends object> = {
     initialValue?: Partial<RemoveReadonly<TState>>
@@ -26,6 +26,22 @@ export const createScopedStore = <TState extends object>(initialState: TState) =
 
     const StoreProvider: FunctionComponent<StoreProviderProps<TState>> = ({ children, initialValue }) => {
         const [store] = useState(() => createStore(mergeState(initialState, initialValue ?? {})))
+        const isMounted = useRef(false)
+
+        useEffect(() => {
+            if (!isMounted.current) {
+                isMounted.current = true
+
+                return
+            }
+
+            store.batchUpdates(() =>
+                Object.entries(initialValue ?? {}).forEach(([key, value]) => {
+                    // @ts-expect-error - TS can't infer action key properly
+                    store.actions[getActionKey(key)](value)
+                })
+            )
+        }, [initialValue])
 
         return <StoreContext.Provider children={children} value={store} />
     }
