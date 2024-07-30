@@ -141,6 +141,22 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         }
     }
 
+    Object.defineProperty(globalThis, '__stan-js__', {
+        // @ts-expect-error - Inject store to globalThis
+        value: [...(globalThis['__stan-js__'] ?? []), {
+            store: state,
+            listen: subscribe(storeKeys),
+            updateStore: (store: TState) =>
+                batchUpdates(() =>
+                    Object.entries(store)
+                        .forEach(([key, value]) => getAction(key as TKey)?.(value))
+                ),
+        }],
+        configurable: true,
+        enumerable: false,
+        writable: true,
+    })
+
     storeKeys.forEach(key => {
         if (Object.getOwnPropertyDescriptor(stateRaw, key)?.get === undefined) {
             return
