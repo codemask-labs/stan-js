@@ -12,6 +12,8 @@ export const createScopedStore = <TState extends object>(initialState: TState) =
     const StoreContext = createContext(createStore(initialState))
     const useScopedStore = () => useContext(StoreContext)
 
+    StoreContext.displayName = 'stan-js'
+
     const useStore = () => {
         const { useStore } = useContext(StoreContext)
 

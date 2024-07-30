@@ -151,6 +151,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                     Object.entries(store)
                         .forEach(([key, value]) => getAction(key as TKey)?.(value))
                 ),
+            getters: Object.keys(stateRaw).filter(key => !Object.keys(actions).includes(getActionKey(key))),
         }],
         configurable: true,
         enumerable: false,
