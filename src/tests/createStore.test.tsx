@@ -412,3 +412,19 @@ describe('storage + computed', () => {
         expect(getState().computedTest).toEqual(1)
     })
 })
+
+describe('devtools', () => {
+    createStore({
+        test: 0,
+    })
+    // @ts-expect-error
+    const stores = globalThis['__stan-js__']
+    const { store, listen, updateStore } = stores.at(-1)
+
+    expect(store).toBeDefined()
+    expect(listen).toBeDefined()
+    expect(updateStore).toBeDefined()
+    updateStore({ test: 1 })
+
+    expect(store.test).toEqual(1)
+})
