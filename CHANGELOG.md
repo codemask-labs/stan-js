@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/codemask-labs/stan-js/compare/v1.4.3...v1.5.0) (2024-08-01)
+
+
+### Features
+
+* add devtools support ([#81](https://github.com/codemask-labs/stan-js/issues/81)) ([c73109d](https://github.com/codemask-labs/stan-js/commit/c73109dce8883c7f6e6a581725039da04d117626))
+
 ## [1.4.3](https://github.com/codemask-labs/stan-js/compare/v1.4.2...v1.4.3) (2024-07-16)
 
 
