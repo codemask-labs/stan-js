@@ -1,0 +1,71 @@
+---
+title: Devtools
+description: A guide on how to add stan-js-devtools to your project.
+next: { link: ../../reference/createstore, label: createStore }
+sidebar:
+    order: 2
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+
+## 📺 Preview
+
+<video controls>
+    <source src="/devtools.mov" />
+</video>
+
+## 📦 Installation
+
+To install stan-js-devtools run the following command in your terminal:
+
+<Tabs syncKey="pkg">
+<TabItem label="npm">
+
+```sh
+npm install stan-js-devtools
+```
+
+</TabItem>
+<TabItem label="yarn">
+
+```sh
+yarn add stan-js-devtools
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```sh
+pnpm add stan-js-devtools
+```
+
+</TabItem>
+<TabItem label="bun">
+
+```sh
+bun add stan-js-devtools
+```
+
+</TabItem>
+</Tabs>
+
+## 🚀 Usage
+
+```tsx
+import { Devtools } from 'stan-js-devtools'
+
+const App = () => {
+    return (
+        <>
+            {/* your app */}
+            <DevTools />
+        </>
+    )
+}
+```
+
+#### Usage with Expo
+
+For React Native we're using [expo dev tools plugins](https://docs.expo.dev/debugging/devtools-plugins/) simply press `Shift + M` and select `Open stan-js-devtools` from the list.
+
+No additional configuration is required!
