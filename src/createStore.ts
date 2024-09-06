@@ -1,5 +1,6 @@
 import { DependencyList, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import { equal, keyInObject } from './utils'
+import { Prettify, RemoveReadonly } from './types'
+import { equal, getActionKey, keyInObject } from './utils'
 import { createStore as createStoreVanilla } from './vanilla'
 
 export const createStore = <TState extends object>(stateRaw: TState) => {
@@ -89,6 +90,19 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         }, deps)
     }
 
+    // @ts-expect-error - TS doesn't know that all keys are in actions object
+    const getAction = <K extends TKey>(key: K) => store.actions[getActionKey(key)] as (value: unknown) => void
+
+    const useHydrateState = (state: Prettify<RemoveReadonly<TState>>) => {
+        const isMounted = useRef(false)
+
+        if (!isMounted.current) {
+            isMounted.current = true
+
+            store.batchUpdates(() => Object.entries(state).forEach(([key, value]) => getAction(key as keyof typeof state)?.(value)))
+        }
+    }
+
     return {
         actions: store.actions,
         getState: store.getState,
@@ -107,5 +121,11 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
          * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#useStoreEffect}
          */
         useStoreEffect,
+        /**
+         * React's hook that allows to hydrate store's state with the provided values once on mount
+         * @param state - values that should be used to hydrate the store
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#useHydrateState}
+         */
+        useHydrateState,
     }
 }
