@@ -196,3 +196,24 @@ You should keep this function in mind when you are using it with effect or `useS
 
 In useStore hook it will be automatically batched by React `useSyncExternalStore` hook
 </Aside>
+
+### useHydrateState
+
+Function that allows to hydrate store's state with the initial values
+
+```typescript
+const { useHydrateState } = createStore({
+    count: 0,
+    name: 'John',
+    notifications: [] as Array<Notification>
+})
+
+useHydrateState({
+    count: 10,
+    name: 'Jane',
+    notifications: [{ message: 'Hello' }]
+})
+
+// Now the store's state is:
+// count: 10, name: 'Jane', notifications: [{ message: 'Hello' }]
+```
