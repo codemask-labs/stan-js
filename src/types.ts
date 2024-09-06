@@ -28,3 +28,9 @@ export type Storage = {
     <T>(initialValue: T, options?: StorageOptions<T>): T
     <T>(initialValue?: T, options?: StorageOptions<T>): T | undefined
 }
+
+export type Prettify<T> =
+    & {
+        [K in keyof T]: T[K]
+    }
+    & {}

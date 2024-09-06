@@ -428,3 +428,27 @@ describe('devtools', () => {
 
     expect(store.test).toEqual(1)
 })
+
+describe('hydration', () => {
+    it('should hydrate state once', async () => {
+        const store1 = createStore({ name: 'John' })
+        const store2 = createStore({
+            count: 0,
+            get doubleCount() {
+                return this.count * 2
+            },
+        })
+
+        renderHook(() => store1.useHydrateState({ name: 'Jane' }))
+        const { rerender } = renderHook(() => store2.useHydrateState({ count: 10 }))
+
+        expect(store1.getState().name).toBe('Jane')
+        expect(store2.getState().count).toBe(10)
+        expect(store2.getState().doubleCount).toBe(20)
+
+        store2.actions.setCount(20)
+        rerender()
+
+        expect(store2.getState().count).toBe(20)
+    })
+})
