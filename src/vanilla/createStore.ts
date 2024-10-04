@@ -63,6 +63,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
 
     const batchUpdates = (callback: VoidFunction) => {
         try {
+            batchedKeys.clear()
             isBatching = true
             callback()
         } finally {
@@ -70,7 +71,6 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
                 listeners[key]?.forEach(listener => listener(state[key as TKey]))
             })
             isBatching = false
-            batchedKeys.clear()
         }
     }
 

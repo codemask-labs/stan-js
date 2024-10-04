@@ -1,6 +1,6 @@
 import { cleanup, render, renderHook, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, jest } from 'bun:test'
-import React, { Fragment, FunctionComponent, useEffect, useRef } from 'react'
+import React, { FunctionComponent, useEffect, useRef } from 'react'
 import { createScopedStore } from '../scoped'
 
 describe('scoped', () => {
@@ -19,7 +19,7 @@ describe('scoped', () => {
         }
 
         const App = () => (
-            <Fragment>
+            <React.Fragment>
                 <User id="1" />
                 <StoreProvider initialValue={{ userName: 'Johnny Test' }}>
                     <User id="2" />
@@ -27,7 +27,7 @@ describe('scoped', () => {
                         <User id="3" />
                     </StoreProvider>
                 </StoreProvider>
-            </Fragment>
+            </React.Fragment>
         )
 
         render(<App />)
