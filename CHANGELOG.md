@@ -1,3 +1,15 @@
+# [1.6.0](https://github.com/codemask-labs/stan-js/compare/v1.5.0...v1.6.0) (2024-10-04)
+
+
+### Bug Fixes
+
+* batching updates ([#84](https://github.com/codemask-labs/stan-js/issues/84)) ([c905a41](https://github.com/codemask-labs/stan-js/commit/c905a41533c057d9a1bfe9b2288afc2d76f7e786))
+
+
+### Features
+
+* add support for manual state hydration ([#83](https://github.com/codemask-labs/stan-js/issues/83)) ([0ead54c](https://github.com/codemask-labs/stan-js/commit/0ead54c657e806d7a302baee4cc8b455d7ade592))
+
 # [1.5.0](https://github.com/codemask-labs/stan-js/compare/v1.4.3...v1.5.0) (2024-08-01)
 
 
