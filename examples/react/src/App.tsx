@@ -1,68 +1,58 @@
-import React, { useEffect, useRef } from 'react'
-import { AnimateRerender } from './AnimateRerender'
-import { actions, fetchUsers, getState, reset, useStore } from './store'
+import { useEffect, useRef } from 'react'
+import { Button } from './components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card'
+import { Input } from './components/ui/input'
+import { fetchUsers, getState, reset, useStore } from './store'
 
 const CurrentTime = () => {
     const { currentTime } = useStore()
 
-    return (
-        <AnimateRerender>
-            <h1>
-                {currentTime.toLocaleTimeString()}
-            </h1>
-        </AnimateRerender>
-    )
+    return <h2 className="text-xl">{currentTime.toLocaleTimeString()}</h2>
 }
 
 const Message = () => {
     const { upperCaseMessage } = useStore()
 
-    return <AnimateRerender>Uppercased message: {upperCaseMessage}</AnimateRerender>
+    return (
+        <span className="mb-2">
+            Uppercased message: <b>{upperCaseMessage}</b>
+        </span>
+    )
 }
 
 const MessageInput = () => {
     const { setMessage } = useStore()
 
     return (
-        <AnimateRerender>
-            <input
-                type="text"
-                defaultValue={getState().message}
-                onChange={(e) => setMessage(e.target.value)}
-            />
-            <p>
-                Message is printed in uppercase using derived hook.<br />
-                Updates are done using <span>actions</span> so Input component won't re-render!
-            </p>
-        </AnimateRerender>
+        <Input
+            defaultValue={getState().message}
+            onChange={event => setMessage(event.target.value)}
+        />
     )
 }
 
 const CounterDisplay = () => {
     const { counter } = useStore()
 
-    return (
-        <AnimateRerender>
-            <h1>{counter}</h1>
-        </AnimateRerender>
-    )
+    return <h2 className="text-2xl font-bold text-center">{counter}</h2>
 }
 
-const Counter = () => {
+const CounterControls = () => {
     const { setCounter } = useStore()
 
     return (
-        <AnimateRerender>
-            <CounterDisplay />
-            <div className="buttons-container">
-                <button onClick={() => setCounter(prev => prev - 1)}>Decrement</button>
-                <button onClick={() => setCounter(prev => prev + 1)}>Increment</button>
+        <div className="flex flex-col">
+            <div className="flex justify-center gap-4 mt-2">
+                <Button onClick={() => setCounter(prev => prev - 1)}>Decrement</Button>
+                <Button onClick={() => setCounter(prev => prev + 1)}>Increment</Button>
             </div>
-            <button onClick={() => reset('counter')}>Reset counter</button>
-            <p>
+            <div className="mx-auto my-2">
+                <Button onClick={() => reset('counter')}>Reset counter</Button>
+            </div>
+            <CardDescription className="text-center">
                 Counter is incremented and decremented using <span>actions</span>,<br />and can be reset using <span>reset</span> function.
-            </p>
-        </AnimateRerender>
+            </CardDescription>
+        </div>
     )
 }
 
@@ -78,22 +68,21 @@ const UsersList = () => {
     }, [users])
 
     return (
-        <AnimateRerender>
-            <div
-                className="users"
-                ref={listRef}
-            >
-                {users.map(user => (
-                    <div key={user}>
-                        {user}
-                    </div>
-                ))}
-            </div>
-        </AnimateRerender>
+        <div
+            className="h-80 overflow-auto flex flex-col items-center justify-center mb-4"
+            ref={listRef}
+        >
+            {users.length === 0 && <span>Press the button to fetch users.</span>}
+            {users.map(user => (
+                <div key={user}>
+                    {user}
+                </div>
+            ))}
+        </div>
     )
 }
 
-const Table = () => {
+const FetchMore = () => {
     const { setUsers } = useStore()
 
     const fetchMoreUsers = async () => {
@@ -103,38 +92,55 @@ const Table = () => {
     }
 
     return (
-        <AnimateRerender>
-            <UsersList />
-            <button onClick={fetchMoreUsers}>
-                Fetch more users
-            </button>
-            <p>
-                Users are fetched from an API<br />and appended to the list asynchronously.
-            </p>
-        </AnimateRerender>
+        <Button onClick={fetchMoreUsers}>
+            Fetch more users
+        </Button>
     )
 }
 
-export const App = () => {
-    useEffect(() => {
-        const interval = setInterval(() => {
-            actions.setCurrentTime(new Date())
-        }, 1000)
-
-        return () => clearInterval(interval)
-    }, [])
-
-    return (
-        <React.Fragment>
-            <CurrentTime />
-            <p>The timer is updating every second using a setInterval.</p>
-            <hr />
-            <Message />
-            <MessageInput />
-            <hr />
-            <Counter />
-            <hr />
-            <Table />
-        </React.Fragment>
-    )
-}
+export const App = () => (
+    <div className="p-4 flex flex-col max-w-xl mx-auto gap-8">
+        <Card>
+            <CardHeader>
+                <CardTitle>Updates & Reset</CardTitle>
+                <CardDescription>Automatically generated functions for updates and reset.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col">
+                <CounterDisplay />
+                <CounterControls />
+            </CardContent>
+        </Card>
+        <Card>
+            <CardHeader>
+                <CardTitle>Asynchronous updates</CardTitle>
+                <CardDescription>Asynchronus updates works without any additional code.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col">
+                <UsersList />
+                <FetchMore />
+            </CardContent>
+        </Card>
+        <Card>
+            <CardHeader>
+                <CardTitle>Updates outside of React</CardTitle>
+                <CardDescription>Update the state outside of React without any issues.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center">
+                <CurrentTime />
+                <CardDescription>
+                    The timer is updating every second using a setInterval.
+                </CardDescription>
+            </CardContent>
+        </Card>
+        <Card>
+            <CardHeader>
+                <CardTitle>Computed values</CardTitle>
+                <CardDescription>Create computed value based on another value in store.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col">
+                <Message />
+                <MessageInput />
+            </CardContent>
+        </Card>
+    </div>
+)

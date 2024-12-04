@@ -1,4 +1,11 @@
-import ReactDOM from 'react-dom/client'
-import { App } from './App'
+import { createRoot } from 'react-dom/client'
+import { scan } from 'react-scan'
+import './index.css'
+import { App } from './App.tsx'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(<App />)
+scan({
+    enabled: true,
+    alwaysShowLabels: true,
+})
+
+createRoot(document.getElementById('root')!).render(<App />)

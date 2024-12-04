@@ -10,6 +10,10 @@ export const { useStore, reset, getState, actions } = createStore({
     users: [] as Array<string>,
 })
 
+setInterval(() => {
+    actions.setCurrentTime(new Date())
+}, 1000)
+
 export const fetchUsers = async () => {
     try {
         const res = await fetch('https://randommer.io/Name', {
