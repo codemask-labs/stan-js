@@ -2,3 +2,4 @@
 preload = "./happydom.ts"
 coverage = true
 coverageThreshold = { lines = 0.9, functions = 1 }
+coverageDir = "src"

@@ -1,16 +1,20 @@
-import { describe, expect, it, jest, spyOn } from 'bun:test'
+import { describe, expect, it, jest, Mock, spyOn } from 'bun:test'
 import { storage } from '../storage'
 import { isLocalStorageAvailable } from '../storage/storage'
 import { Synchronizer } from '../types'
 
-const windowStub = spyOn(window, 'window')
-const originalWindow = { ...window }
+const windowStub = spyOn(window, 'window') as Mock<() => undefined | Window>
+const originalWindow = {
+    ...window,
+    dispatchEvent: window.dispatchEvent,
+    addEventListener: window.addEventListener,
+    localStorage: window.localStorage,
+} as unknown as Window
 
-const getStorage = () => storage(1, { storageKey: 'key' }) as unknown as Synchronizer<number>
+const getStorage = () => storage(1, { storageKey: 'key' }) as unknown as Synchronizer<number | undefined>
 
 describe('isLocalStorageAvailable', () => {
     it('should return false', () => {
-        // @ts-ignore
         windowStub.mockImplementationOnce(() => undefined)
 
         expect(isLocalStorageAvailable()).toBeFalsy()
@@ -93,7 +97,7 @@ describe('disabled localStorage', () => {
 
 describe('SSR', () => {
     it('should work', () => {
-        windowStub.mockImplementation((() => undefined) as never)
+        windowStub.mockImplementation(() => undefined)
         const { getSnapshot, update } = getStorage()
 
         expect(typeof window).toBe('undefined')
@@ -102,12 +106,16 @@ describe('SSR', () => {
         update(2, 'key')
 
         expect(getSnapshot('key')).toEqual(2)
+
+        update(undefined, 'key')
+
+        expect(() => getSnapshot('key')).toThrowError()
     })
 })
 
 describe('storage change', () => {
     it('should trigger update on change', () => {
-        windowStub.mockImplementation((() => originalWindow) as never)
+        windowStub.mockImplementation(() => originalWindow)
 
         const { subscribe } = getStorage()
 
