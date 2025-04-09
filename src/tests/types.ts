@@ -2,6 +2,7 @@ import { Equal, Expect } from 'type-testing'
 import { createStore } from '../createStore'
 import { storage } from '../storage'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { useStore, getState, actions, reset } = createStore({
     counter: 0,
     user: storage('john'),

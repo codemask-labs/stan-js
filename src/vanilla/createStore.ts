@@ -42,10 +42,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     // @ts-expect-error - TS doesn't know that all keys are in actions object
     const getAction = <K extends TKey>(key: K) => actions[getActionKey(key)] as (value: unknown) => void
 
-    const listeners = storeKeys.reduce((acc, key) => ({
-        ...acc,
-        [key]: [],
-    }), {} as Record<string, Array<(newState: unknown) => void>>)
+    const listeners = Object.fromEntries(storeKeys.map(key => [key, [] as Array<(newState: unknown) => void>]))
 
     const notifyUpdates = (keyToNotify: TKey) => {
         Object.entries(listeners).forEach(([compositeKey, listenersArray]) => {
