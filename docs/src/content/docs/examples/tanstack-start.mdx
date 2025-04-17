@@ -1,0 +1,23 @@
+---
+title: Tanstack Start
+description: 'Example of using stan-js with Tanstack Start'
+sidebar:
+    order: 3
+---
+
+import { Code } from '@/code'
+import { Aside } from '@astrojs/starlight/components'
+
+{/* <iframe src="https://stackblitz.com/github/codemask-labs/stan-js/tree/main/examples/tanstack-start?embed=1&hideExplorer=1&view=preview" /> */}
+{/* For now Tanstack Start not-fully works on stackblitz https://github.com/TanStack/router/issues/2792 */}
+<iframe src="https://codesandbox.io/p/sandbox/github/codemask-labs/stan-js/tree/main/examples/tanstack-start?view=preview&embed=1" />
+
+Create stan-js store in your app:
+<Code path="tanstack-start/app/store.ts" />
+
+Calculate initial values (e.g. fetch some data using Server Functions) and pass that to `StoreProvider`:
+<Code path="tanstack-start/app/routes/__root.tsx" mark={[13, 21, 23, 30, { range: '51-57' }]} />
+
+Use `useStore` to access the store in your components:
+<Code path="tanstack-start/app/routes/index.tsx" mark={[6]} />
+<Code path="tanstack-start/app/components/Counter.tsx" mark={[4]} />

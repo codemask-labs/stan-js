@@ -1,0 +1,29 @@
+{
+    "name": "stan-js-tanstack-start-example",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vinxi dev",
+        "build": "vinxi build",
+        "start": "vinxi start"
+    },
+    "keywords": [],
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "@tanstack/react-router": "1.116.0",
+        "@tanstack/react-start": "1.116.1",
+        "react": "19.1.0",
+        "react-dom": "19.1.0",
+        "stan-js": "latest",
+        "vinxi": "0.5.4"
+    },
+    "devDependencies": {
+        "@types/react": "19.1.2",
+        "@types/react-dom": "19.1.2",
+        "@vitejs/plugin-react": "4.4.0",
+        "typescript": "5.8.3",
+        "vite-tsconfig-paths": "5.1.4"
+    }
+}

@@ -1,12 +1,14 @@
 ---
 import fs from 'node:fs/promises'
 import { Code as StarlightCode } from '@astrojs/starlight/components'
+import type { ComponentPropsWithoutRef } from 'react'
 
 type Props = {
     path: string
+    mark: ComponentPropsWithoutRef<typeof StarlightCode>['mark']
 }
 
-const { path } = Astro.props
+const { path, mark } = Astro.props
 const url = new URL(`../../../examples/${path}`, import.meta.url)
 const file = await fs.readFile(url, 'utf-8')
 
@@ -14,4 +16,4 @@ const title = path.split('/').at(-1) ?? ''
 const lang = title.split('.').at(-1) ?? ''
 ---
 
-<StarlightCode code={file} lang={lang} title={title} />
+<StarlightCode code={file} lang={lang} title={title} mark={mark} />
