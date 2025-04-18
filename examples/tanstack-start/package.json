@@ -17,7 +17,8 @@
         "react": "19.1.0",
         "react-dom": "19.1.0",
         "stan-js": "latest",
-        "vinxi": "0.5.4"
+        "vinxi": "0.5.4",
+        "zod": "3.24.3"
     },
     "devDependencies": {
         "@types/react": "19.1.2",

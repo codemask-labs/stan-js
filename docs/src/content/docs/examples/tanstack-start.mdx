@@ -15,8 +15,8 @@ import { Aside } from '@astrojs/starlight/components'
 Create stan-js store in your app:
 <Code path="tanstack-start/app/store.ts" />
 
-Calculate initial values (e.g. fetch some data using Server Functions) and pass that to `StoreProvider`:
-<Code path="tanstack-start/app/routes/__root.tsx" mark={[13, 21, 23, 30, { range: '51-57' }]} />
+Calculate initial values (e.g. fetch some data using Server Functions or get it from search params) and pass that to `StoreProvider`:
+<Code path="tanstack-start/app/routes/__root.tsx" mark={[{ range: '14-15' }, 23, 25, 32, { range: '53-62' }]} />
 
 Use `useStore` to access the store in your components:
 <Code path="tanstack-start/app/routes/index.tsx" mark={[6]} />

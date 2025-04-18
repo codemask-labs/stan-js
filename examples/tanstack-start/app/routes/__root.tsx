@@ -5,12 +5,14 @@ import {
     Scripts,
 } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 import { fetchUser } from '../data'
 import globals from '../globals.css?url'
 import { StoreProvider } from '../store'
 
 const RootComponent = () => {
     const { user } = Route.useLoaderData()
+    const { counter } = Route.useSearch()
 
     return (
         <html>
@@ -18,7 +20,7 @@ const RootComponent = () => {
                 <HeadContent />
             </head>
             <body>
-                <StoreProvider initialValue={{ user }}>
+                <StoreProvider initialValue={{ user, counter }}>
                     <Outlet />
                 </StoreProvider>
                 <Scripts />
@@ -55,4 +57,7 @@ export const Route = createRootRoute({
             user,
         }
     },
+    validateSearch: z.object({
+        counter: z.number().optional(),
+    }),
 })
