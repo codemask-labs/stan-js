@@ -5,7 +5,7 @@ import { type MarkerDefinition } from '@expressive-code/plugin-text-markers'
 
 type Props = {
     path: string
-    mark: MarkerDefinition
+    mark?: MarkerDefinition | Array<MarkerDefinition> | undefined
 }
 
 const { path, mark } = Astro.props
