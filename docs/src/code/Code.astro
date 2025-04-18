@@ -1,11 +1,11 @@
 ---
 import fs from 'node:fs/promises'
 import { Code as StarlightCode } from '@astrojs/starlight/components'
-import type { ComponentPropsWithoutRef } from 'react'
+import { type MarkerDefinition } from '@expressive-code/plugin-text-markers'
 
 type Props = {
     path: string
-    mark: ComponentPropsWithoutRef<typeof StarlightCode>['mark']
+    mark: MarkerDefinition
 }
 
 const { path, mark } = Astro.props
