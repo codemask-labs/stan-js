@@ -93,7 +93,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     // @ts-expect-error - TS doesn't know that all keys are in actions object
     const getAction = <K extends TKey>(key: K) => store.actions[getActionKey(key)] as (value: unknown) => void
 
-    const useHydrateState = (state: Prettify<RemoveReadonly<TState>>) => {
+    const useHydrateState = (state: Prettify<Partial<RemoveReadonly<TState>>>) => {
         const isMounted = useRef(false)
 
         if (!isMounted.current) {
