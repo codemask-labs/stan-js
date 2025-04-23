@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/codemask-labs/stan-js/compare/v1.6.0...v1.6.1) (2025-04-23)
+
+
+### Bug Fixes
+
+* update useHydrateState param type ([3ef780f](https://github.com/codemask-labs/stan-js/commit/3ef780f9a2876ce1de2996afc0c41a69535c2f4a))
+
 # [1.6.0](https://github.com/codemask-labs/stan-js/compare/v1.5.0...v1.6.0) (2024-10-04)
 
 
