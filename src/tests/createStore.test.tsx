@@ -170,6 +170,28 @@ describe('reset', () => {
 
         expect(store.getState().counter).toEqual(2)
     })
+
+    it('should batch updates when resetting', () => {
+        const { effect, actions, reset } = createStore({
+            a: 0,
+            b: 0,
+        })
+
+        const callback = jest.fn()
+
+        effect(({ a, b }) => callback(a, b))
+
+        expect(callback).toHaveBeenCalledTimes(1)
+
+        actions.setA(1)
+        actions.setB(2)
+
+        expect(callback).toHaveBeenCalledTimes(3)
+
+        reset()
+
+        expect(callback).toHaveBeenCalledTimes(4)
+    })
 })
 
 describe('useStore', () => {
@@ -450,5 +472,51 @@ describe('hydration', () => {
         rerender()
 
         expect(store2.getState().count).toBe(20)
+    })
+})
+
+describe('custom actions', () => {
+    it('custom actions should be batched', () => {
+        const { getState, effect, actions } = createStore(
+            {
+                firstName: 'John',
+                lastName: 'Doe',
+            },
+            ({ actions }) => ({
+                setUser: (firstName: string, lastName: string) => {
+                    actions.setFirstName(firstName)
+                    actions.setLastName(lastName)
+                },
+            }),
+        )
+
+        const callback = jest.fn()
+
+        effect(({ firstName, lastName }) => callback(firstName, lastName))
+
+        expect(callback).toHaveBeenCalledTimes(1)
+
+        expect(getState().firstName).toBe('John')
+        expect(getState().lastName).toBe('Doe')
+
+        actions.setUser('Jane', 'Anderson')
+
+        expect(getState().firstName).toBe('Jane')
+        expect(getState().lastName).toBe('Anderson')
+
+        expect(callback).toHaveBeenCalledTimes(2)
+    })
+
+    it('custom actions can\'t have the same key as state or actions', () => {
+        expect(() =>
+            createStore(
+                {
+                    name: 'John',
+                },
+                ({ actions }) => ({
+                    setName: actions.setName,
+                }),
+            )
+        ).toThrow()
     })
 })
