@@ -55,6 +55,8 @@ Function that resets store state to the initial values
 
 You can either pass all the keys that you want to be reset, or if you won't pass any key **WHOLE** store will be reset.
 
+When resetting multiple keys, the updates will be [batched](#batchupdates).
+
 ```typescript
 reset('count')
 // Only count value will be reset
@@ -216,4 +218,34 @@ useHydrateState({
 
 // Now the store's state is:
 // count: 10, name: 'Jane', notifications: [{ message: 'Hello' }]
+```
+### Custom Actions
+
+Sometimes you need to create a function that will perform multiple updates at once. For convinience, you can create custom actions that will be available in the store.
+
+`createStore` accepts a second argument - a function that will be called with the store's [actions](#actions), [reset](#reset) callback and the [getState](#getstate) method.
+
+Every synchronous custom action will be batched by the store.
+
+```typescript
+export const { actions, useStore } = createStore(
+    {
+        count: 0,
+        name: 'John',
+        notifications: [] as Array<Notification>
+    },
+    ({ actions, getState, reset }) => ({
+        updateUserNotifications: (notifications: Array<Notification>) => {
+            actions.setNotifications([ ...getState().notifications, ...notifications ])
+            actions.setName(notifications.at(0)?.userName)
+            reset('count')
+        },
+    }),
+)
+
+actions.updateUserNotifications([{ message: 'Hello', userName: 'Jane' }])
+
+const { actions } = useStore()
+
+actions.updateUserNotifications([{ message: 'Hello from React', userName: 'React' }])
 ```

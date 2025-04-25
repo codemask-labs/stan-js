@@ -1,6 +1,13 @@
 import { Actions, CustomActions, CustomActionsBuilder, Dispatch, Prettify, RemoveReadonly } from '../types'
 import { equal, getActionKey, isPromise, isSynchronizer, keyInObject, optionalArray } from '../utils'
 
+/**
+ * Function that creates a store.
+ * @param stateRaw - initial state of the store
+ * @param customActionsBuilder - function to create custom actions
+ *
+ * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore}
+ */
 export const createStore = <TState extends object, TCustomActions extends CustomActions = {}>(
     stateRaw: TState,
     customActionsBuilder?: CustomActionsBuilder<TState, TCustomActions>,
@@ -249,7 +256,7 @@ export const createStore = <TState extends object, TCustomActions extends Custom
     return {
         /**
          * Function that returns current state of the store
-         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#getState}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#getstate}
          */
         getState,
         /**
@@ -278,7 +285,7 @@ export const createStore = <TState extends object, TCustomActions extends Custom
         /**
          * Function that allows to batch updates to the store's state
          * @param callback - callback that will be called after all updates are batched
-         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#batchUpdates}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#batchupdates}
          */
         batchUpdates,
     }

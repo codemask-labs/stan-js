@@ -3,6 +3,13 @@ import { Actions, CustomActions, CustomActionsBuilder, Prettify, RemoveReadonly 
 import { equal, getActionKey, keyInObject } from './utils'
 import { createStore as createStoreVanilla } from './vanilla'
 
+/**
+ * Function that creates a store.
+ * @param stateRaw - initial state of the store
+ * @param customActionsBuilder - function to create custom actions
+ *
+ * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore}
+ */
 export const createStore = <TState extends object, TCustomActions extends CustomActions = {}>(
     stateRaw: TState,
     customActionsBuilder?: CustomActionsBuilder<TState, TCustomActions>,
@@ -115,19 +122,19 @@ export const createStore = <TState extends object, TCustomActions extends Custom
         /**
          * React's hook that allows to access store's values and to update them
          * @returns Store's values and actions
-         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#useStore}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#usestore}
          */
         useStore,
         /**
          * React's hook that allows to subscribe to store's values and react to them by calling the listener callback
          * @param run - callback that will be called when store's values change
-         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#useStoreEffect}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#usestoreeffect}
          */
         useStoreEffect,
         /**
          * React's hook that allows to hydrate store's state with the provided values once on mount
          * @param state - values that should be used to hydrate the store
-         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#useHydrateState}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#usehydratestate}
          */
         useHydrateState,
     }
