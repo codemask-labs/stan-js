@@ -221,11 +221,13 @@ useHydrateState({
 ```
 ### Custom Actions
 
-Sometimes you need to create a function that will perform multiple updates at once. For convinience, you can create custom actions that will be available in the store.
+Sometimes you need to create a function that will perform multiple updates at once. For convenience, you can create custom actions that will be available in the store.
 
 `createStore` accepts a second argument - a function that will be called with the store's [actions](#actions), [reset](#reset) callback and the [getState](#getstate) method.
 
-Every synchronous custom action will be batched by the store.
+<Aside type="caution">
+Only synchronous custom action will be batched by the store.
+</Aside>
 
 ```typescript
 export const { actions, useStore } = createStore(
