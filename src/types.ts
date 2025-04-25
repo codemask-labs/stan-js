@@ -34,3 +34,15 @@ export type Prettify<T> =
         [K in keyof T]: T[K]
     }
     & {}
+
+export type CustomActions = Record<string, (...args: Array<never>) => void>
+
+export type CustomActionsBuilderParams<TState extends object> = {
+    getState: () => TState
+    actions: Actions<RemoveReadonly<TState>>
+    reset: (...keys: Array<keyof RemoveReadonly<TState>>) => void
+}
+
+export type CustomActionsBuilder<TState extends object, TCustomActions extends CustomActions> = (
+    builderParams: CustomActionsBuilderParams<TState>,
+) => TCustomActions

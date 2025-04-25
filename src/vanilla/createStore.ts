@@ -1,7 +1,17 @@
-import { Actions, Dispatch, RemoveReadonly } from '../types'
+import { Actions, CustomActions, CustomActionsBuilder, Dispatch, Prettify, RemoveReadonly } from '../types'
 import { equal, getActionKey, isPromise, isSynchronizer, keyInObject, optionalArray } from '../utils'
 
-export const createStore = <TState extends object>(stateRaw: TState) => {
+/**
+ * Function that creates a store.
+ * @param stateRaw - initial state of the store
+ * @param customActionsBuilder - function to create custom actions
+ *
+ * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore}
+ */
+export const createStore = <TState extends object, TCustomActions extends CustomActions = {}>(
+    stateRaw: TState,
+    customActionsBuilder?: CustomActionsBuilder<TState, TCustomActions>,
+) => {
     type TKey = keyof TState
     const storeKeys = Object.keys(stateRaw) as Array<TKey>
     let isBatching = false
@@ -184,11 +194,13 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
     })
 
     const reset = (...keys: Array<keyof RemoveReadonly<TState>>) => {
-        optionalArray(keys, storeKeys).forEach(key => {
-            const valueOrSynchronizer = stateRaw[key]
-            const initialValue = isSynchronizer(valueOrSynchronizer) ? valueOrSynchronizer.value : valueOrSynchronizer
+        batchUpdates(() => {
+            optionalArray(keys, storeKeys).forEach(key => {
+                const valueOrSynchronizer = stateRaw[key]
+                const initialValue = isSynchronizer(valueOrSynchronizer) ? valueOrSynchronizer.value : valueOrSynchronizer
 
-            getAction(key)?.(initialValue)
+                getAction(key)?.(initialValue)
+            })
         })
     }
 
@@ -214,17 +226,44 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         return subscribe(keysToListen.size === 0 ? storeKeys : Array.from(keysToListen))(() => run(state))
     }
 
+    const getState = () => state
+
+    const getCustomActions = () => {
+        if (customActionsBuilder === undefined) {
+            return {}
+        }
+
+        const customActions = customActionsBuilder({ getState, actions, reset })
+
+        return Object.fromEntries(
+            Object.entries(customActions).map(
+                ([key, value]) => {
+                    if (key in state || key in actions) {
+                        throw new Error(`Action with key ${key} already exists in store`)
+                    }
+
+                    return [
+                        key,
+                        (...args: Array<never>) => batchUpdates(() => value(...args)),
+                    ]
+                },
+            ),
+        )
+    }
+
+    const finalActions = { ...actions, ...getCustomActions() } as unknown as Prettify<Actions<RemoveReadonly<TState>> & TCustomActions>
+
     return {
         /**
          * Function that returns current state of the store
-         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#getState}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#getstate}
          */
-        getState: () => state,
+        getState,
         /**
          * Object that contains all functions that allows for updating the store's state
          * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore/#actions}
          */
-        actions,
+        actions: finalActions,
         /**
          * Function that resets store state to the initial values
          * @param keys - keys of the store that should be reset
@@ -246,7 +285,7 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         /**
          * Function that allows to batch updates to the store's state
          * @param callback - callback that will be called after all updates are batched
-         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#batchUpdates}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#batchupdates}
          */
         batchUpdates,
     }

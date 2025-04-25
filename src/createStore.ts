@@ -1,12 +1,22 @@
 import { DependencyList, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import { Prettify, RemoveReadonly } from './types'
+import { Actions, CustomActions, CustomActionsBuilder, Prettify, RemoveReadonly } from './types'
 import { equal, getActionKey, keyInObject } from './utils'
 import { createStore as createStoreVanilla } from './vanilla'
 
-export const createStore = <TState extends object>(stateRaw: TState) => {
+/**
+ * Function that creates a store.
+ * @param stateRaw - initial state of the store
+ * @param customActionsBuilder - function to create custom actions
+ *
+ * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore}
+ */
+export const createStore = <TState extends object, TCustomActions extends CustomActions = {}>(
+    stateRaw: TState,
+    customActionsBuilder?: CustomActionsBuilder<TState, TCustomActions>,
+) => {
     type TKey = keyof TState
     const storeKeys = Object.keys(stateRaw) as Array<TKey>
-    const store = createStoreVanilla(stateRaw)
+    const store = createStoreVanilla(stateRaw, customActionsBuilder)
 
     const getState = () => {
         let oldState: TState
@@ -24,7 +34,8 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         }
     }
 
-    const useStore = () => {
+    type UseStoreReturn = Prettify<TState & Actions<RemoveReadonly<TState>> & TCustomActions>
+    const useStore = (): UseStoreReturn => {
         const [isInitialized, setIsInitialized] = useState(false)
         const [subscribeKeys] = useState(() => new Set<TKey>())
         const getSnapshot = useMemo(() => {
@@ -45,10 +56,10 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         const synced = useSyncExternalStore(subscribeStore, getSnapshot, getSnapshot)
 
         if (isInitialized) {
-            return { ...synced, ...store.actions }
+            return { ...synced, ...store.actions } as UseStoreReturn
         }
 
-        return new Proxy({ ...synced, ...store.actions }, {
+        return new Proxy({ ...synced, ...store.actions } as UseStoreReturn, {
             get: (target, key) => {
                 if (storeKeys.includes(key as TKey) && !subscribeKeys.has(key as TKey)) {
                     subscribeKeys.add(key as TKey)
@@ -90,7 +101,6 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         }, deps)
     }
 
-    // @ts-expect-error - TS doesn't know that all keys are in actions object
     const getAction = <K extends TKey>(key: K) => store.actions[getActionKey(key)] as (value: unknown) => void
 
     const useHydrateState = (state: Prettify<Partial<RemoveReadonly<TState>>>) => {
@@ -112,19 +122,19 @@ export const createStore = <TState extends object>(stateRaw: TState) => {
         /**
          * React's hook that allows to access store's values and to update them
          * @returns Store's values and actions
-         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#useStore}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#usestore}
          */
         useStore,
         /**
          * React's hook that allows to subscribe to store's values and react to them by calling the listener callback
          * @param run - callback that will be called when store's values change
-         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#useStoreEffect}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#usestoreeffect}
          */
         useStoreEffect,
         /**
          * React's hook that allows to hydrate store's state with the provided values once on mount
          * @param state - values that should be used to hydrate the store
-         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#useHydrateState}
+         * @see {@link https://codemask-labs.github.io/stan-js/reference/createstore#usehydratestate}
          */
         useHydrateState,
     }
