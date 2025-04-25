@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/codemask-labs/stan-js/compare/v1.6.1...v1.7.0) (2025-04-25)
+
+
+### Features
+
+* custom actions ([#93](https://github.com/codemask-labs/stan-js/issues/93)) ([688acb3](https://github.com/codemask-labs/stan-js/commit/688acb3e41d4a07dc229b7961d4d54e88076d0e9))
+
 ## [1.6.1](https://github.com/codemask-labs/stan-js/compare/v1.6.0...v1.6.1) (2025-04-23)
 
 
