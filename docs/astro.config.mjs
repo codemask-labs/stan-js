@@ -10,9 +10,13 @@ export default defineConfig({
             logo: {
                 src: './src/assets/logo.svg',
             },
-            social: {
-                github: 'https://github.com/codemask-labs/stan-js',
-            },
+            social: [
+                {
+                    icon: 'github',
+                    label: 'GitHub',
+                    href: 'https://github.com/codemask-labs/stan-js',
+                },
+            ],
             sidebar: [
                 {
                     label: 'Guides',
