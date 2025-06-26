@@ -1,5 +1,6 @@
 import starlight from '@astrojs/starlight'
 import { defineConfig } from 'astro/config'
+import starlightLlmsTxt from 'starlight-llms-txt'
 
 export default defineConfig({
     site: 'https://codemask-labs.github.io',
@@ -40,6 +41,7 @@ export default defineConfig({
                 },
             ],
             customCss: ['./src/styles.css'],
+            plugins: [starlightLlmsTxt()],
         }),
     ],
 })
