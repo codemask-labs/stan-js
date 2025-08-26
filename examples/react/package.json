@@ -9,6 +9,9 @@
         "lint": "eslint .",
         "preview": "vite preview"
     },
+    "stackblitz": {
+        "startCommand": "npm install && npm run dev"
+    },
     "dependencies": {
         "@radix-ui/react-slot": "1.1.0",
         "class-variance-authority": "^0.7.1",
