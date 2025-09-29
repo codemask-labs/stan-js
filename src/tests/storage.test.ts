@@ -1,6 +1,6 @@
 import { describe, expect, it, jest, Mock, spyOn } from 'bun:test'
 import { storage } from '../storage'
-import { isLocalStorageAvailable } from '../storage/storage'
+import { isLocalStorageAvailable } from '../storage/factory'
 import { Synchronizer } from '../types'
 
 const windowStub = spyOn(window, 'window') as Mock<() => undefined | Window>
@@ -23,7 +23,7 @@ describe('isLocalStorageAvailable', () => {
 
 describe('storage', () => {
     it('should return an object with keys', () => {
-        const returnedValue = storage()
+        const returnedValue = storage(1)
 
         expect(returnedValue).toHaveProperty('value')
         expect(returnedValue).toHaveProperty('subscribe')

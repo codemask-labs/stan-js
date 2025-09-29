@@ -52,18 +52,35 @@ const { useStore } = createStore({
 })
 ```
 
-#### Custom serializer
+#### Custom storage
 
-If you want to store more complex objects that aren't supported by JSON you can either write your own storage synchronizer or pass custom `serialize` and `deserialize` functions to the options' parameter. For example, you can use [superjson](https://github.com/blitz-js/superjson) package:
+If you want to customize storage, for example to use your own mmkv instance - you can use `createStorage` factory function. It creates a new storage function that you can use across your app.
+
+```ts
+import { createStorage } from 'stan-js'
+import { MMKV } from 'react-native-mmkv'
+
+const encryptedMMKV = new MMKV({
+    encryptionKey: 'my-encryption-key'
+})
+
+const myStorage = createStorage({
+    mmkvInstance: encryptedMMKV,
+})
+```
+
+Or if you want to store more complex objects that aren't supported by JSON you can pass custom `serialize` and `deserialize` functions. For example, you can use [superjson](https://github.com/blitz-js/superjson) package:
 ```typescript
 import { createStore } from 'stan-js'
-import { storage } from 'stan-js/storage'
+import { createStorage } from 'stan-js/storage'
 import superjson from 'superjson'
 
+const superJsonStorage = createStorage({
+    serialize: superjson.stringify,
+    deserialize: superjson.deserialize
+}) 
+
 const { useStore } = createStore({
-    user: storage(new Set(), {
-        serialize: superjson.stringify,
-        deserialize: superjson.deserialize
-    })
+    user: superJsonStorage(new Set())
 })
 ```

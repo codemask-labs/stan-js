@@ -1,3 +1,5 @@
+import type { MMKV } from 'react-native-mmkv'
+
 export type Synchronizer<T> = {
     value: T
     subscribe?: (update: (value: T) => void, key: string) => void
@@ -46,3 +48,9 @@ export type CustomActionsBuilderParams<TState extends object> = {
 export type CustomActionsBuilder<TState extends object, TCustomActions extends CustomActions> = (
     builderParams: CustomActionsBuilderParams<TState>,
 ) => TCustomActions
+
+export type CreateStorageOptions = {
+    mmkvInstance?: MMKV
+    deserialize?: (value: string) => unknown
+    serialize?: (value: unknown) => string
+}
