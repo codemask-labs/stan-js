@@ -57,7 +57,7 @@ const { useStore } = createStore({
 If you want to customize storage, for example to use your own mmkv instance - you can use `createStorage` factory function. It creates a new storage function that you can use across your app.
 
 ```ts
-import { createStorage } from 'stan-js'
+import { createStorage } from 'stan-js/storage'
 import { MMKV } from 'react-native-mmkv'
 
 const encryptedMMKV = new MMKV({
