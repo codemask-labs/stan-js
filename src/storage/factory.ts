@@ -45,7 +45,7 @@ const ssrSaveStorage = {
     },
 }
 
-export const createStorage = (storageOptions?: CreateStorageOptions) =>
+export const createStorage = (storageOptions?: CreateStorageOptions): Storage =>
 <T>(
     initialValue: T,
     {
@@ -93,4 +93,4 @@ export const createStorage = (storageOptions?: CreateStorageOptions) =>
 
         return deserialize(value)
     },
-} as Synchronizer<T>) as unknown as Storage
+} as Synchronizer<T>)
