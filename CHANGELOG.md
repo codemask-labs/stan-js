@@ -1,3 +1,15 @@
+# [1.8.0](https://github.com/codemask-labs/stan-js/compare/v1.7.0...v1.8.0) (2025-09-29)
+
+
+### Bug Fixes
+
+* typo in introduction.mdx ([#103](https://github.com/codemask-labs/stan-js/issues/103)) ([b265adf](https://github.com/codemask-labs/stan-js/commit/b265adf96368d23f8d00327d12dc3b1b779d1d81))
+
+
+### Features
+
+* createStorage factory ([#105](https://github.com/codemask-labs/stan-js/issues/105)) ([5bfaf07](https://github.com/codemask-labs/stan-js/commit/5bfaf0746e15854ccb9530d54448f5d4ca005e72))
+
 # [1.7.0](https://github.com/codemask-labs/stan-js/compare/v1.6.1...v1.7.0) (2025-04-25)
 
 
