@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/codemask-labs/stan-js/compare/v1.8.0...v1.8.1) (2025-09-30)
+
+
+### Bug Fixes
+
+* storage path ([2d4d046](https://github.com/codemask-labs/stan-js/commit/2d4d046d4a2ff28da2e61ae708e700b33035f220))
+
 # [1.8.0](https://github.com/codemask-labs/stan-js/compare/v1.7.0...v1.8.0) (2025-09-29)
 
 
