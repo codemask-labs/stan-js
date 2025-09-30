@@ -32,6 +32,7 @@
             "default": "./dist/index.cjs"
         },
         "./storage": {
+            "types": "./dist/storage/index.d.ts",
             "module": "./dist/storage/index.mjs",
             "react-native": "./dist/storage/native.cjs",
             "browser": "./dist/storage/index.cjs",
