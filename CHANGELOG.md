@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/codemask-labs/stan-js/compare/v1.8.1...v1.8.2) (2025-09-30)
+
+
+### Bug Fixes
+
+* update storage d.ts ([b8c3eb1](https://github.com/codemask-labs/stan-js/commit/b8c3eb194ac24332e762446e3652212c9a044dd3))
+
 ## [1.8.1](https://github.com/codemask-labs/stan-js/compare/v1.8.0...v1.8.1) (2025-09-30)
 
 
