@@ -2,9 +2,7 @@ import mmkv from 'react-native-mmkv'
 import { CreateStorageOptions, StorageOptions, Synchronizer } from '../types'
 
 type MMKV_V3 = {
-    MMKV: new () => mmkv.MMKV & {
-        delete(key: string): void
-    }
+    MMKV: new () => mmkv.MMKV
 }
 
 const DefaultMMKV: mmkv.MMKV = 'createMMKV' in mmkv
