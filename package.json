@@ -32,7 +32,6 @@
             "default": "./dist/index.cjs"
         },
         "./storage": {
-            "types": "./dist/storage/index.d.ts",
             "module": "./dist/storage/index.mjs",
             "react-native": "./dist/storage/native.cjs",
             "browser": "./dist/storage/index.cjs",
@@ -90,15 +89,15 @@
         "@happy-dom/global-registrator": "18.0.1",
         "@testing-library/react": "16.3.1",
         "@types/bun": "1.3.4",
-        "@types/web": "0.0.301",
+        "@types/web": "0.0.302",
         "dprint": "0.50.2",
-        "eslint": "9.28.0",
+        "eslint": "9.39.2",
         "eslint-config-codemask": "2.2.1",
         "husky": "9.1.7",
         "publint": "0.3.16",
         "type-testing": "0.2.0",
         "typescript": "5.9.3",
-        "unbuild": "3.5.0",
+        "unbuild": "3.6.1",
         "react-native-mmkv": "4.1.0",
         "@types/react": "19.2.7"
     },
