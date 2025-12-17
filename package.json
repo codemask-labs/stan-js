@@ -99,7 +99,8 @@
         "type-testing": "0.2.0",
         "typescript": "5.9.3",
         "unbuild": "3.6.1",
-        "react-native-mmkv": "4.1.0"
+        "react-native-mmkv": "4.1.0",
+        "@types/react": "19.2.7"
     },
     "peerDependencies": {
         "react": ">=18.2.0",
