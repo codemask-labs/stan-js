@@ -1,5 +1,18 @@
-import { MMKV } from 'react-native-mmkv'
+import mmkv from 'react-native-mmkv'
 import { CreateStorageOptions, StorageOptions, Synchronizer } from '../types'
+
+type MMKV_V3 = {
+    MMKV: new () => mmkv.MMKV
+}
+
+const DefaultMMKV: mmkv.MMKV = 'createMMKV' in mmkv
+    ? mmkv.createMMKV()
+    : Object.assign(new (mmkv as MMKV_V3).MMKV(), {
+        remove(this: mmkv.MMKV, key: string) {
+            // @ts-expect-error MMKV v3 delete method
+            this.delete(key)
+        },
+    })
 
 export const createStorage = (storageOptions?: CreateStorageOptions) =>
 <T>(
@@ -10,7 +23,7 @@ export const createStorage = (storageOptions?: CreateStorageOptions) =>
         storageKey,
     }: StorageOptions<T> = {},
 ) => {
-    const mmkv = storageOptions?.mmkvInstance ?? new MMKV()
+    const mmkv = storageOptions?.mmkvInstance ?? DefaultMMKV
 
     return {
         value: initialValue,
@@ -18,7 +31,7 @@ export const createStorage = (storageOptions?: CreateStorageOptions) =>
             const storageKeyToUse = storageKey ?? key
 
             if (value === undefined) {
-                mmkv.delete(storageKeyToUse)
+                mmkv.remove(storageKeyToUse)
 
                 return
             }
