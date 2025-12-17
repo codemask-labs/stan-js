@@ -1,10 +1,3 @@
-# [1.9.0](https://github.com/codemask-labs/stan-js/compare/v1.8.2...v1.9.0) (2025-12-17)
-
-
-### Features
-
-* support mmkv 4 ([#108](https://github.com/codemask-labs/stan-js/issues/108)) ([a3b19f0](https://github.com/codemask-labs/stan-js/commit/a3b19f048a40affcb90e59eb62af9b456c0df071))
-
 ## [1.8.2](https://github.com/codemask-labs/stan-js/compare/v1.8.1...v1.8.2) (2025-09-30)
 
 

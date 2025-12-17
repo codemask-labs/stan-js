@@ -18,6 +18,12 @@ jobs:
         with:
           bun-version-file: .bun-version
 
+      - name: Setup Node.js (for npm with OIDC support)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
       - name: Release new version
         uses: cycjimmy/semantic-release-action@v6.0.0
         with:
