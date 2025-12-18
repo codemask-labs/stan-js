@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/codemask-labs/stan-js/compare/v1.9.0...v1.9.1) (2025-12-18)
+
+
+### Bug Fixes
+
+* fix regression in storage types ([b34a035](https://github.com/codemask-labs/stan-js/commit/b34a035fb02293abddff23e81dcb525094619d18))
+
 # [1.9.0](https://github.com/codemask-labs/stan-js/compare/v1.8.2...v1.9.0) (2025-12-17)
 
 
